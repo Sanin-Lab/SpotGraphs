@@ -8,6 +8,8 @@
 CleanSlide = function(obj) {
   # Get coordinates and calculate euclidean distance
   coord = GetTissueCoordinates(obj)
+  
+  # Create igraph object with coordinates
   ig = SpotGraph(coord[,1:2], max.dist = 30)
   
   # Community detection via Modularity maximization
@@ -15,10 +17,11 @@ CleanSlide = function(obj) {
   ig = ig %>% set_vertex_attr('cluster', index = V(ig), value = factor(mod_groups$membership))
   
   # Clustering assignments
-  vertex_cl = data.frame(barcode = as_ids(V(ig)), cluster = mod_groups$membership)
-  meta = obj@meta.data
-  meta$barcode = rownames(meta)
-  meta = meta %>% left_join(vertex_cl) %>% suppressMessages()
+  vertex_clusterid = data.frame(barcode = as_ids(V(ig)), cluster = mod_groups$membership)
+  meta = obj@meta.data %>% 
+    mutate(barcode = rownames(.)) %>%
+    left_join(vertex_clusterid) %>% 
+    suppressMessages()
   
   # Calculate total nCount per cluster
   cl.df = meta %>% 
@@ -54,7 +57,7 @@ CleanSlide = function(obj) {
 # - each column corresponds to x and y coordinates
 
 SpotGraph = function(coord, max.dist = 30) {
-  # Get coordinates and calculate euclidian distance
+  # Get coordinates and calculate euclidean distance
   d = dist(coord, method = 'euclidean')
   m = as.matrix(d)
   
