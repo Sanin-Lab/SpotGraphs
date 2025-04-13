@@ -6,10 +6,8 @@
 # 4. Setting a threshold to identify which clusters should be filtered out
 
 CleanSlide = function(obj) {
-  # Get coordinates and calculate euclidean distance
+  # Get coordinates, calculate euclidean distance, create igraph object
   coord = GetTissueCoordinates(obj)
-  
-  # Create igraph object with coordinates
   ig = SpotGraph(coord[,1:2], max.dist = 30)
   
   # Community detection via Modularity maximization
