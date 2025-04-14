@@ -12,18 +12,18 @@ CleanSlide = function(obj) {
   
   # Community detection via Modularity maximization
   mod_groups = cluster_fast_greedy(ig)
-  ig = ig %>% set_vertex_attr('cluster', index = V(ig), value = factor(mod_groups$membership))
+  ig = ig %>% set_vertex_attr('ig_cluster', index = V(ig), value = factor(mod_groups$membership))
   
   # Clustering assignments
-  vertex_clusterid = data.frame(barcode = as_ids(V(ig)), cluster = mod_groups$membership)
+  vertex_clusterid = data.frame(barcode = as_ids(V(ig)), ig_cluster = mod_groups$membership)
   meta = obj@meta.data %>% 
-    mutate(barcode = rownames(.)) %>%
-    left_join(vertex_clusterid) %>% 
+    mutate(barcode = rownames(.), ig_cluster = NULL) %>%
+    left_join(vertex_clusterid, by = 'barcode') %>% 
     suppressMessages()
   
   # Calculate total nCount per cluster
   cl.df = meta %>% 
-    reframe(.by = cluster, totalcounts = sum(nCount_Spatial)) %>% 
+    reframe(.by = ig_cluster, totalcounts = sum(nCount_Spatial)) %>% 
     arrange(totalcounts)
   
   # Calculate nCount threshold
@@ -41,7 +41,7 @@ CleanSlide = function(obj) {
   #   appropriate for their analysis. If not, individual clusters can
   #   be manually re-added to "pass" the threshold
   obj = AddMetaData(obj, meta$thres.pass, 'threshold')
-  obj = AddMetaData(obj, factor(meta$cluster %>% ifelse(is.na(.), 'singlet', .)), 'cluster')
+  obj = AddMetaData(obj, factor(meta$ig_cluster %>% ifelse(is.na(.), 'singlet', .)), 'ig_cluster')
   obj = AddMetaData(obj, meta$totalcounts, 'cluster_nCount')
   
   # Store igraph object in Seurat object
