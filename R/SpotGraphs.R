@@ -4,7 +4,6 @@
 # 2. Performing modularity maximization to identify clusters
 # 3. Calculating total number of transcripts detected in each cluster
 # 4. Setting a threshold to identify which clusters should be filtered out
-
 CleanSlide = function(obj) {
   # Get coordinates, calculate euclidean distance, create igraph object
   coord = GetTissueCoordinates(obj)
@@ -53,8 +52,7 @@ CleanSlide = function(obj) {
 # Define a function to create an igraph object, given tissue coordinates
 # - input should be a two-column dataframe or matrix
 # - each column corresponds to x and y coordinates
-
-SpotGraph = function(coord, max.dist = 30) {
+SpotGraph = function(coord, max.dist = 30, cluster = F, resolution = 0.5) {
   # Get coordinates and calculate euclidean distance
   d = dist(coord, method = 'euclidean')
   m = as.matrix(d)
@@ -86,6 +84,81 @@ SpotGraph = function(coord, max.dist = 30) {
   
   # Create igraph object from edge data frame
   ig = graph_from_edgelist(edges, directed = F)
+  
+  if (cluster) {
+    cluster_res = factor(cluster_louvain(ig, resolution = resolution)$membership)
+    ig = set_vertex_attr(ig, name = 'iglouvain_cluster', value = cluster_res)
+  }
+  
   return(ig)
 }
 
+# Create a function to plot on x,y coordinates some vertex
+# attribute from a corresponding igraph object
+# - Coordinate matrix should have two columns (x,y) with rownames
+#   matching all of the vertices in the igraph object
+# - function will assume first column is x coordinates and 
+#   second column is y coordinates
+# - group.by should be a vertex attribute in the igraph object
+SpatialPlotGraph = function(igraph_object, coord, group.by, label = T) {
+  ig = igraph_object
+  v_names = as_ids(V(ig))
+  if(!all(rownames(coord) %in% v_names)) {
+    stop('igraph vertices do not match coordinates')
+  }
+  
+  # Join coordinates together with vertex information
+  colnames(coord) = c('x', 'y')
+  coord = coord %>% mutate(barcode = rownames(.))
+  df = data.frame(barcode = as_ids(V(ig)), groups = vertex_attr(ig, group.by))
+  df = df %>% left_join(coord, by = 'barcode')
+  
+  # Create plot
+  plt = ggplot(df, aes(x = y, y = -x)) +
+    geom_point(aes(color = groups))
+  
+  # Label groups if desired
+  if (label) {
+    label.df = df %>% 
+      reframe(.by = groups, x = mean(x), y = mean(y))
+    plt = plt + 
+      geom_label(data = label.df, 
+                 aes(x = y, y = -x,
+                     label = groups, fill = groups))
+  }
+  return(plt)
+}
+
+# Remove all edges that lie between pairs of clusters
+# - cluster_pairs should be a list containing two-element vectors
+#   indicating pairs of cluster names where we want to remove edges
+# - output is an updated igraph object with those edges removed
+CutEdges = function(igraph_object, cluster_pairs = NULL, cluster.col = 'cluster') {
+  ig = igraph_object
+  
+  # get data frame matching vertices with cluster ids
+  vert.df = data.frame(vertices = as_ids(V(ig)), 
+                       cluster = vertex_attr(ig, cluster.col))
+  
+  # create edge data frame
+  edge.df = data.frame(edges = as_ids(E(ig)))
+  edge.df = as_ids(E(ig)) %>% strsplit('\\|') %>%
+    do.call(what = rbind) %>% as.data.frame()
+  colnames(edge.df) = c('node1', 'node2')
+  
+  # match each node to their respective cluster id
+  edge.df = edge.df %>% 
+    mutate(node1_cl = vert.df$cluster[match(node1, vert.df$vertices)],
+           node2_cl = vert.df$cluster[match(node2, vert.df$vertices)])
+  edge.df$edge_cl = apply(edge.df, 1, function(i) {
+    str_flatten(sort(c(i['node1_cl'], i['node2_cl'])), collapse = '_')
+  })
+  
+  # remove edges between cluster pairs
+  cluster_pairs = lapply(cluster_pairs, function(x) {
+    sort(x) %>% str_flatten(collapse = '_')
+  }) %>% unlist
+  edge.df = edge.df %>% filter(edge_cl %in% cluster_pairs)
+  ig = igraph::delete_edges(ig, paste(edge.df$node1, edge.df$node2, sep = '|'))
+  return(ig)
+}
