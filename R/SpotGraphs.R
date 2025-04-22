@@ -1,3 +1,6 @@
+# Load libraries required for functions to work
+library(igraph)
+
 # Remove spots that are not part of the major tissue mass on each
 # slide by identifying which spots are connected by:
 # 1. Identify neighboring spots based on euclidean distance (on x/y coordinates)
@@ -52,10 +55,14 @@ CleanSlide = function(obj) {
 # Define a function to create an igraph object, given tissue coordinates
 # - input should be a two-column dataframe or matrix
 # - each column corresponds to x and y coordinates
-SpotGraph = function(coord, max.dist = 30, cluster = F, resolution = 0.5) {
+SpotGraph = function(coord, cluster = F, resolution = 0.5) {
   # Get coordinates and calculate euclidean distance
   d = dist(coord, method = 'euclidean')
   m = as.matrix(d)
+  
+  # Find the distance between two adjacent spots
+  # - assumes all adjacent spots are equidistant
+  max.dist = min(d) + 1
   
   # Identify whether a spot is immediately neighboring another spot
   # - this algorithm seems robust to a range of distance thresholds
