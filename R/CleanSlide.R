@@ -1,9 +1,25 @@
 # Remove spots that are not part of the major tissue mass on each
 # slide by identifying which spots are connected by:
-# 1. Identify neighboring spots based on euclidean distance (on x/y coordinates)
-# 2. Performing modularity maximization to identify clusters
-# 3. Calculating total number of transcripts detected in each cluster
-# 4. Setting a threshold to identify which clusters should be filtered out
+
+#' Identify spots isolated from the largest groups of immediately adjacent spots
+#' @description
+#' 1. Identify neighboring spots on x/y coordinates with SpotGraph()
+#' 2. Performing modularity maximization to identify clusters
+#' 3. Calculate total number of transcripts detected in each cluster (nCount)
+#' 4. Set a threshold to identify which clusters should be filtered out
+#'
+#' @param obj A Seurat object with 10X Visium data
+#'
+#' @return A Seurat object with several columns of meta-data added:
+#' 1. igraph modularity maximization results stored in 'ig_cluster'
+#' 2. summed transcript counts within each 'ig_cluster' group in 'cluster_nCount'
+#' 3. whether the respective 'ig_cluster' group passed the automatic threshold
+#' @export
+#'
+#' @examples
+#' library(Seurat)
+#' obj = CleanSlide(obj)
+#' SpatialDimPlot(obj, group.by = 'ig_cluster')
 CleanSlide = function(obj) {
   # Get coordinates, calculate euclidean distance, create igraph object
   coord = GetTissueCoordinates(obj)
@@ -39,9 +55,9 @@ CleanSlide = function(obj) {
   # - Return all results, let the user determine if the filter is
   #   appropriate for their analysis. If not, individual clusters can
   #   be manually re-added to "pass" the threshold
-  obj = AddMetaData(obj, meta$thres.pass, 'threshold')
   obj = AddMetaData(obj, factor(meta$ig_cluster %>% ifelse(is.na(.), 'singlet', .)), 'ig_cluster')
   obj = AddMetaData(obj, meta$totalcounts, 'cluster_nCount')
+  obj = AddMetaData(obj, meta$thres.pass, 'threshold')
 
   # Store igraph object in Seurat object
   obj@misc[['igraph_qc']] = ig

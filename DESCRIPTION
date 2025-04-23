@@ -16,4 +16,6 @@ Imports:
     stats,
     tidyr
 Suggests: 
-    ggplot2
+    ggnetwork,
+    ggplot2,
+    Seurat
