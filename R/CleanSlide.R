@@ -1,9 +1,9 @@
-# Remove spots that are not part of the major tissue mass on each
-# slide by identifying which spots are connected by:
-
 #' Identify spots isolated from the largest groups of immediately adjacent spots
 #' @description
-#' 1. Identify neighboring spots on x/y coordinates with SpotGraph()
+#' Identify spots in a 10X Visium Seurat object that are potentially low
+#' quality. Mostly useful for slides where there are large areas without tissue
+#' and standard spot-filtering based on nCounts is insufficient.
+#' 1. Identify neighboring spots on x,y coordinates with SpotGraph()
 #' 2. Performing modularity maximization to identify clusters
 #' 3. Calculate total number of transcripts detected in each cluster (nCount)
 #' 4. Set a threshold to identify which clusters should be filtered out

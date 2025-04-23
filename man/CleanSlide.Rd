@@ -18,10 +18,18 @@ A Seurat object with several columns of meta-data added:
 }
 }
 \description{
+Identify spots in a 10X Visium Seurat object that are potentially low
+quality. Mostly useful for slides where there are large areas without tissue
+and standard spot-filtering based on nCounts is insufficient.
 \enumerate{
-\item Identify neighboring spots on x/y coordinates with SpotGraph()
+\item Identify neighboring spots on x,y coordinates with SpotGraph()
 \item Performing modularity maximization to identify clusters
 \item Calculate total number of transcripts detected in each cluster (nCount)
 \item Set a threshold to identify which clusters should be filtered out
 }
+}
+\examples{
+library(Seurat)
+obj = CleanSlide(obj)
+SpatialDimPlot(obj, group.by = 'ig_cluster')
 }
