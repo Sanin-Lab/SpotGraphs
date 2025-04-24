@@ -1,10 +1,3 @@
-# Create a function to plot on x,y coordinates some vertex
-# attribute from a corresponding igraph object
-# - Coordinate matrix should have two columns (x,y) with rownames
-#   matching all of the vertices in the igraph object
-# - function will assume first column is x coordinates and
-#   second column is y coordinates
-# - group.by should be a vertex attribute in the igraph object
 #' Visualize igraph vertex attribute on tissue x,y coordinates
 #'
 #' @param igraph_object An igraph object

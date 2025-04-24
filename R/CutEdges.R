@@ -1,7 +1,3 @@
-# Remove all edges that lie between pairs of clusters
-# - cluster_pairs should be a list containing two-element vectors
-#   indicating pairs of cluster names where we want to remove edges
-# - output is an updated igraph object with those edges removed
 #' Remove all edges that lie between pairs of clusters
 #'
 #' @param igraph_object An igraph object with cluster results stored.
