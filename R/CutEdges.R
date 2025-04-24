@@ -4,11 +4,11 @@
 # - output is an updated igraph object with those edges removed
 #' Remove all edges that lie between pairs of clusters
 #'
-#' @param igraph_object an igraph object with cluster results stored
-#' @param cluster_pairs a list containing two-element vectors indicating
-#' pairs of cluster names where we want to remove edges between
-#' @param cluster.col a character value with the vertex attribute name in
-#' the igraph object with clustering results
+#' @param igraph_object An igraph object with cluster results stored.
+#' @param cluster_pairs A list containing two-element vectors indicating
+#' pairs of cluster names where we want to remove edges between.
+#' @param cluster.col A character value with the vertex attribute name in
+#' the igraph object with clustering results.
 #'
 #' @return an updated igraph object with some edges removed
 #' @export

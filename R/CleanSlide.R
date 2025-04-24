@@ -8,10 +8,7 @@
 #' 3. Calculate total number of transcripts detected in each cluster (nCount)
 #' 4. Set a threshold to identify which clusters should be filtered out
 #'
-#' @importFrom stats approxfun density dist optimize
-#' @importFrom utils tail
-#'
-#' @param obj A Seurat object with 10X Visium data
+#' @param obj A Seurat object with 10X Visium data.
 #'
 #' @return A Seurat object with several columns of meta-data added:
 #' 1. igraph modularity maximization results stored in 'ig_cluster'
@@ -26,7 +23,7 @@
 CleanSlide = function(obj) {
   # Get coordinates, calculate euclidean distance, create igraph object
   coord = GetTissueCoordinates(obj)
-  ig = SpotGraph(coord[,1:2], max.dist = 30)
+  ig = SpotGraph(coord[,1:2])
 
   # Community detection via Modularity maximization
   mod_groups = cluster_fast_greedy(ig)

@@ -5,6 +5,25 @@
 # - function will assume first column is x coordinates and
 #   second column is y coordinates
 # - group.by should be a vertex attribute in the igraph object
+#' Visualize igraph vertex attribute on tissue x,y coordinates
+#'
+#' @param igraph_object An igraph object
+#' @param coord A two-column data.frame or matrix, where each column contains x or y coordinates.
+#' @param group.by Some vertex attribute to plot onto tissue coordinates. Must be
+#' present in vertex_attr(ig).
+#' @param label Logical, whether to label groups on the plot based on group.by
+#'
+#' @return a ggplot object
+#' @export
+#'
+#' @examples
+#' # Create a coordinate data frame and create and igraph object
+#' df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
+#' colnames(df) = c('x', 'y')
+#' ig = SpotGraph(df, cluster = T)
+#'
+#' # Plot cluster results
+#' SpatialPlotGraph(igraph_object = ig, coord = df, group.by = 'iglouvain_cluster')
 SpatialPlotGraph = function(igraph_object, coord, group.by, label = T) {
   ig = igraph_object
   v_names = as_ids(V(ig))

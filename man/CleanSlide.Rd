@@ -7,7 +7,7 @@
 CleanSlide(obj)
 }
 \arguments{
-\item{obj}{A Seurat object with 10X Visium data}
+\item{obj}{A Seurat object with 10X Visium data.}
 }
 \value{
 A Seurat object with several columns of meta-data added:

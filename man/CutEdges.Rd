@@ -7,13 +7,13 @@
 CutEdges(igraph_object, cluster_pairs = NULL, cluster.col = "cluster")
 }
 \arguments{
-\item{igraph_object}{an igraph object with cluster results stored}
+\item{igraph_object}{An igraph object with cluster results stored.}
 
-\item{cluster_pairs}{a list containing two-element vectors indicating
-pairs of cluster names where we want to remove edges between}
+\item{cluster_pairs}{A list containing two-element vectors indicating
+pairs of cluster names where we want to remove edges between.}
 
-\item{cluster.col}{a character value with the vertex attribute name in
-the igraph object with clustering results}
+\item{cluster.col}{A character value with the vertex attribute name in
+the igraph object with clustering results.}
 }
 \value{
 an updated igraph object with some edges removed
