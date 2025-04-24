@@ -8,6 +8,9 @@
 #' 3. Calculate total number of transcripts detected in each cluster (nCount)
 #' 4. Set a threshold to identify which clusters should be filtered out
 #'
+#' @importFrom stats approxfun density dist optimize
+#' @importFrom utils tail
+#'
 #' @param obj A Seurat object with 10X Visium data
 #'
 #' @return A Seurat object with several columns of meta-data added:
@@ -27,7 +30,8 @@ CleanSlide = function(obj) {
 
   # Community detection via Modularity maximization
   mod_groups = cluster_fast_greedy(ig)
-  ig = ig %>% set_vertex_attr('ig_cluster', index = V(ig), value = factor(mod_groups$membership))
+  ig = set_vertex_attr(ig, 'ig_cluster', index = V(ig),
+                       value = factor(mod_groups$membership))
 
   # Clustering assignments
   vertex_clusterid = data.frame(barcode = as_ids(V(ig)), ig_cluster = mod_groups$membership)

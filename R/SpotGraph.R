@@ -52,27 +52,25 @@ SpotGraph = function(coord, cluster = F, resolution = 0.5) {
   # - two columns, each column indicating end nodes
   # - each spot is a node in ST data
   edges = lapply(names(neighbors), function(xx) {
-    data.frame(adj.spot = neighbors[xx] %>%
-                 unlist(use.names = F),
+    data.frame(adj.spot = unlist(neighbors[xx], use.names = F),
                spot = names(neighbors[xx]))
-  }) %>% do.call(what = rbind) %>%
-    filter(spot != adj.spot)
+  })
+  edges = do.call(edges, what = rbind)
+  edges = dplyr::filter(edges, spot != adj.spot)
 
   # Remove duplicated edges
   edges$edgeid = apply(edges, 1, function(xx) {
     str_flatten(sort(c(xx[1], xx[2])))
   })
-  edges = edges %>%
-    filter(!duplicated(edgeid)) %>%
-    select(!matches('edgeid')) %>%
-    as.matrix
+  edges = dplyr::filter(edges, !duplicated(edgeid))
+  edges = as.matrix(dplyr::select(edges, !matches('edgeid')))
 
   # Create igraph object from edge data frame
   ig = graph_from_edgelist(edges, directed = F)
 
   if (cluster) {
-    cluster_res = factor(cluster_louvain(ig, resolution = resolution)$membership)
-    ig = set_vertex_attr(ig, name = 'iglouvain_cluster', value = cluster_res)
+    cluster_res = factor(igraph::cluster_louvain(ig, resolution = resolution)$membership)
+    ig = igraph::set_vertex_attr(ig, name = 'iglouvain_cluster', value = cluster_res)
   }
 
   return(ig)

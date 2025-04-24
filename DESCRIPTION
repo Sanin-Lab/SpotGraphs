@@ -2,7 +2,7 @@ Package: SpotGraphs
 Title: Generate igraph Objects With Visium Spot Coordinates For Basic Analysis Tasks
 Version: 0.0.0.9000
 Authors@R: 
-    person("Alex", "Lee", "alee262@jhmi.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1825-2439"))
+    person("Alex", "Lee", , "alee262@jhmi.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1825-2439"))
 Description: Use x,y coordinates from 10X Visium data to create an igraph object, which 
     can be useful to identify which spots are immediately neighboring each other and to
     provide a simple, lightweight framework to work with spatial communities of spots.
@@ -13,9 +13,12 @@ RoxygenNote: 7.3.2
 Imports: 
     dplyr,
     igraph,
+    magrittr,
+    Seurat,
     stats,
-    tidyr
+    stringr,
+    tidyr,
+    tidyselect
 Suggests: 
     ggnetwork,
-    ggplot2,
-    Seurat
+    ggplot2

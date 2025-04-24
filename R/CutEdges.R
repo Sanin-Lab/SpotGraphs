@@ -2,6 +2,44 @@
 # - cluster_pairs should be a list containing two-element vectors
 #   indicating pairs of cluster names where we want to remove edges
 # - output is an updated igraph object with those edges removed
+#' Remove all edges that lie between pairs of clusters
+#'
+#' @param igraph_object an igraph object with cluster results stored
+#' @param cluster_pairs a list containing two-element vectors indicating
+#' pairs of cluster names where we want to remove edges between
+#' @param cluster.col a character value with the vertex attribute name in
+#' the igraph object with clustering results
+#'
+#' @return an updated igraph object with some edges removed
+#' @export
+#'
+#' @examples
+#' # Create a coordinate data frame
+#' df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
+#' colnames(df) = c('x', 'y')
+#'
+#' # Create an igraph object with these coordinates
+#' ig = SpotGraph(df)
+#'
+#' # Perform clustering and add those cluster assignments to the igraph object
+#' cl = cluster_louvain(ig)$membership
+#' ig = set_vertex_attr(ig, 'cluster', value = factor(cl))
+#'
+#' # Examine graph before removing edges
+#' library(ggnetwork)
+#' ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
+#'   geom_edges() +
+#'   geom_nodes(aes(color = cluster))
+#'
+#' # Remove edges between clusters 1 and 2, and between clusters 3 and 4
+#' ig = CutEdges(igraph_object = ig,
+#'               cluster_pairs = list(c(1,2), c(1,3)),
+#'               cluster.col = 'cluster')
+#'
+#' # Examine graph after removing edges
+#' ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
+#'   geom_edges() +
+#'   geom_nodes(aes(color = cluster))
 CutEdges = function(igraph_object, cluster_pairs = NULL, cluster.col = 'cluster') {
   ig = igraph_object
 
@@ -10,7 +48,6 @@ CutEdges = function(igraph_object, cluster_pairs = NULL, cluster.col = 'cluster'
                        cluster = vertex_attr(ig, cluster.col))
 
   # create edge data frame
-  edge.df = data.frame(edges = as_ids(E(ig)))
   edge.df = as_ids(E(ig)) %>% strsplit('\\|') %>%
     do.call(what = rbind) %>% as.data.frame()
   colnames(edge.df) = c('node1', 'node2')
