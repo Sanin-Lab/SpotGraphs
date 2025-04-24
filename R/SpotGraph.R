@@ -69,7 +69,21 @@ SpotGraph = function(coord, cluster = F, resolution = 0.5) {
   ig = graph_from_edgelist(edges, directed = F)
 
   if (cluster) {
-    cluster_res = factor(igraph::cluster_louvain(ig, resolution = resolution)$membership)
+    # identify boundary nodes
+    is_boundary = degree(ig)<6
+    boundary_nodes = names(is_boundary)[is_boundary]
+    ig = set_vertex_attr(ig, name =  'is_boundary', value = is_boundary)
+
+    # calculate edge weights based on connections to boundary nodes
+    weights = as_ids(E(ig)) %>% str_split('\\|') %>%
+      sapply(function(nodes) {
+        xx = ifelse(nodes %in% boundary_nodes, 0.5, 1)
+        return(prod(xx))
+      })
+
+    # perform clustering
+    cluster_res = igraph::cluster_louvain(ig, weights = weights, resolution = resolution)
+    cluster_res = factor(cluster_res$membership)
     ig = igraph::set_vertex_attr(ig, name = 'iglouvain_cluster', value = cluster_res)
   }
 
