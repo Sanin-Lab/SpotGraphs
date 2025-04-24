@@ -20,7 +20,7 @@
 #' # Create a coordinate data frame and create and igraph object
 #' df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
 #' colnames(df) = c('x', 'y')
-#' ig = SpotGraph(df, cluster = T)
+#' ig = SpotGraph(df, cluster = TRUE)
 #'
 #' # Plot cluster results
 #' SpatialPlotGraph(igraph_object = ig, coord = df, group.by = 'iglouvain_cluster')

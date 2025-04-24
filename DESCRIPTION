@@ -16,10 +16,8 @@ Imports:
     igraph,
     magrittr,
     rlang,
-    Seurat,
     stats,
     stringr,
-    tidyr,
     tidyselect,
     utils
 Suggests: 

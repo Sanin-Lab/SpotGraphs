@@ -8,22 +8,37 @@
 #' 3. Calculate total number of transcripts detected in each cluster (nCount)
 #' 4. Set a threshold to identify which clusters should be filtered out
 #'
-#' @param obj A Seurat object with 10X Visium data.
+#' @param coord A two-column data.frame or matrix, where each column contains x or y coordinates.
+#' @param nCount A named vector of transcript counts per spot, where names are
+#' spot barcodes/ids, and each element should match each row of coord.
 #'
-#' @return A Seurat object with several columns of meta-data added:
-#' 1. igraph modularity maximization results stored in 'ig_cluster'
-#' 2. summed transcript counts within each 'ig_cluster' group in 'cluster_nCount'
-#' 3. whether the respective 'ig_cluster' group passed the automatic threshold
+#' @return A data.frame with the following columns:
+#' 1. ig_cluster: igraph modularity maximization results
+#' 2. cluster_nCount: summed transcript counts within each 'ig_cluster' group
+#' 3. threshold: whether the respective 'ig_cluster' group passed the
+#' automatically determiend threshold
+#' 4. barcode: the spot id or barcode sequence
 #' @export
 #'
 #' @examples
-#' library(Seurat)
-#' obj = CleanSlide(obj)
-#' SpatialDimPlot(obj, group.by = 'ig_cluster')
-CleanSlide = function(obj) {
+#' # Create a coordinate data frame with two isolated groups of points
+#' df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
+#' colnames(df) = c('x', 'y')
+#' nspots = dim(df)[1]
+#' rownames(df) = paste0('spot', 1:nspots)
+#'
+#' # Create some vector of transcript counts
+#' spotcounts = rbinom(25, 10000, 0.3)
+#' spotcounts = c(spotcounts, rbinom(9, 100, 0.3))
+#' names(spotcounts) = rownames(df)
+#'
+#' # The resulting data.frame should indicate that the smaller
+#' # cluster of 3x3 points did not pass the threshold, while the
+#' # larger group of 5x5 points should have passed the threshold.
+#' res = CleanSlide(coord = df, nCount = spotcounts)
+CleanSlide = function(coord, nCount) {
   # Get coordinates, calculate euclidean distance, create igraph object
-  coord = GetTissueCoordinates(obj)
-  ig = SpotGraph(coord[,1:2])
+  ig = SpotGraph(coord)
 
   # Community detection via Modularity maximization
   mod_groups = cluster_fast_greedy(ig)
@@ -31,37 +46,36 @@ CleanSlide = function(obj) {
                        value = factor(mod_groups$membership))
 
   # Clustering assignments
-  vertex_clusterid = data.frame(barcode = as_ids(V(ig)), ig_cluster = mod_groups$membership)
-  meta = obj@meta.data %>%
-    mutate(barcode = rownames(.), ig_cluster = NULL) %>%
+  vertex_clusterid = data.frame(barcode = as_ids(V(ig)), ig_cluster = vertex_attr(ig, 'ig_cluster'))
+  meta = data.frame(barcode = names(nCount), nCount = nCount) %>%
     left_join(vertex_clusterid, by = 'barcode') %>%
     suppressMessages()
 
   # Calculate total nCount per cluster
   cl.df = meta %>%
-    reframe(.by = ig_cluster, totalcounts = sum(nCount_Spatial)) %>%
-    arrange(totalcounts)
+    reframe(.by = ig_cluster, cluster_nCount = sum(nCount)) %>%
+    arrange(cluster_nCount)
 
   # Calculate nCount threshold
   # - log the total counts per cluster to smooth out the density
   # - take the mean of the top 5 clusters as the upper limit of the
   #   optimization window; this seems to work pretty well.
-  den = density(log(cl.df$totalcounts))
-  interval.max = cl.df$totalcounts %>% tail(5) %>% mean %>% log
+  den = density(log(cl.df$cluster_nCount))
+  interval.max = cl.df$cluster_nCount %>% tail(5) %>% mean %>% log
   thres = exp(optimize(approxfun(den$x,den$y),interval=c(0,interval.max))$minimum)
-  cl.df = cl.df %>% mutate(thres.pass = totalcounts > thres)
+  cl.df = cl.df %>% mutate(thres.pass = cluster_nCount > thres)
   meta = meta %>% left_join(cl.df) %>% suppressMessages()
 
   # Add results to Seurat object
   # - Return all results, let the user determine if the filter is
   #   appropriate for their analysis. If not, individual clusters can
   #   be manually re-added to "pass" the threshold
-  obj = AddMetaData(obj, factor(meta$ig_cluster %>% ifelse(is.na(.), 'singlet', .)), 'ig_cluster')
-  obj = AddMetaData(obj, meta$totalcounts, 'cluster_nCount')
-  obj = AddMetaData(obj, meta$thres.pass, 'threshold')
+  meta = meta %>%
+    mutate(ig_cluster = factor(ifelse(is.na(ig_cluster), 'singlet', ig_cluster)),
+           threshold = thres.pass, thres.pass = NULL) %>%
+    select(ig_cluster, cluster_nCount, threshold, barcode)
 
-  # Store igraph object in Seurat object
-  obj@misc[['igraph_qc']] = ig
+  rownames(meta) = meta$barcode
 
-  return(obj)
+  return(meta)
 }

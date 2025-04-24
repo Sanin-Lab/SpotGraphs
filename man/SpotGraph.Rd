@@ -32,14 +32,14 @@ df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
 colnames(df) = c('x', 'y')
 
 # Preview the points on a grid with their corresponding x,y coordinates
-ggplot(df, aes(x = x,y=y)) + geom_point()
+# ggplot(df, aes(x = x,y=y)) + geom_point()
 
 # Identify points that are immediately adjacent to each other and create an igraph object
 ig = SpotGraph(df)
 
 # Optionally view the network with ggnetwork
-library(ggnetwork)
-ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
-  geom_edges() +
-  geom_nodes()
+# library(ggnetwork)
+# ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
+#   geom_edges() +
+#   geom_nodes()
 }

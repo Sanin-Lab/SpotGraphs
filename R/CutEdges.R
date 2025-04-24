@@ -22,14 +22,14 @@
 #' ig = SpotGraph(df)
 #'
 #' # Perform clustering and add those cluster assignments to the igraph object
-#' cl = cluster_louvain(ig)$membership
-#' ig = set_vertex_attr(ig, 'cluster', value = factor(cl))
+#' cl = igraph::cluster_louvain(ig)$membership
+#' ig = igraph::set_vertex_attr(ig, 'cluster', value = factor(cl))
 #'
 #' # Examine graph before removing edges
-#' library(ggnetwork)
-#' ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
-#'   geom_edges() +
-#'   geom_nodes(aes(color = cluster))
+#' # library(ggnetwork)
+#' # ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
+#' #  geom_edges() +
+#' #  geom_nodes(aes(color = cluster))
 #'
 #' # Remove edges between clusters 1 and 2, and between clusters 3 and 4
 #' ig = CutEdges(igraph_object = ig,
@@ -37,9 +37,9 @@
 #'               cluster.col = 'cluster')
 #'
 #' # Examine graph after removing edges
-#' ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
-#'   geom_edges() +
-#'   geom_nodes(aes(color = cluster))
+#' # ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
+#' #   geom_edges() +
+#' #   geom_nodes(aes(color = cluster))
 CutEdges = function(igraph_object, cluster_pairs = NULL, cluster.col = 'cluster') {
   ig = igraph_object
 

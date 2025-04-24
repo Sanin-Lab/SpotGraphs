@@ -4,17 +4,22 @@
 \alias{CleanSlide}
 \title{Identify spots isolated from the largest groups of immediately adjacent spots}
 \usage{
-CleanSlide(obj)
+CleanSlide(coord, nCount)
 }
 \arguments{
-\item{obj}{A Seurat object with 10X Visium data.}
+\item{coord}{A two-column data.frame or matrix, where each column contains x or y coordinates.}
+
+\item{nCount}{A named vector of transcript counts per spot, where names are
+spot barcodes/ids, and each element should match each row of coord.}
 }
 \value{
-A Seurat object with several columns of meta-data added:
+A data.frame with the following columns:
 \enumerate{
-\item igraph modularity maximization results stored in 'ig_cluster'
-\item summed transcript counts within each 'ig_cluster' group in 'cluster_nCount'
-\item whether the respective 'ig_cluster' group passed the automatic threshold
+\item ig_cluster: igraph modularity maximization results
+\item cluster_nCount: summed transcript counts within each 'ig_cluster' group
+\item threshold: whether the respective 'ig_cluster' group passed the
+automatically determiend threshold
+\item barcode: the spot id or barcode sequence
 }
 }
 \description{
@@ -29,7 +34,19 @@ and standard spot-filtering based on nCounts is insufficient.
 }
 }
 \examples{
-library(Seurat)
-obj = CleanSlide(obj)
-SpatialDimPlot(obj, group.by = 'ig_cluster')
+# Create a coordinate data frame with two isolated groups of points
+df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
+colnames(df) = c('x', 'y')
+nspots = dim(df)[1]
+rownames(df) = paste0('spot', 1:nspots)
+
+# Create some vector of transcript counts
+spotcounts = rbinom(25, 10000, 0.3)
+spotcounts = c(spotcounts, rbinom(9, 100, 0.3))
+names(spotcounts) = rownames(df)
+
+# The resulting data.frame should indicate that the smaller
+# cluster of 3x3 points did not pass the threshold, while the
+# larger group of 5x5 points should have passed the threshold.
+res = CleanSlide(coord = df, nCount = spotcounts)
 }
