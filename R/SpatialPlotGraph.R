@@ -41,7 +41,7 @@ SpatialPlotGraph = function(igraph_object, coord, group.by, label = T) {
     plt = plt +
       geom_label(data = label.df,
                  aes(x = y, y = -x,
-                     label = groups, fill = groups))
+                     label = groups, fill = groups)) + #get rid of all of that
   }
   return(plt)
 }

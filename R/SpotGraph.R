@@ -33,16 +33,16 @@
 #' #   geom_edges() +
 #' #   geom_nodes()
 
-SpotGraph = function(coord, cluster = F, resolution = 0.5) {
+SpotGraph = function(coord, max.dist = NULL, cluster = F, resolution = 0.5) {
   # Get coordinates and calculate euclidean distance
   d = dist(coord, method = 'euclidean')
   m = as.matrix(d)
 
-  #Add x y coordinates
+  #Add x y coordinates to igraph object
 
   # Find the distance between two adjacent spots
-  # - assumes all adjacent spots are equidistant
-  max.dist = (2*min(d)^2)^0.5
+  # - max.dist buffered by hypotenuse if max.dist is not provided by user
+  if (is.null(max.dist)) max.dist = sqrt(2*min(d)^2)
 
   # Create igraph object from edge data frame
   ig = igraph::graph_from_adjacency_matrix(m <= max.dist, mode = "undirected", diag = F)

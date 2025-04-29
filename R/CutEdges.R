@@ -43,6 +43,9 @@ CutEdges = function(igraph_object, cluster_pairs = NULL, cluster.col = 'cluster'
   vert.df = data.frame(vertices = as_ids(V(ig)),
                        cluster = vertex_attr(ig, cluster.col))
 
+  # === update code to use igraph::crossing(), then identify edges to remove
+  # from cluster_pairs argument 4/29/2025 ===
+
   # create edge data frame
   edge.df = as_ids(E(ig)) %>% strsplit('\\|') %>%
     do.call(what = rbind) %>% as.data.frame()

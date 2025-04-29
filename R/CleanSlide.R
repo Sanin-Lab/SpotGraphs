@@ -1,8 +1,6 @@
 #' Identify spots isolated from the largest groups of immediately adjacent spots
-#' @description
-#' Identify spots in a 10X Visium Seurat object that are potentially low
-#' quality. Mostly useful for slides where there are large areas without tissue
-#' and standard spot-filtering based on nCounts is insufficient.
+#'
+#' @description Identify spots in a 10X Visium Seurat object that are potentially low quality. Mostly useful for slides where there are large areas without tissue and standard spot-filtering based on nCounts is insufficient.
 #' 1. Identify neighboring spots on x,y coordinates with SpotGraph()
 #' 2. Performing modularity maximization to identify clusters
 #' 3. Calculate total number of transcripts detected in each cluster (nCount)
@@ -42,17 +40,16 @@ CleanSlide = function(coord, nCount) {
 
   # Community detection via Modularity maximization
   mod_groups = cluster_fast_greedy(ig)
-  ig = set_vertex_attr(ig, 'ig_cluster', index = V(ig),
-                       value = factor(mod_groups$membership))
+  igraph::V(ig)$ig_cluster <- factor(mod_groups$membership)
 
   # Clustering assignments
-  vertex_clusterid = data.frame(barcode = as_ids(V(ig)), ig_cluster = vertex_attr(ig, 'ig_cluster'))
+  vertex_clusterid = data.frame(barcode = names(V(ig)), ig_cluster = igraph::V(ig)$ig_cluster)
   meta = data.frame(barcode = names(nCount), nCount = nCount) %>%
-    left_join(vertex_clusterid, by = 'barcode') %>%
-    suppressMessages()
+    left_join(vertex_clusterid, by = 'barcode')
 
   # Calculate total nCount per cluster
   cl.df = meta %>%
+    # reframe(.by = ig_cluster, cluster_nCount = sum(nCount)/dplyr::n()) %>% #consider averaging counts
     reframe(.by = ig_cluster, cluster_nCount = sum(nCount)) %>%
     arrange(cluster_nCount)
 
@@ -60,9 +57,9 @@ CleanSlide = function(coord, nCount) {
   # - log the total counts per cluster to smooth out the density
   # - take the mean of the top 5 clusters as the upper limit of the
   #   optimization window; this seems to work pretty well.
-  den = density(log(cl.df$cluster_nCount))
-  interval.max = cl.df$cluster_nCount %>% tail(5) %>% mean %>% log
-  thres = exp(optimize(approxfun(den$x,den$y),interval=c(0,interval.max))$minimum)
+  den = density(log10(cl.df$cluster_nCount))
+  interval.max = cl.df$cluster_nCount %>% tail(5) %>% mean %>% log10 #consider a different interval
+  thres = 10^(optimize(approxfun(den$x,den$y),interval=c(0,interval.max))$minimum)
   cl.df = cl.df %>% mutate(thres.pass = cluster_nCount > thres)
   meta = meta %>% left_join(cl.df) %>% suppressMessages()
 
@@ -71,9 +68,8 @@ CleanSlide = function(coord, nCount) {
   #   appropriate for their analysis. If not, individual clusters can
   #   be manually re-added to "pass" the threshold
   meta = meta %>%
-    mutate(ig_cluster = factor(ifelse(is.na(ig_cluster), 'singlet', ig_cluster)),
-           threshold = thres.pass, thres.pass = NULL) %>%
-    select(ig_cluster, cluster_nCount, threshold, barcode)
+    mutate(ig_cluster = factor(ifelse(is.na(ig_cluster), 'singlet', ig_cluster))) %>%
+    select(ig_cluster, cluster_nCount, threshold = thres.pass, barcode)
 
   rownames(meta) = meta$barcode
 
