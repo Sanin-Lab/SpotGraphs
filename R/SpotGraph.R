@@ -38,54 +38,36 @@ SpotGraph = function(coord, cluster = F, resolution = 0.5) {
   d = dist(coord, method = 'euclidean')
   m = as.matrix(d)
 
+  #Add x y coordinates
+
   # Find the distance between two adjacent spots
   # - assumes all adjacent spots are equidistant
-  max.dist = min(d) + 1
-
-  # Identify whether a spot is immediately neighboring another spot
-  # - this algorithm seems robust to a range of distance thresholds
-  #   to identify neighbors, as long as this threshold is larger than
-  #   the minimum distance between spots.
-  neighbors = apply(m < max.dist, 1, function(spot) colnames(m)[spot])
-
-  # Create edge data frame
-  # - two columns, each column indicating end nodes
-  # - each spot is a node in ST data
-  edges = lapply(names(neighbors), function(xx) {
-    data.frame(adj.spot = unlist(neighbors[xx], use.names = F),
-               spot = names(neighbors[xx]))
-  })
-  edges = do.call(edges, what = rbind)
-  edges = dplyr::filter(edges, spot != adj.spot)
-
-  # Remove duplicated edges
-  edges$edgeid = apply(edges, 1, function(xx) {
-    str_flatten(sort(c(xx[1], xx[2])))
-  })
-  edges = dplyr::filter(edges, !duplicated(edgeid))
-  edges = as.matrix(dplyr::select(edges, !matches('edgeid')))
+  max.dist = (2*min(d)^2)^0.5
 
   # Create igraph object from edge data frame
-  ig = graph_from_edgelist(edges, directed = F)
+  ig = igraph::graph_from_adjacency_matrix(m <= max.dist, mode = "undirected", diag = F)
 
-  if (cluster) {
-    # identify boundary nodes
-    is_boundary = degree(ig)<6
-    boundary_nodes = names(is_boundary)[is_boundary]
-    ig = set_vertex_attr(ig, name =  'is_boundary', value = is_boundary)
+  # identify boundary nodes
+  is_boundary = degree(ig) < max(degree(ig))
+  boundary_nodes = names(is_boundary)[is_boundary]
+  ig = set_vertex_attr(ig, name =  'is_boundary', value = is_boundary)
 
-    # calculate edge weights based on connections to boundary nodes
-    weights = as_ids(E(ig)) %>% str_split('\\|') %>%
-      sapply(function(nodes) {
-        xx = ifelse(nodes %in% boundary_nodes, 0.5, 1)
-        return(prod(xx))
-      })
+  # calculate edge weights based on connections to boundary nodes
+  weights = as_ids(E(ig)) %>% str_split('\\|') %>%
+    sapply(function(nodes) {
+      xx = ifelse(nodes %in% boundary_nodes, 0.5, 1)
+      return(prod(xx))
+    })
 
-    # perform clustering
-    cluster_res = igraph::cluster_louvain(ig, weights = weights, resolution = resolution)
-    cluster_res = factor(cluster_res$membership)
-    ig = igraph::set_vertex_attr(ig, name = 'iglouvain_cluster', value = cluster_res)
-  }
+  # Add weights to graph
+  igraph::E(ig)$weight <- weights
+
+  # if (cluster) {
+  #   # perform clustering
+  #   cluster_res = igraph::cluster_louvain(ig, weights = weights, resolution = resolution)
+  #   cluster_res = factor(cluster_res$membership)
+  #   ig = igraph::set_vertex_attr(ig, name = 'iglouvain_cluster', value = cluster_res)
+  # }
 
   return(ig)
 }
