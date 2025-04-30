@@ -1,7 +1,8 @@
 #' Visualize igraph vertex attribute on tissue x,y coordinates
 #'
 #' @param igraph_object An igraph object
-#' @param coord A two-column data.frame or matrix, where each column contains x or y coordinates.
+#' @param coord (optional) A two-column data.frame or matrix, where each column contains x or y coordinates.
+#' if not provided, will look for coord_x and coord_y attributes in the provided igraph object.
 #' @param group.by Some vertex attribute to plot onto tissue coordinates. Must be
 #' present in vertex_attr(ig).
 #' @param label Logical, whether to label groups on the plot based on group.by
@@ -16,23 +17,31 @@
 #' ig = SpotGraph(df, cluster = TRUE)
 #'
 #' # Plot cluster results
-#' SpatialPlotGraph(igraph_object = ig, coord = df, group.by = 'iglouvain_cluster')
-SpatialPlotGraph = function(igraph_object, coord, group.by, label = T) {
+#' SpatialPlotGraph(igraph_object = ig, coord = df, group.by = 'is_boundary')
+SpatialPlotGraph = function(igraph_object, coord = NULL, group.by, label = T) {
   ig = igraph_object
-  v_names = as_ids(V(ig))
-  if(!all(rownames(coord) %in% v_names)) {
-    stop('igraph vertices do not match coordinates')
+
+  # Check if coordinates are provided, if not assume they are
+  # stored in the igraph object from running SpotGraph()
+  if (is.null(coord)) {
+    coord = data.frame(coord_x = V(ig)$coord_x, coord_y = V(ig)$coord_y)
+  } else {
+    colnames(coord) = c('coord_x', 'coord_y')
+    if(!all(rownames(coord) %in% names(V(ig)))) {
+      stop('igraph vertices do not match coordinates')
+    }
   }
 
-  # Join coordinates together with vertex information
-  colnames(coord) = c('x', 'y')
-  coord = coord %>% mutate(barcode = rownames(.))
-  df = data.frame(barcode = as_ids(V(ig)), groups = vertex_attr(ig, group.by))
-  df = df %>% left_join(coord, by = 'barcode')
+  # Create data.frame with all igraph vertex attributes and
+  # coordinates for geom_segment using ggnetwork
+  df = ggnetwork::ggnetwork(ig, layout = as.matrix(coord))
+  df$groups = df[,group.by]
 
   # Create plot
-  plt = ggplot(df, aes(x = y, y = -x)) +
-    geom_point(aes(color = groups))
+  plt = ggplot(df, aes(x = x, y = y)) +
+    geom_segment(aes( xend = xend, yend = yend, alpha = weight)) +
+    geom_point(aes(color = groups)) +
+    guides(color = guide_legend(title = group.by))
 
   # Label groups if desired
   if (label) {
@@ -40,8 +49,8 @@ SpatialPlotGraph = function(igraph_object, coord, group.by, label = T) {
       reframe(.by = groups, x = mean(x), y = mean(y))
     plt = plt +
       geom_label(data = label.df,
-                 aes(x = y, y = -x,
-                     label = groups, fill = groups)) + #get rid of all of that
+                 aes(x = x, y = y, label = groups, fill = groups),
+                 show.legend = F)
   }
   return(plt)
 }
