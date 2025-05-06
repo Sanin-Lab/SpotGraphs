@@ -42,29 +42,33 @@ CleanSlide = function(coord, nCount) {
   ig = SpotGraph(coord)
 
   # Community detection via Modularity maximization
-  mod_groups = cluster_fast_greedy(ig)
-  igraph::V(ig)$ig_cluster <- factor(mod_groups$membership)
+  cl = igraph::cluster_fast_greedy(ig)
+  igraph::V(ig)$ig_cluster <- factor(cl$membership)
 
   # Clustering assignments
   vertex_clusterid = data.frame(barcode = names(V(ig)), ig_cluster = igraph::V(ig)$ig_cluster)
   meta = data.frame(barcode = names(nCount), nCount = nCount) %>%
-    left_join(vertex_clusterid, by = 'barcode')
+    dplyr::left_join(vertex_clusterid, by = 'barcode')
 
   # Calculate total nCount per cluster
   cl.df = meta %>%
     # reframe(.by = ig_cluster, cluster_nCount = sum(nCount)/dplyr::n()) %>% #consider averaging counts
-    reframe(.by = ig_cluster, cluster_nCount = sum(nCount)) %>%
-    arrange(cluster_nCount)
+    dplyr::reframe(.by = ig_cluster, cluster_nCount = sum(nCount)) %>%
+    dplyr::arrange(cluster_nCount)
 
   # Calculate nCount threshold
   # - log the total counts per cluster to smooth out the density
   # - take the mean of the top 5 clusters as the upper limit of the
   #   optimization window; this seems to work pretty well.
   den = density(log10(cl.df$cluster_nCount))
-  interval.max = cl.df$cluster_nCount %>% tail(5) %>% mean %>% log10 #consider a different interval
-  thres = 10^(optimize(approxfun(den$x,den$y),interval=c(0,interval.max))$minimum)
-  cl.df = cl.df %>% mutate(thres.pass = cluster_nCount > thres)
-  meta = meta %>% left_join(cl.df) %>% suppressMessages()
+  # interval.max = cl.df$cluster_nCount %>% tail(5) %>% mean %>% log10
+  int.min = quantile(den$x, 0.1) #previously 0, but this may be too low
+  int.max = quantile(den$x, 0.75) #maybe 3rd quantile?
+  interval = c(int.min, int.max)
+  thres = approxfun(den$x, den$y) %>% optimise(interval=interval)
+  thres = 10^(thres$minimum)
+  cl.df = cl.df %>% dplyr::mutate(thres.pass = cluster_nCount > thres)
+  meta = meta %>% dplyr::left_join(cl.df, by = 'ig_cluster')
 
   # Add results to Seurat object
   # - Return all results, let the user determine if the filter is
