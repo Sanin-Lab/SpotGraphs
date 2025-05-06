@@ -23,9 +23,7 @@ automatically determiend threshold
 }
 }
 \description{
-Identify spots in a 10X Visium Seurat object that are potentially low
-quality. Mostly useful for slides where there are large areas without tissue
-and standard spot-filtering based on nCounts is insufficient.
+Identify spots in a 10X Visium Seurat object that are potentially low quality. Mostly useful for slides where there are large areas without tissue and standard spot-filtering based on nCounts is insufficient.
 \enumerate{
 \item Identify neighboring spots on x,y coordinates with SpotGraph()
 \item Performing modularity maximization to identify clusters
@@ -34,6 +32,7 @@ and standard spot-filtering based on nCounts is insufficient.
 }
 }
 \examples{
+\dontrun{
 # Create a coordinate data frame with two isolated groups of points
 df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
 colnames(df) = c('x', 'y')
@@ -49,4 +48,5 @@ names(spotcounts) = rownames(df)
 # cluster of 3x3 points did not pass the threshold, while the
 # larger group of 5x5 points should have passed the threshold.
 res = CleanSlide(coord = df, nCount = spotcounts)
+}
 }

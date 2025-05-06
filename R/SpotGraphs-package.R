@@ -11,6 +11,7 @@
 #' @importFrom ggplot2 aes
 #' @importFrom ggplot2 geom_label
 #' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 geom_segment
 #' @importFrom ggplot2 ggplot
 #' @importFrom igraph as_ids
 #' @importFrom igraph cluster_fast_greedy

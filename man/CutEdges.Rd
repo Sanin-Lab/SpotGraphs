@@ -22,6 +22,7 @@ an updated igraph object with some edges removed
 Remove all edges that lie between pairs of clusters
 }
 \examples{
+\dontrun{
 # Create a coordinate data frame
 df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
 colnames(df) = c('x', 'y')
@@ -34,10 +35,7 @@ cl = igraph::cluster_louvain(ig)$membership
 ig = igraph::set_vertex_attr(ig, 'cluster', value = factor(cl))
 
 # Examine graph before removing edges
-# library(ggnetwork)
-# ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
-#  geom_edges() +
-#  geom_nodes(aes(color = cluster))
+SpatialPlotGraph(ig, group.by = 'cluster')
 
 # Remove edges between clusters 1 and 2, and between clusters 3 and 4
 ig = CutEdges(igraph_object = ig,
@@ -45,7 +43,6 @@ ig = CutEdges(igraph_object = ig,
               cluster.col = 'cluster')
 
 # Examine graph after removing edges
-# ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
-#   geom_edges() +
-#   geom_nodes(aes(color = cluster))
+SpatialPlotGraph(ig, group.by = 'cluster')
+}
 }

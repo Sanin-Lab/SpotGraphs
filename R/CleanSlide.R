@@ -19,6 +19,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Create a coordinate data frame with two isolated groups of points
 #' df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
 #' colnames(df) = c('x', 'y')
@@ -34,6 +35,8 @@
 #' # cluster of 3x3 points did not pass the threshold, while the
 #' # larger group of 5x5 points should have passed the threshold.
 #' res = CleanSlide(coord = df, nCount = spotcounts)
+#' }
+
 CleanSlide = function(coord, nCount) {
   # Get coordinates, calculate euclidean distance, create igraph object
   ig = SpotGraph(coord)

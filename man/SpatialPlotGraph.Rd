@@ -4,12 +4,13 @@
 \alias{SpatialPlotGraph}
 \title{Visualize igraph vertex attribute on tissue x,y coordinates}
 \usage{
-SpatialPlotGraph(igraph_object, coord, group.by, label = T)
+SpatialPlotGraph(igraph_object, coord = NULL, group.by, label = T)
 }
 \arguments{
 \item{igraph_object}{An igraph object}
 
-\item{coord}{A two-column data.frame or matrix, where each column contains x or y coordinates.}
+\item{coord}{(optional) A two-column data.frame or matrix, where each column contains x or y coordinates.
+if not provided, will look for coord_x and coord_y attributes in the provided igraph object.}
 
 \item{group.by}{Some vertex attribute to plot onto tissue coordinates. Must be
 present in vertex_attr(ig).}
@@ -23,11 +24,13 @@ a ggplot object
 Visualize igraph vertex attribute on tissue x,y coordinates
 }
 \examples{
+\dontrun{
 # Create a coordinate data frame and create and igraph object
 df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
 colnames(df) = c('x', 'y')
-ig = SpotGraph(df, cluster = TRUE)
+ig = SpotGraph(df)
 
 # Plot cluster results
-SpatialPlotGraph(igraph_object = ig, coord = df, group.by = 'iglouvain_cluster')
+SpatialPlotGraph(igraph_object = ig, group.by = 'is_boundary')
+}
 }
