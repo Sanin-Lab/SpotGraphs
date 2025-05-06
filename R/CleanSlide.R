@@ -75,8 +75,8 @@ CleanSlide = function(coord, nCount) {
   #   appropriate for their analysis. If not, individual clusters can
   #   be manually re-added to "pass" the threshold
   meta = meta %>%
-    mutate(ig_cluster = factor(ifelse(is.na(ig_cluster), 'singlet', ig_cluster))) %>%
-    select(ig_cluster, cluster_nCount, threshold = thres.pass, barcode)
+    dplyr::mutate(ig_cluster = factor(ifelse(is.na(ig_cluster), 'singlet', ig_cluster))) %>%
+    dplyr::select(ig_cluster, cluster_nCount, threshold = thres.pass, barcode)
 
   rownames(meta) = meta$barcode
 

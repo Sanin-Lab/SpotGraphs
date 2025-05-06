@@ -26,7 +26,7 @@ SpatialPlotGraph = function(igraph_object, coord = NULL, group.by, label = T) {
   # Check if coordinates are provided, if not assume they are
   # stored in the igraph object from running SpotGraph()
   if (is.null(coord)) {
-    coord = data.frame(coord_x = V(ig)$coord_x, coord_y = V(ig)$coord_y)
+    coord = data.frame(coord_x = igraph::V(ig)$coord_x, coord_y = igraph::V(ig)$coord_y)
   } else {
     colnames(coord) = c('coord_x', 'coord_y')
     if(!all(rownames(coord) %in% names(V(ig)))) {
@@ -48,7 +48,7 @@ SpatialPlotGraph = function(igraph_object, coord = NULL, group.by, label = T) {
   # Label groups if desired
   if (label) {
     label.df = df %>%
-      reframe(.by = groups, x = mean(x), y = mean(y))
+      dplyr::reframe(.by = groups, x = mean(x), y = mean(y))
     plt = plt +
       geom_label(data = label.df,
                  aes(x = x, y = y, label = groups, fill = groups),

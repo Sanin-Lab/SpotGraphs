@@ -44,8 +44,10 @@ CutEdges = function(igraph_object, cluster_pairs = NULL, cluster.col = 'cluster'
   # from cluster_pairs argument 4/29/2025 ===
 
   # create edge data frame
-  edge.df = as_ids(E(ig)) %>% strsplit('\\|') %>%
-    do.call(what = rbind) %>% as.data.frame()
+  edge.df = as_ids(E(ig)) %>%
+    strsplit('\\|') %>%
+    do.call(what = rbind) %>%
+    as.data.frame()
   colnames(edge.df) = c('node1', 'node2')
 
   # match each node to their respective cluster id
@@ -53,14 +55,14 @@ CutEdges = function(igraph_object, cluster_pairs = NULL, cluster.col = 'cluster'
     mutate(node1_cl = vert.df$cluster[match(node1, vert.df$vertices)],
            node2_cl = vert.df$cluster[match(node2, vert.df$vertices)])
   edge.df$edge_cl = apply(edge.df, 1, function(i) {
-    str_flatten(sort(c(i['node1_cl'], i['node2_cl'])), collapse = '_')
+    stringr::str_flatten(sort(c(i['node1_cl'], i['node2_cl'])), collapse = '_')
   })
 
   # remove edges between cluster pairs
   cluster_pairs = lapply(cluster_pairs, function(x) {
-    sort(x) %>% str_flatten(collapse = '_')
+    sort(x) %>% stringr::str_flatten(collapse = '_')
   }) %>% unlist
-  edge.df = edge.df %>% filter(edge_cl %in% cluster_pairs)
+  edge.df = edge.df %>% dplyr::filter(edge_cl %in% cluster_pairs)
   ig = igraph::delete_edges(ig, paste(edge.df$node1, edge.df$node2, sep = '|'))
   return(ig)
 }
