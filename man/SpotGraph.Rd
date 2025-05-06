@@ -15,6 +15,14 @@ SpotGraph(
 \arguments{
 \item{coord}{A two-column data.frame or matrix, where each column contains x or y coordinates.}
 
+\item{dist.buffer}{Influences the maximum distance a node is allowed to be from another
+node to be considered a neighbor. Only used if max.dist = NULL.}
+
+\item{max.dist}{The furthest a node should be from another node to be considered neighbors.
+If NULL (default), the shortest distance between any two nodes is the minimum distance (min.dist)
+required for two nodes to be considered neighbors, and the max.dist is calculated as the hypotenuse
+of a triangle with two sides of length min.dist, and then is multiplied by dist.buffer.}
+
 \item{cluster}{Whether clustering should be performed on the igraph object.}
 
 \item{resolution}{If cluster = T, a higher number will return more clusters and
