@@ -57,16 +57,7 @@ CleanSlide = function(coord, nCount) {
     dplyr::arrange(cluster_nCount)
 
   # Calculate nCount threshold
-  # - log the total counts per cluster to smooth out the density
-  # - take the mean of the top 5 clusters as the upper limit of the
-  #   optimization window; this seems to work pretty well.
-  den = density(log10(cl.df$cluster_nCount))
-  # interval.max = cl.df$cluster_nCount %>% tail(5) %>% mean %>% log10
-  int.min = quantile(den$x, 0.1) #previously 0, but this may be too low
-  int.max = quantile(den$x, 0.75) #maybe 3rd quantile?
-  interval = c(int.min, int.max)
-  thres = approxfun(den$x, den$y) %>% optimise(interval=interval)
-  thres = 10^(thres$minimum)
+  thres = get_threshold(cl.df$cluster_nCount)
   cl.df = cl.df %>% dplyr::mutate(thres.pass = cluster_nCount > thres)
   meta = meta %>% dplyr::left_join(cl.df, by = 'ig_cluster')
 
@@ -82,3 +73,22 @@ CleanSlide = function(coord, nCount) {
 
   return(meta)
 }
+
+# helper to calculate threshold, given a vector of transcript counts
+get_threshold = function(nCount) {
+  # log the total counts per cluster to smooth out the density
+  den = density(log10(nCount))
+
+  # define an interval to check for local minima
+  # - nCount should all be positive, so ignore negatives values in the density function
+  int.min = quantile(den$x[den$x>0], 0.05) #previous value of 0 might be to low
+  int.max = quantile(den$x[den$x>0], 0.75) #maybe 3rd quantile?
+  interval = c(int.min, int.max)
+
+  # calculate local minima
+  thres = approxfun(den$x, den$y) %>% optimise(interval=interval)
+  thres = 10^(thres$minimum)
+  return(thres)
+}
+
+
