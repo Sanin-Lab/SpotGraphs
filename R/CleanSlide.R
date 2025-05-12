@@ -80,9 +80,8 @@ get_threshold = function(nCount) {
   den = density(log10(nCount))
 
   # define an interval to check for local minima
-  # - nCount should all be positive, so ignore negatives values in the density function
-  int.min = quantile(den$x[den$x>0], 0.05) #previous value of 0 might be to low
-  int.max = quantile(den$x[den$x>0], 0.75) #maybe 3rd quantile?
+  int.min = quantile(den$x, 0.05) #previous value of 0 might be to low
+  int.max = quantile(den$x, 0.75) #maybe 3rd quantile?
   interval = c(int.min, int.max)
 
   # calculate local minima
