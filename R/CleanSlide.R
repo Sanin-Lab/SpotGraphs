@@ -52,7 +52,6 @@ CleanSlide = function(coord, nCount) {
 
   # Calculate total nCount per cluster
   cl.df = meta %>%
-    # reframe(.by = ig_cluster, cluster_nCount = sum(nCount)/dplyr::n()) %>% #consider averaging counts
     dplyr::reframe(.by = ig_cluster, cluster_nCount = sum(nCount)) %>%
     dplyr::arrange(cluster_nCount)
 

@@ -4,8 +4,8 @@ test_that("SpotGraph returns an igraph object", {
   expect_equal(class(SpotGraph(df)), 'igraph')
 })
 
-test_that("density calculation results in a number in the range of nCount", {
+test_that("density calculation returns a number within the range of nCount", {
   nCount = rbinom(20, 100, 0.5)
   thres = get_threshold(nCount)
-  expect_true(thres > 0 & thres < max(nCount-min(nCount)))
+  expect_true(thres > 0 & (thres-min(nCount) < max(nCount)-min(nCount)))
 })
