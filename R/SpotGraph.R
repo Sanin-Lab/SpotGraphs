@@ -76,13 +76,6 @@ SpotGraph = function(coord, dist.buffer = 1.05, max.dist = NULL,
   # Add weights to graph
   igraph::E(ig)$weight <- weights
 
-  # if (cluster) {
-  #   # perform clustering
-  #   cluster_res = igraph::cluster_louvain(ig, weights = weights, resolution = resolution)
-  #   cluster_res = factor(cluster_res$membership)
-  #   ig = igraph::set_vertex_attr(ig, name = 'iglouvain_cluster', value = cluster_res)
-  # }
-
   return(ig)
 }
 
