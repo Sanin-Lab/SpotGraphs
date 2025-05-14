@@ -11,11 +11,6 @@
 #' If NULL (default), the shortest distance between any two nodes is the minimum distance (min.dist)
 #' required for two nodes to be considered neighbors, and the max.dist is calculated as the hypotenuse
 #' of a triangle with two sides of length min.dist, and then is multiplied by dist.buffer.
-#' @param cluster Whether clustering should be performed on the igraph object.
-#' @param resolution If cluster = T, a higher number will return more clusters and
-#' a lower number will return fewer clusters. Clustering results are stored in the
-#' returned igraph object under the name 'iglouvain_cluster' and can be accessed
-#' by vertex_attr(igraph, 'iglouvain_cluster').
 #
 #' @return an igraph object, where each vertex (i.e., node) corresponds to each
 #' row in the coord input, with un-weighted edges between vertices that are
@@ -41,8 +36,7 @@
 #'   geom_edges() +
 #'   geom_nodes()
 #' }
-SpotGraph = function(coord, dist.buffer = 1.05, max.dist = NULL,
-                     cluster = F, resolution = 0.5) {
+SpotGraph = function(coord, dist.buffer = 1.05, max.dist = NULL) {
   # Get coordinates and calculate euclidean distance
   d = dist(coord, method = 'euclidean')
   m = as.matrix(d)
