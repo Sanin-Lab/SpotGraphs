@@ -41,7 +41,7 @@ SpatialPlotGraph = function(igraph_object, coord = NULL, group.by, label = T) {
 
   # Create plot
   plt = ggplot(df, aes(x = x, y = y)) +
-    geom_segment(aes( xend = xend, yend = yend, alpha = weight)) +
+    geom_segment(aes(xend = xend, yend = yend, alpha = weight)) +
     geom_point(aes(color = groups)) +
     guides(color = guide_legend(title = group.by))
 
