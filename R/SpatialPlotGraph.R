@@ -20,7 +20,12 @@
 #' # Plot cluster results
 #' SpatialPlotGraph(igraph_object = ig, group.by = 'is_boundary')
 #' }
-SpatialPlotGraph = function(igraph_object, coord = NULL, group.by, label = TRUE, flip.axes = TRUE) {
+SpatialPlotGraph = function(igraph_object,
+                            coord = NULL,
+                            group.by = 'is_boundary',
+                            label = FALSE,
+                            flip.axes = TRUE,
+                            pt.size.factor = 1.6) {
   ig = igraph_object
 
   # Check if coordinates are provided, if not assume they are
@@ -49,7 +54,7 @@ SpatialPlotGraph = function(igraph_object, coord = NULL, group.by, label = TRUE,
   # Create plot
   plt = ggplot(df, aes(x = x, y = y)) +
     geom_segment(aes(xend = xend, yend = yend, alpha = weight)) +
-    geom_point(aes(color = groups)) +
+    geom_point(aes(color = groups), size = pt.size.factor) +
     guides(color = guide_legend(title = group.by))
 
   # Label groups if desired
