@@ -6,7 +6,7 @@
 #' @param group.by Some vertex attribute to plot onto tissue coordinates. Must be
 #' present in vertex_attr(ig).
 #' @param label Logical, whether to label groups on the plot based on group.by
-#'
+#' @param flip.axes Default is TRUE. Invert the x and y axes, typically needed with coordinates from Visium Seurat objects to align the spots with the tissue image.
 #' @return a ggplot object
 #' @export
 #'
@@ -20,7 +20,7 @@
 #' # Plot cluster results
 #' SpatialPlotGraph(igraph_object = ig, group.by = 'is_boundary')
 #' }
-SpatialPlotGraph = function(igraph_object, coord = NULL, group.by, label = T) {
+SpatialPlotGraph = function(igraph_object, coord = NULL, group.by, label = TRUE, flip.axes = TRUE) {
   ig = igraph_object
 
   # Check if coordinates are provided, if not assume they are
@@ -32,6 +32,13 @@ SpatialPlotGraph = function(igraph_object, coord = NULL, group.by, label = T) {
     if(!all(rownames(coord) %in% names(V(ig)))) {
       stop('igraph vertices do not match coordinates')
     }
+  }
+
+  if (flip.axes) {
+    coord$x.new = coord$coord_y
+    coord$y.new = -coord$coord_x
+    coord[,c('coord_x', 'coord_y')] = NULL
+    colnames(coord) = c('coord_x', 'coord_y')
   }
 
   # Create data.frame with all igraph vertex attributes and
