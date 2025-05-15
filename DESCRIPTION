@@ -2,7 +2,8 @@ Package: SpotGraphs
 Title: Generate igraph Objects With Visium Spot Coordinates For Basic Analysis Tasks
 Version: 0.0.0.9000
 Authors@R: 
-    person("Alex", "Lee", , "alee262@jhmi.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1825-2439"))
+    c(person("Alex", "Lee", , "alee262@jhmi.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1825-2439")),
+      person("David", "Sanin", , "david.sanin@jhu.edu", role = c("aut"), comment = c(ORCID = "0000-0003-0188-7267")))
 Description: Use x,y coordinates from 10X Visium data to create an igraph object, which 
     can be useful to identify which spots are immediately neighboring each other and to
     provide a simple, lightweight framework to work with spatial communities of spots.
@@ -24,4 +25,4 @@ Suggests:
     ggnetwork,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://potential-adventure-or7z9q9.pages.github.io/
+URL: https://sanin-lab.github.io/SpotGraphs/
