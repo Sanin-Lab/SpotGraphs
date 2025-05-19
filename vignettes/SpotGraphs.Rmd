@@ -1,0 +1,19 @@
+---
+title: "SpotGraphs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SpotGraphs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SpotGraphs)
+```
