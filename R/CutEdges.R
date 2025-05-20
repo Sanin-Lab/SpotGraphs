@@ -37,30 +37,35 @@ CutEdges = function(igraph_object, cluster_pairs = NULL, cluster.col = 'cluster'
   ig = igraph_object
 
   # get data frame matching vertices with cluster ids
-  vert.df = data.frame(vertices = as_ids(V(ig)),
-                       cluster = vertex_attr(ig, cluster.col))
+  vert.df = data.frame(vertices = igraph::as_ids(igraph::V(ig)),
+                       cluster = igraph::vertex_attr(ig, cluster.col))
 
   # === update code to use igraph::crossing(), then identify edges to remove
   # from cluster_pairs argument 4/29/2025 ===
 
   # create edge data frame
-  edge.df = as_ids(E(ig)) %>%
-    strsplit('\\|') %>%
+  edge.df = igraph::as_ids(igraph::E(ig)) %>%
+    stringr::str_split('\\|') %>%
     do.call(what = rbind) %>%
     as.data.frame()
   colnames(edge.df) = c('node1', 'node2')
 
   # match each node to their respective cluster id
   edge.df = edge.df %>%
-    mutate(node1_cl = vert.df$cluster[match(node1, vert.df$vertices)],
-           node2_cl = vert.df$cluster[match(node2, vert.df$vertices)])
+    dplyr::mutate(node1_cl = vert.df$cluster[match(node1, vert.df$vertices)],
+                  node2_cl = vert.df$cluster[match(node2, vert.df$vertices)])
   edge.df$edge_cl = apply(edge.df, 1, function(i) {
-    stringr::str_flatten(sort(c(i['node1_cl'], i['node2_cl'])), collapse = '_')
+    # sort the cluster ids as characters; this is more reliable
+    # than coercing to numeric since node ids could be characters.
+    node_clusterid = as.character(c(i['node1_cl'], i['node2_cl']))
+    stringr::str_flatten(sort(node_clusterid), collapse = '_')
   })
 
   # remove edges between cluster pairs
   cluster_pairs = lapply(cluster_pairs, function(x) {
-    sort(x) %>% stringr::str_flatten(collapse = '_')
+    # coerce to character to match edge.df
+    pair_of_clusters = as.character(x)
+    sort(pair_of_clusters) %>% stringr::str_flatten(collapse = '_')
   }) %>% unlist
   edge.df = edge.df %>% dplyr::filter(edge_cl %in% cluster_pairs)
   ig = igraph::delete_edges(ig, paste(edge.df$node1, edge.df$node2, sep = '|'))
