@@ -4,7 +4,14 @@
 \alias{SpatialPlotGraph}
 \title{Visualize igraph vertex attribute on tissue x,y coordinates}
 \usage{
-SpatialPlotGraph(igraph_object, coord = NULL, group.by, label = T)
+SpatialPlotGraph(
+  igraph_object,
+  coord = NULL,
+  group.by = "is_boundary",
+  label = FALSE,
+  flip.axes = TRUE,
+  pt.size.factor = 1.6
+)
 }
 \arguments{
 \item{igraph_object}{An igraph object}
@@ -16,6 +23,8 @@ if not provided, will look for coord_x and coord_y attributes in the provided ig
 present in vertex_attr(ig).}
 
 \item{label}{Logical, whether to label groups on the plot based on group.by}
+
+\item{flip.axes}{Default is TRUE. Invert the x and y axes, typically needed with coordinates from Visium Seurat objects to align the spots with the tissue image.}
 }
 \value{
 a ggplot object
