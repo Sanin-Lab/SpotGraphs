@@ -31,4 +31,4 @@ VignetteBuilder: knitr
 Depends: 
     R (>= 3.5)
 LazyData: true
-URL: https://potential-adventure-or7z9q9.pages.github.io/
+URL: https://sanin-lab.github.io/SpotGraphs/

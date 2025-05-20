@@ -8,6 +8,13 @@
 \description{
 Use x,y coordinates from 10X Visium data to create an igraph object, which can be useful to identify which spots are immediately neighboring each other and to provide a simple, lightweight framework to work with spatial communities of spots.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://sanin-lab.github.io/SpotGraphs/}
+}
+
+}
 \author{
 \strong{Maintainer}: Alex Lee \email{alee262@jhmi.edu} (\href{https://orcid.org/0000-0002-1825-2439}{ORCID})
 
