@@ -81,7 +81,8 @@ spot_clusters_to_remove = c(9, 10, 23, 24, 26, 22, 15, 18, 19, 17, 20, 25)
 scc_s1 = scc_s1[, !scc_s1$ig_cluster %in% spot_clusters_to_remove]
 Seurat::SpatialFeaturePlot(scc_s1, features = 'nCount_Spatial', pt.size.factor = 2)
 ```
-# CutEdges
+
+## CutEdges
 When working with an igraph object, it may be desirable to remove all edges between two groups of spots. 
 
 ```{r, fig.width=8, fig.height=4}

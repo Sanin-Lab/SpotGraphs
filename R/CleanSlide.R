@@ -8,7 +8,7 @@
 #'
 #' @param coord A two-column data.frame or matrix, where each column contains x or y coordinates.
 #' @param nCount A named vector of transcript counts per spot, where names are
-#' spot barcodes/ids, and each element should match each row of coord.
+#' spot barcodes/ids, and each element should match each row of `coord`.
 #'
 #' @return A data.frame with the following columns:
 #' 1. ig_cluster: igraph modularity maximization results

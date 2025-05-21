@@ -2,11 +2,12 @@
 #'
 #' @param igraph_object An igraph object
 #' @param coord (optional) A two-column data.frame or matrix, where each column contains x or y coordinates.
-#' if not provided, will look for coord_x and coord_y attributes in the provided igraph object.
+#' if not provided, will look for `coord_x` and `coord_y` attributes in the provided igraph object.
 #' @param group.by Some vertex attribute to plot onto tissue coordinates. Must be
-#' present in vertex_attr(ig).
-#' @param label Logical, whether to label groups on the plot based on group.by
+#' present in `vertex_attr(ig)`.
+#' @param label Logical, whether to label groups on the plot based on `group.by`.
 #' @param flip.axes Default is TRUE. Invert the x and y axes, typically needed with coordinates from Visium Seurat objects to align the spots with the tissue image.
+#' @param pt.size Numeric input to determine size of each point on the plot. Used as the size parameter in `geom_point()`.
 #' @return a ggplot object
 #' @export
 #'
@@ -25,7 +26,7 @@ SpatialPlotGraph = function(igraph_object,
                             group.by = 'is_boundary',
                             label = FALSE,
                             flip.axes = TRUE,
-                            pt.size.factor = 1.6) {
+                            pt.size = 1.6) {
   ig = igraph_object
 
   # Check if coordinates are provided, if not assume they are
@@ -54,7 +55,7 @@ SpatialPlotGraph = function(igraph_object,
   # Create plot
   plt = ggplot(df, aes(x = x, y = y)) +
     geom_segment(aes(xend = xend, yend = yend, alpha = weight)) +
-    geom_point(aes(color = groups), size = pt.size.factor) +
+    geom_point(aes(color = groups), size = pt.size) +
     guides(color = guide_legend(title = group.by))
 
   # Label groups if desired

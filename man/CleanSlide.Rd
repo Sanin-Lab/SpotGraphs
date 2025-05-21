@@ -10,7 +10,7 @@ CleanSlide(coord, nCount)
 \item{coord}{A two-column data.frame or matrix, where each column contains x or y coordinates.}
 
 \item{nCount}{A named vector of transcript counts per spot, where names are
-spot barcodes/ids, and each element should match each row of coord.}
+spot barcodes/ids, and each element should match each row of \code{coord}.}
 }
 \value{
 A data.frame with the following columns:

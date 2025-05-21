@@ -10,21 +10,23 @@ SpatialPlotGraph(
   group.by = "is_boundary",
   label = FALSE,
   flip.axes = TRUE,
-  pt.size.factor = 1.6
+  pt.size = 1.6
 )
 }
 \arguments{
 \item{igraph_object}{An igraph object}
 
 \item{coord}{(optional) A two-column data.frame or matrix, where each column contains x or y coordinates.
-if not provided, will look for coord_x and coord_y attributes in the provided igraph object.}
+if not provided, will look for \code{coord_x} and \code{coord_y} attributes in the provided igraph object.}
 
 \item{group.by}{Some vertex attribute to plot onto tissue coordinates. Must be
-present in vertex_attr(ig).}
+present in \code{vertex_attr(ig)}.}
 
-\item{label}{Logical, whether to label groups on the plot based on group.by}
+\item{label}{Logical, whether to label groups on the plot based on \code{group.by}.}
 
 \item{flip.axes}{Default is TRUE. Invert the x and y axes, typically needed with coordinates from Visium Seurat objects to align the spots with the tissue image.}
+
+\item{pt.size}{Numeric input to determine size of each point on the plot. Used as the size parameter in \code{geom_point()}.}
 }
 \value{
 a ggplot object

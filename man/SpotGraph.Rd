@@ -10,16 +10,16 @@ SpotGraph(coord, dist.buffer = 1.05, max.dist = NULL)
 \item{coord}{A two-column data.frame or matrix, where each column contains x or y coordinates.}
 
 \item{dist.buffer}{Influences the maximum distance a node is allowed to be from another
-node to be considered a neighbor. Only used if max.dist = NULL.}
+node to be considered a neighbor. Only used if \code{max.dist = NULL}.}
 
 \item{max.dist}{The furthest a node should be from another node to be considered neighbors.
-If NULL (default), the shortest distance between any two nodes is the minimum distance (min.dist)
-required for two nodes to be considered neighbors, and the max.dist is calculated as the hypotenuse
-of a triangle with two sides of length min.dist, and then is multiplied by dist.buffer.}
+If NULL (default), the shortest distance between any two nodes is the minimum distance (\code{min.dist})
+required for two nodes to be considered neighbors, and the \code{max.dist} is calculated as the hypotenuse
+of a triangle with two sides of length \code{min.dist}, and then is multiplied by \code{dist.buffer}.}
 }
 \value{
 an igraph object, where each vertex (i.e., node) corresponds to each
-row in the coord input, with un-weighted edges between vertices that are
+row in the \code{coord} input, with un-weighted edges between vertices that are
 immediately adjacent to each other.
 }
 \description{

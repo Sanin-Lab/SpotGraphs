@@ -6,14 +6,14 @@
 #'
 #' @param coord A two-column data.frame or matrix, where each column contains x or y coordinates.
 #' @param dist.buffer Influences the maximum distance a node is allowed to be from another
-#' node to be considered a neighbor. Only used if max.dist = NULL.
+#' node to be considered a neighbor. Only used if `max.dist = NULL`.
 #' @param max.dist The furthest a node should be from another node to be considered neighbors.
-#' If NULL (default), the shortest distance between any two nodes is the minimum distance (min.dist)
-#' required for two nodes to be considered neighbors, and the max.dist is calculated as the hypotenuse
-#' of a triangle with two sides of length min.dist, and then is multiplied by dist.buffer.
+#' If NULL (default), the shortest distance between any two nodes is the minimum distance (`min.dist`)
+#' required for two nodes to be considered neighbors, and the `max.dist` is calculated as the hypotenuse
+#' of a triangle with two sides of length `min.dist`, and then is multiplied by `dist.buffer`.
 #
 #' @return an igraph object, where each vertex (i.e., node) corresponds to each
-#' row in the coord input, with un-weighted edges between vertices that are
+#' row in the `coord` input, with un-weighted edges between vertices that are
 #' immediately adjacent to each other.
 #' @export
 #'
