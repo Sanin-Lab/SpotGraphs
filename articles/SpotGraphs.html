@@ -109,10 +109,10 @@ the spots on our slide.</p>
 <span></span>
 <span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpotGraph.html">SpotGraph</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span><span class="op">)</span></span>
 <span><span class="va">ig</span></span>
-<span><span class="co">#&gt; IGRAPH 75654d1 UNW- 1185 3189 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 5a42bda UNW- 1185 3189 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l),</span></span>
 <span><span class="co">#&gt; | weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 75654d1 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 5a42bda (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] AAACACCAATAACTGC-1--AGGCGGTTTGTCCCGC-1</span></span>
 <span><span class="co">#&gt;  [2] AAACACCAATAACTGC-1--CTCGTCGAGGGCTCAT-1</span></span>
 <span><span class="co">#&gt;  [3] AAACACCAATAACTGC-1--GAAACATAGGAAACAG-1</span></span>
@@ -178,9 +178,13 @@ spot is immediately adjacent to other spots.</p>
 <span><span class="co">#&gt; Not validating FOV objects</span></span>
 <span><span class="co">#&gt; Warning: Not validating Seurat objects</span></span>
 <span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">scc_s1</span>, features <span class="op">=</span> <span class="st">'nCount_Spatial'</span>, pt.size.factor <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-8-1.png" width="576">
-# CutEdges When working with an igraph object, it may be desirable to
-remove all edges between two groups of spots.</p>
+<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
+</div>
+<div class="section level2">
+<h2 id="cutedges">CutEdges<a class="anchor" aria-label="anchor" href="#cutedges"></a>
+</h2>
+<p>When working with an igraph object, it may be desirable to remove all
+edges between two groups of spots.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create igraph object</span></span>
 <span><span class="va">coord</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
@@ -203,8 +207,11 @@ remove all edges between two groups of spots.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span>, face <span class="op">=</span> <span class="st">'bold'</span><span class="op">)</span>,</span>
 <span>        legend.position <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt1</span>, <span class="va">plt2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
+<span><span class="va">plt3</span> <span class="op">=</span> <span class="va">plt2</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.35</span>,<span class="fl">0.8</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.4</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'after/zoomed'</span><span class="op">)</span></span>
+<span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt1</span>, <span class="va">plt2</span>, <span class="va">plt3</span><span class="op">)</span></span></code></pre></div>
+<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-9-1.png" width="1056"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

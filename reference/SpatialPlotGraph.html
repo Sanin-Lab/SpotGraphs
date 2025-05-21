@@ -44,7 +44,7 @@
 <span>  group.by <span class="op">=</span> <span class="st">"is_boundary"</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  flip.axes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  pt.size.factor <span class="op">=</span> <span class="fl">1.6</span></span>
+<span>  pt.size <span class="op">=</span> <span class="fl">1.6</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -58,20 +58,24 @@
 
 <dt id="arg-coord">coord<a class="anchor" aria-label="anchor" href="#arg-coord"></a></dt>
 <dd><p>(optional) A two-column data.frame or matrix, where each column contains x or y coordinates.
-if not provided, will look for coord_x and coord_y attributes in the provided igraph object.</p></dd>
+if not provided, will look for <code>coord_x</code> and <code>coord_y</code> attributes in the provided igraph object.</p></dd>
 
 
 <dt id="arg-group-by">group.by<a class="anchor" aria-label="anchor" href="#arg-group-by"></a></dt>
 <dd><p>Some vertex attribute to plot onto tissue coordinates. Must be
-present in vertex_attr(ig).</p></dd>
+present in <code>vertex_attr(ig)</code>.</p></dd>
 
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
-<dd><p>Logical, whether to label groups on the plot based on group.by</p></dd>
+<dd><p>Logical, whether to label groups on the plot based on <code>group.by</code>.</p></dd>
 
 
 <dt id="arg-flip-axes">flip.axes<a class="anchor" aria-label="anchor" href="#arg-flip-axes"></a></dt>
 <dd><p>Default is TRUE. Invert the x and y axes, typically needed with coordinates from Visium Seurat objects to align the spots with the tissue image.</p></dd>
+
+
+<dt id="arg-pt-size">pt.size<a class="anchor" aria-label="anchor" href="#arg-pt-size"></a></dt>
+<dd><p>Numeric input to determine size of each point on the plot. Used as the size parameter in <code>geom_point()</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
