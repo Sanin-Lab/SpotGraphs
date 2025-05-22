@@ -22,10 +22,15 @@ Imports:
     tidyselect,
     utils
 Suggests: 
+    AnnotationHub,
+    ExperimentHub,
     ggnetwork,
     knitr,
+    patchwork,
     rmarkdown,
-    testthat (>= 3.0.0)
+    TENxVisiumData,
+    testthat (>= 3.0.0),
+    viridis
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Depends: 
