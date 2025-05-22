@@ -56,7 +56,8 @@ SpatialPlotGraph = function(igraph_object,
   plt = ggplot(df, aes(x = x, y = y)) +
     geom_segment(aes(xend = xend, yend = yend, alpha = weight)) +
     geom_point(aes(color = groups), size = pt.size) +
-    guides(color = guide_legend(title = group.by))
+    guides(color = guide_legend(title = group.by)) +
+    theme_classic()
 
   # Label groups if desired
   if (label) {
