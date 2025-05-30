@@ -1,0 +1,150 @@
+---
+title: "ThresholdTests"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ThresholdTests}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Test different strategies to automatically detect a threshold for filtering
+
+```{r setup}
+library(SpotGraphs)
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(ggplot2)
+library(viridis)
+library(patchwork)
+```
+
+## Load several datasets to get a survey of potential cluster_nCount distributions
+```{r}
+# retrieve data from TENxVisium
+eh = ExperimentHub::ExperimentHub()
+q = AnnotationHub::query(eh, 'TENxVisium')
+ds.names = c('HumanLymphNode', 
+             'MouseBrainCoronal',
+             'HumanColorectalCancer_v3.13',
+             'HumanSpinalCord_v3.13',
+             'HumanGlioblastoma_v3.13',
+             'MouseKidneyCoronal_v3.13')
+id = q$ah_id[q$title %in% ds.names]
+spe.ls = lapply(id, function(ds.id) eh[[ds.id]])
+names(spe.ls) = ds.names %>% str_replace('\\.', '_')
+```
+
+## Use CleanSlide to get cluster_nCounts
+```{r}
+spe.ls = lapply(spe.ls, function(spe) {
+  colData(spe)$nCount = colSums(assay(spe))
+  return(spe)
+})
+res.ls = lapply(spe.ls, function(spe) {
+  coord = SpatialExperiment::spatialCoords(spe) %>% as.data.frame()
+  colnames(coord) = c('x', 'y')
+  CleanSlide(coord = coord, nCount = spe$nCount)
+})
+```
+
+## Store the result dataframe in each SpatialExperiment object
+```{r}
+for (ds.name in names(res.ls)) {
+  colData(spe.ls[[ds.name]]) = cbind(colData(spe.ls[[ds.name]]), res.ls[[ds.name]])
+}
+```
+
+
+## Plot distributions of each dataset
+```{r}
+den = density(log10(cluster_nCount.ls$HumanLymphNode))
+df = data.frame(x=den$x, y=den$y)
+ggplot(df, aes(x=x, y=y)) +
+  geom_line() +
+  theme_classic()
+```
+
+
+
+```{r}
+ImageFeature = function(obj, feature = 'nCount', label = F) {
+  # First, scale the x,y coordinates to fit the low-res H&E image
+  lowres_scale <- imgData(obj)[imgData(obj)$image_id == 'lowres', 'scaleFactor']
+  coord.xy = SpatialExperiment::spatialCoords(obj) %>% as.data.frame()
+  coord.xy$x_axis <- coord.xy$pxl_row_in_fullres * lowres_scale
+  coord.xy$y_axis <- coord.xy$pxl_col_in_fullres * lowres_scale
+    
+  # Flip the y-axis
+  coord.xy$y_axis <- abs(coord.xy$y_axis - (ncol(imgRaster(obj)) + 1))
+    
+  # Get metadata feature from object
+  coord.xy[,feature] = colData(obj)[,feature]
+
+  # Create plot of transcripts per spot overlaid ontop of H&E
+  plt = ggplot(mapping = aes(1:600, 1:600)) +
+    annotation_raster(imgRaster(obj), 
+                      xmin = 1, xmax = 600, 
+                      ymin = 1, ymax = 600) +
+    geom_point(data=coord.xy, alpha=0.5, size = 0.5,
+               aes(x=x_axis, y=y_axis, colour=get(feature))) +
+    scale_color_viridis(option = 'turbo', name = feature) +
+    coord_cartesian(xlim = c(1,600), 
+                    ylim = c(1,600)) +
+    coord_fixed() +
+    theme_void()
+  
+  if (label) {
+    df.labels = coord.xy %>% 
+      reframe(.by = feature, 
+              x_axis = mean(x_axis),
+              y_axis = mean(y_axis))
+    
+    plt = plt +
+      geom_label(data = df.labels, aes(x=x_axis, y=y_axis, label = get(feature)))
+  }
+  return(plt)
+}
+
+tmp = ImageFeature(spe.ls[[1]], feature = 'cluster_nCount', label = T)
+plt.ncount = lapply(names(spe.ls), function(ds.name) {
+  ImageFeature(spe.ls[[ds.name]], feature = 'cluster_nCount', label = T) +
+    ggtitle(ds.name) +
+    theme(plot.title = element_text(hjust = 0.5, face = 'bold'))
+})
+wrap_plots(plt.ncount, ncol = 3)
+```
+
+## Extract cluster_nCount per dataset
+```{r}
+cluster_nCount.ls = lapply(res.ls, function(res) {
+  unique(res$cluster_nCount)
+})
+```
+
+## Write the current helper function to identify the threshold
+```{r}
+# helper to calculate threshold, given a vector of transcript counts
+get_threshold = function(cluster_nCount) {
+  # log the total counts per cluster to smooth out the density
+  den = density(log10(cluster_nCount))
+
+  # define an interval to check for local minima
+  int.min = quantile(den$x, 0.05) #previous value of 0 might be to low
+  int.max = quantile(den$x, 0.75) #maybe 3rd quantile?
+  interval = c(int.min, int.max)
+
+  # calculate local minima
+  thres = approxfun(den$x, den$y) %>% optimise(interval=interval)
+  thres = 10^(thres$minimum)
+  return(thres)
+}
+```
+

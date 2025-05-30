@@ -74,9 +74,9 @@ CleanSlide = function(coord, nCount) {
 }
 
 # helper to calculate threshold, given a vector of transcript counts
-get_threshold = function(nCount) {
+get_threshold = function(cluster_nCount) {
   # log the total counts per cluster to smooth out the density
-  den = density(log10(nCount))
+  den = density(log10(cluster_nCount))
 
   # define an interval to check for local minima
   int.min = quantile(den$x, 0.05) #previous value of 0 might be to low
