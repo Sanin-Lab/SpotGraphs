@@ -1,5 +1,6 @@
-# Functions to aid in Visium ST data analysis with igraph
 # SpotGraphs <a href="https://sanin-lab.github.io/SpotGraphs/"><img src="man/figures/logo.png" align="right" height="139" alt="SpotGraphs website" /></a>
+
+# Functions to aid in Visium ST data analysis with igraph
 
 ## Current functions in this repo:
 1. `SpotGraph(coord, dist.buffer = 1.05, max.dist = NULL)`
