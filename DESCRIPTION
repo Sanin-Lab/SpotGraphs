@@ -28,8 +28,10 @@ Suggests:
     knitr,
     patchwork,
     rmarkdown,
+    Seurat,
     TENxVisiumData,
     testthat (>= 3.0.0),
+    tidyr,
     viridis
 Config/testthat/edition: 3
 VignetteBuilder: knitr
