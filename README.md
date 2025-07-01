@@ -1,7 +1,7 @@
-# SpotGraphs [![R-CMD-check](https://github.com/Sanin-Lab/SpotGraphs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Sanin-Lab/SpotGraphs/actions/workflows/R-CMD-check.yaml) <href="https://sanin-lab.github.io/SpotGraphs/"><img src="man/figures/logo.png" align="right" height="139" alt="SpotGraphs website" />
+# SpotGraphs [![R-CMD-check](https://github.com/Sanin-Lab/SpotGraphs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Sanin-Lab/SpotGraphs/actions/workflows/R-CMD-check.yaml) <a href="https://sanin-lab.github.io/SpotGraphs/"><img src="man/figures/logo.png" align="right" height="139" alt="SpotGraphs website" /></a>
 
 
-## Functions to aid in Visium ST data analysis with igraph
+## Functions to aid in Visium spatial transcriptomics data analysis with igraph
 
 ### Current functions in this repo:
 1. `SpotGraph(coord, dist.buffer = 1.05, max.dist = NULL)`
