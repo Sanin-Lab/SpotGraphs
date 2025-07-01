@@ -27,6 +27,7 @@
 #' @importFrom stats density
 #' @importFrom stats dist
 #' @importFrom stats optimize
+#' @importFrom stats quantile
 #' @importFrom stringr str_flatten
 #' @importFrom stringr str_split
 #' @importFrom tidyselect matches

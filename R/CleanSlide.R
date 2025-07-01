@@ -84,7 +84,7 @@ get_threshold = function(cluster_nCount) {
   interval = c(int.min, int.max)
 
   # calculate local minima
-  thres = approxfun(den$x, den$y) %>% optimise(interval=interval)
+  thres = approxfun(den$x, den$y) %>% optimize(interval=interval)
   thres = 10^(thres$minimum)
   return(thres)
 }
