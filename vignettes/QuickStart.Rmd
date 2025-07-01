@@ -21,7 +21,7 @@ library(dplyr)
 ```
 
 ## Load example dataset
-```{r}
+```{r, eval = F}
 # retrieve data from TENxVisium
 eh = ExperimentHub::ExperimentHub()
 q = AnnotationHub::query(eh, 'TENxVisium')
@@ -30,7 +30,7 @@ spe = eh[[id]]
 ```
 
 ## Filter stray spots
-```{r}
+```{r, eval = F}
 # 1. prepare CleanSlide() inputs
 coord.xy = SpatialExperiment::spatialCoords(spe) %>% as.data.frame()
 ncount = colSums(assay(spe))

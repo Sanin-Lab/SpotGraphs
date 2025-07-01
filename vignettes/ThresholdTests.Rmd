@@ -27,7 +27,7 @@ library(patchwork)
 ```
 
 ## Load several datasets to get a survey of potential cluster_nCount distributions
-```{r}
+```{r, eval = F}
 # retrieve data from TENxVisium
 eh = ExperimentHub::ExperimentHub()
 q = AnnotationHub::query(eh, 'TENxVisium')
@@ -43,7 +43,7 @@ names(spe.ls) = ds.names %>% str_replace('\\.', '_')
 ```
 
 ## Use CleanSlide to get cluster_nCounts
-```{r}
+```{r, eval = F}
 spe.ls = lapply(spe.ls, function(spe) {
   colData(spe)$nCount = colSums(assay(spe))
   return(spe)
@@ -56,7 +56,7 @@ res.ls = lapply(spe.ls, function(spe) {
 ```
 
 ## Store the result dataframe in each SpatialExperiment object
-```{r}
+```{r, eval = F}
 for (ds.name in names(res.ls)) {
   colData(spe.ls[[ds.name]]) = cbind(colData(spe.ls[[ds.name]]), res.ls[[ds.name]])
 }
@@ -64,7 +64,7 @@ for (ds.name in names(res.ls)) {
 
 
 ## Plot distributions of each dataset
-```{r}
+```{r, eval = F}
 den = density(log10(cluster_nCount.ls$HumanLymphNode))
 df = data.frame(x=den$x, y=den$y)
 ggplot(df, aes(x=x, y=y)) +
@@ -74,7 +74,7 @@ ggplot(df, aes(x=x, y=y)) +
 
 
 
-```{r}
+```{r, eval = F}
 ImageFeature = function(obj, feature = 'nCount', label = F) {
   # First, scale the x,y coordinates to fit the low-res H&E image
   lowres_scale <- imgData(obj)[imgData(obj)$image_id == 'lowres', 'scaleFactor']
@@ -123,14 +123,14 @@ wrap_plots(plt.ncount, ncol = 3)
 ```
 
 ## Extract cluster_nCount per dataset
-```{r}
+```{r, eval = F}
 cluster_nCount.ls = lapply(res.ls, function(res) {
   unique(res$cluster_nCount)
 })
 ```
 
 ## Write the current helper function to identify the threshold
-```{r}
+```{r, eval = F}
 # helper to calculate threshold, given a vector of transcript counts
 get_threshold = function(cluster_nCount) {
   # log the total counts per cluster to smooth out the density

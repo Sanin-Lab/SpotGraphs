@@ -6,6 +6,8 @@
 \alias{SpotGraphs-package}
 \title{SpotGraphs: Generate igraph Objects With Visium Spot Coordinates For Basic Analysis Tasks}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Use x,y coordinates from 10X Visium data to create an igraph object, which can be useful to identify which spots are immediately neighboring each other and to provide a simple, lightweight framework to work with spatial communities of spots.
 }
 \seealso{

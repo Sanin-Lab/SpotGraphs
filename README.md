@@ -3,7 +3,25 @@
 
 ## Functions to aid in Visium spatial transcriptomics data analysis with igraph
 
-### Current functions in this repo:
+## Motivation
+
+## Method overview
+
+## Installation
+
+## Usage
+
+## Tutorials and Applications
+
+### Quick overview
+
+### Creating and igraph object
+
+### Filtering low quality spots on tissue debris
+
+### Identifying centers of neighborhoods
+
+## Current functions in this repo:
 1. `SpotGraph(coord, dist.buffer = 1.05, max.dist = NULL)`
    - this will create an igraph object given a 2-column data frame or matrix of x,y coordinates
    - each node = a spot, where an edge exists between two spots if they are adjacent to each other

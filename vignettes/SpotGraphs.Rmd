@@ -24,65 +24,29 @@ library(ggnetwork)
 ```
 
 ## Load example dataset
-To demonstrate the general usage of SpotGraph, will use the Human Glioblastoma 10X Visium dataset from the 
-TENxVisiumData package. 
+To demonstrate the general usage of SpotGraph, will use a 10X Visium dataset from a squamous cell carcinoma patient, downloaded from GSE208253. The raw data from GEO is provided as a Seurat object in this package to use as an example.
+
 
 ```{r}
-# retrieve data from TENxVisium
-eh = ExperimentHub::ExperimentHub()
-q = AnnotationHub::query(eh, 'TENxVisium')
-id = q$ah_id[q$title=='HumanGlioblastoma_v3.13']
-spe = eh[[id]]
-
-# inspect the loaded SpatialExperiment object
-class(spe)
-dim(spe)
+class(scc_s1)
+dim(scc_s1)
 ```
-Next, let's plot the number of transcripts in each spot and overlay it onto the image of the tissue sample from this dataset.
-
-```{r, fig.width = 5.5, fig.height = 6.5}
-# First, scale the x,y coordinates to fit the low-res H&E image
-lowres_scale <- imgData(spe)[imgData(spe)$image_id == 'lowres', 'scaleFactor']
-coord.xy = SpatialExperiment::spatialCoords(spe) %>% as.data.frame()
-coord.xy$x_axis <- coord.xy$pxl_row_in_fullres * lowres_scale
-coord.xy$y_axis <- coord.xy$pxl_col_in_fullres * lowres_scale
-
-# Flip the y-axis
-coord.xy$y_axis <- abs(coord.xy$y_axis - (ncol(imgRaster(spe)) + 1))
-
-# Calculate the number of transcripts per spot
-coord.xy$ncount = colSums(assay(spe))
-
-# Get the dimensions of the image
-dim(imgRaster(spe))
-
-# Create plot of transcripts per spot overlaid ontop of H&E
-ggplot(mapping = aes(1:600, 1:600)) +
-  annotation_raster(imgRaster(spe), 
-                    xmin = 1, xmax = 600, 
-                    ymin = 1, ymax = 600) +
-  geom_point(data=coord.xy, alpha=0.5,
-             aes(x=x_axis, y=y_axis, colour=ncount)) +
-  scale_color_viridis(option = 'turbo') +
-  coord_cartesian(xlim = c(1,600),
-                  ylim = c(1,600)) +
-  coord_fixed() +
-  theme_void()
-```
-
-From the above plot, we see that although all spots are indeed ontop of tissue, there are a handful of spots at the bottom left that seem to be lying ontop of tissue debris that has torn off of the rest of the sample. We provide a simple, automated method to remove these spots from our dataset for downstream analysis.
 
 ## Create an igraph object
 Our goal with this package is support Visium analysis by providing a function that constructs an igraph object based on the number of immediately adjacent spots on a slide. This opens up the analysis pipeline to various igraph functions to perform certain tasks such as:
 
-1.
-2.
-3.
+1. identifying spots lying on tissue debris to be removed from downstream analysis
+2. distance calculations between spots by measuring the shortest path through the network between each spot
+3. easily identifying edges of pre-defined regions of tissue
 
 To construct an igraph object, all we need are the x,y coordinates of the spots on our slide.
 
 ```{r}
-ig = SpotGraph(coord = coord.xy[c('x_axis', 'y_axis')])
+coord = Seurat::GetTissueCoordinates(scc_s1)
+coord = coord[,c('x', 'y')]
+head(coord)
+
+ig = SpotGraph(coord = coord)
 ig
 ```
 
@@ -97,7 +61,7 @@ plt.ggnet = ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
 
 plt.spg = SpatialPlotGraph(igraph_object = ig, 
                            group.by = 'is_boundary', 
-                           flip.axes = F, 
+                           flip.axes = T, 
                            pt.size = 0.5)
 
 patchwork::wrap_plots(plt.ggnet, plt.spg)
@@ -111,20 +75,20 @@ First, we extract the two inputs required for the `CleanSlide()` function:
 
 1. the x,y coordinates of each spot in our dataset
 2. a vector of transcript counts detected in each spot
-```{r, eval = F}
+```{r}
 coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = coord[,c('x', 'y')]
 nCounts = scc_s1$nCount_Spatial
 ```
 
 The output of `CleanSlide()` is a data.frame with the same number of rows as the input coordinate data.frame or matrix that can be directly used with `Seurat::AddMetaData()` to re-insert back into the original Seurat object.
-```{r, eval = F}
+```{r}
 res = CleanSlide(coord, nCount = nCounts)
 scc_s1 = Seurat::AddMetaData(scc_s1, res)
 ```
 
 We can now observe the results of `CleanSlide()` with `Seurat::SpatialDimPlot()`
-```{r, fig.width=6, fig.height=4, message=FALSE, eval = F}
+```{r, fig.width=6, fig.height=4, message=FALSE}
 Seurat::SpatialDimPlot(scc_s1, group.by = 'threshold', image.alpha = 0.6)
 ```
 
@@ -143,9 +107,9 @@ Seurat::SpatialFeaturePlot(scc_s1, features = 'nCount_Spatial', pt.size.factor =
 ## CutEdges
 When working with an igraph object, it may be desirable to remove all edges between two groups of spots. 
 
-```{r, fig.width=11, fig.height=4, eval = F}
+```{r, fig.width=11, fig.height=4}
 # Create igraph object
-coord = GetTissueCoordinates(scc_s1)
+coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = coord[,c('x', 'y')]
 ig = SpotGraph(coord)
 
