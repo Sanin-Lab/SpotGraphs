@@ -38,4 +38,5 @@ VignetteBuilder: knitr
 Depends: 
     R (>= 3.5)
 LazyData: true
+LazyDataCompression:bzip2
 URL: https://sanin-lab.github.io/SpotGraphs/
