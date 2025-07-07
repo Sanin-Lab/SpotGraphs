@@ -1,6 +1,20 @@
 #' @keywords internal
 "_PACKAGE"
 
+utils::globalVariables(c('barcode',
+                         'cluster_nCount',
+                         'edge_cl',
+                         'groups',
+                         'ig_cluster',
+                         'node1',
+                         'node2',
+                         'thres.pass',
+                         'weight',
+                         'x',
+                         'y',
+                         'xend',
+                         'yend'))
+
 ## usethis namespace: start
 #' @importFrom dplyr arrange
 #' @importFrom dplyr filter
@@ -13,6 +27,9 @@
 #' @importFrom ggplot2 geom_point
 #' @importFrom ggplot2 geom_segment
 #' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 guide_legend
+#' @importFrom ggplot2 guides
+#' @importFrom ggplot2 theme_classic
 #' @importFrom igraph as_ids
 #' @importFrom igraph cluster_fast_greedy
 #' @importFrom igraph cluster_louvain
