@@ -14,9 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-Test different strategies to automatically detect a threshold for filtering
+## Test different strategies to automatically detect a threshold for filtering
 
-```{r setup}
+```{r setup, message=FALSE, warning=FALSE}
 library(SpotGraphs)
 library(dplyr)
 library(stringr)
@@ -26,8 +26,8 @@ library(viridis)
 library(patchwork)
 ```
 
-## Load several datasets to get a survey of potential cluster_nCount distributions
-```{r, eval = F}
+### Load several datasets to get a survey of potential cluster_nCount distributions
+```{r Load Data, message=FALSE, warning=FALSE, eval = T}
 # retrieve data from TENxVisium
 eh = ExperimentHub::ExperimentHub()
 q = AnnotationHub::query(eh, 'TENxVisium')
@@ -42,8 +42,8 @@ spe.ls = lapply(id, function(ds.id) eh[[ds.id]])
 names(spe.ls) = ds.names %>% str_replace('\\.', '_')
 ```
 
-## Use CleanSlide to get cluster_nCounts
-```{r, eval = F}
+### Use CleanSlide to get cluster_nCounts
+```{r Calculate total transcripts in each cluster, eval = T}
 spe.ls = lapply(spe.ls, function(spe) {
   colData(spe)$nCount = colSums(assay(spe))
   return(spe)
@@ -55,26 +55,15 @@ res.ls = lapply(spe.ls, function(spe) {
 })
 ```
 
-## Store the result dataframe in each SpatialExperiment object
-```{r, eval = F}
+### Store the result dataframe in each SpatialExperiment object
+```{r Store results in SPE objects, eval = T}
 for (ds.name in names(res.ls)) {
   colData(spe.ls[[ds.name]]) = cbind(colData(spe.ls[[ds.name]]), res.ls[[ds.name]])
 }
 ```
 
-
-## Plot distributions of each dataset
-```{r, eval = F}
-den = density(log10(cluster_nCount.ls$HumanLymphNode))
-df = data.frame(x=den$x, y=den$y)
-ggplot(df, aes(x=x, y=y)) +
-  geom_line() +
-  theme_classic()
-```
-
-
-
-```{r, eval = F}
+### Define a function to plot nCounts on tissue image
+```{r Define plotting function, eval = T}
 ImageFeature = function(obj, feature = 'nCount', label = F) {
   # First, scale the x,y coordinates to fit the low-res H&E image
   lowres_scale <- imgData(obj)[imgData(obj)$image_id == 'lowres', 'scaleFactor']
@@ -94,7 +83,7 @@ ImageFeature = function(obj, feature = 'nCount', label = F) {
                       xmin = 1, xmax = 600, 
                       ymin = 1, ymax = 600) +
     geom_point(data=coord.xy, alpha=0.5, size = 0.5,
-               aes(x=x_axis, y=y_axis, colour=get(feature))) +
+               aes_string(x='x_axis', y='y_axis', color=feature)) +
     scale_color_viridis(option = 'turbo', name = feature) +
     coord_cartesian(xlim = c(1,600), 
                     ylim = c(1,600)) +
@@ -103,48 +92,107 @@ ImageFeature = function(obj, feature = 'nCount', label = F) {
   
   if (label) {
     df.labels = coord.xy %>% 
-      reframe(.by = feature, 
+      reframe(.by = all_of(feature), 
               x_axis = mean(x_axis),
               y_axis = mean(y_axis))
     
     plt = plt +
-      geom_label(data = df.labels, aes(x=x_axis, y=y_axis, label = get(feature)))
+      geom_label(data = df.labels, 
+                 aes_string(x='x_axis', y='y_axis', label = feature, color=feature))
   }
   return(plt)
 }
+```
 
-tmp = ImageFeature(spe.ls[[1]], feature = 'cluster_nCount', label = T)
+### Plot spotgraph cluster nCounts on tissue images
+```{r Plot counts on tissue images, message=FALSE, warning=FALSE, fig.width=8, fig.height=10, eval = T}
 plt.ncount = lapply(names(spe.ls), function(ds.name) {
-  ImageFeature(spe.ls[[ds.name]], feature = 'cluster_nCount', label = T) +
+  ImageFeature(spe.ls[[ds.name]], feature = 'cluster_nCount', label = F) +
     ggtitle(ds.name) +
     theme(plot.title = element_text(hjust = 0.5, face = 'bold'))
 })
-wrap_plots(plt.ncount, ncol = 3)
+
+wrap_plots(plt.ncount, ncol = 2)
 ```
 
-## Extract cluster_nCount per dataset
-```{r, eval = F}
+
+### Extract cluster_nCount per dataset
+```{r , eval = T}
 cluster_nCount.ls = lapply(res.ls, function(res) {
   unique(res$cluster_nCount)
 })
 ```
 
-## Write the current helper function to identify the threshold
+### Plot density distributions for each slide
+```{r, fig.width=7, fig.height=7, eval = T}
+den.ls = lapply(cluster_nCount.ls, function(xx) {
+  den = density(log10(xx))
+})
+
+density_plots = lapply(names(den.ls), function(ds.name) {
+  den = den.ls[[ds.name]]
+  df = data.frame(x = den$x, y = den$y)
+  ggplot(df, aes(x = x, y = y)) +
+    geom_line() +
+    ggtitle(ds.name) +
+    theme_bw() +
+    theme(plot.title = element_text(hjust = 0.5, face = 'bold'))
+})
+
+wrap_plots(density_plots, ncol = 2)
+```
+
+
+### Calculate intervals with various strategies
 ```{r, eval = F}
-# helper to calculate threshold, given a vector of transcript counts
-get_threshold = function(cluster_nCount) {
-  # log the total counts per cluster to smooth out the density
-  den = density(log10(cluster_nCount))
 
-  # define an interval to check for local minima
-  int.min = quantile(den$x, 0.05) #previous value of 0 might be to low
-  int.max = quantile(den$x, 0.75) #maybe 3rd quantile?
-  interval = c(int.min, int.max)
+# Using 5th and 75th percentiles as min/max
+interval_tests = lapply(den.ls, function(den) {
+  int.perc = c(quantile(den$x, 0.05), quantile(den$x, 0.75))
+  int.mean = c(0, mean(den$x))
+  
+  # thres.perc = approxfun(den$x, den$y) %>% optimise(interval=int.perc)
+  # thres.perc = 10^(thres.perc$minimum)
+  # 
+  # thres.mean = approxfun(den$x, den$y) %>% optimise(interval=int.mean)
+  # thres.mean = 10^(thres.mean$minimum)
+  
+  df = data.frame(x = den$x, y = den$y)
+  plt.base = ggplot(df, aes(x = x, y = y)) +
+    geom_line() +
+    coord_cartesian(xlim = c(0, NA)) +
+    theme_bw() +
+    theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
+          plot.subtitle = element_text(hjust = 0.5))
+  
+  plt.perc = plt.base + 
+    geom_vline(xintercept = int.perc, color = 'red')
+    # ggtitle(label = 'percentiles',
+    #         subtitle = thres.perc)
+  plt.mean = plt.base + 
+    geom_vline(xintercept = int.mean, color = 'red')
+    # ggtitle(label = 'mean',
+    #         subtitle = thres.mean)
+  return(wrap_plots(plt.perc, plt.mean))
+})
 
-  # calculate local minima
-  thres = approxfun(den$x, den$y) %>% optimise(interval=interval)
-  thres = 10^(thres$minimum)
-  return(thres)
-}
+wrap_plots(interval_tests, ncol = 2)
+
+
+# # helper to calculate threshold, given a vector of transcript counts
+# get_threshold = function(cluster_nCount) {
+#   # log the total counts per cluster to smooth out the density
+#   den = density(log10(cluster_nCount))
+# 
+#   # define an interval to check for local minima
+#   int.min = quantile(den$x, 0.05) #previous value of 0 might be to low
+#   int.max = quantile(den$x, 0.75) #maybe 3rd quantile?
+#   interval = c(int.min, int.max)
+# 
+#   # calculate local minima
+#   thres = approxfun(den$x, den$y) %>% optimise(interval=interval)
+#   thres = 10^(thres$minimum)
+#   return(thres)
+# }
 ```
 
