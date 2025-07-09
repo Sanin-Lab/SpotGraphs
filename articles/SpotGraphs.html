@@ -34,7 +34,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item"><a class="nav-link" href="../articles/SpotGraphs.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/SpotGraphs.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -123,10 +123,10 @@ the spots on our slide.</p>
 <span></span>
 <span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpotGraph.html">SpotGraph</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span><span class="op">)</span></span>
 <span><span class="va">ig</span></span>
-<span><span class="co">#&gt; IGRAPH d301300 UNW- 1185 3189 -- </span></span>
+<span><span class="co">#&gt; IGRAPH f083eeb UNW- 1185 3189 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l),</span></span>
 <span><span class="co">#&gt; | weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from d301300 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from f083eeb (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] AAACACCAATAACTGC-1--AGGCGGTTTGTCCCGC-1</span></span>
 <span><span class="co">#&gt;  [2] AAACACCAATAACTGC-1--CTCGTCGAGGGCTCAT-1</span></span>
 <span><span class="co">#&gt;  [3] AAACACCAATAACTGC-1--GAAACATAGGAAACAG-1</span></span>
@@ -197,12 +197,14 @@ we can manually identify groups of spots that we want to filter out. The
 spot is immediately adjacent to other spots.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialDimPlot</a></span><span class="op">(</span><span class="va">scc_s1</span>, group.by <span class="op">=</span> <span class="st">'ig_cluster'</span>, image.alpha <span class="op">=</span> <span class="fl">0.6</span>, label <span class="op">=</span> <span class="cn">T</span>, label.size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
 <p>In this case, we could manually remove clusters 9, 10, 23, 24, 26,
 22, 15, 18, 19, 17, 20, and 25.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spot_clusters_to_remove</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">10</span>, <span class="fl">23</span>, <span class="fl">24</span>, <span class="fl">26</span>, <span class="fl">22</span>, <span class="fl">15</span>, <span class="fl">18</span>, <span class="fl">19</span>, <span class="fl">17</span>, <span class="fl">20</span>, <span class="fl">25</span><span class="op">)</span></span>
 <span><span class="va">scc_s1</span> <span class="op">=</span> <span class="va">scc_s1</span><span class="op">[</span>, <span class="op">!</span><span class="va">scc_s1</span><span class="op">$</span><span class="va">ig_cluster</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">spot_clusters_to_remove</span><span class="op">]</span></span>
 <span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">scc_s1</span>, features <span class="op">=</span> <span class="st">'nCount_Spatial'</span>, pt.size.factor <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
 </div>
 <div class="section level2">
 <h2 id="cutedges">CutEdges<a class="anchor" aria-label="anchor" href="#cutedges"></a>
