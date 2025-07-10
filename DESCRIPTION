@@ -29,6 +29,7 @@ Suggests:
     patchwork,
     rmarkdown,
     Seurat,
+    SpatialExperiment,
     TENxVisiumData,
     testthat (>= 3.0.0),
     tidyr,
@@ -38,5 +39,5 @@ VignetteBuilder: knitr
 Depends: 
     R (>= 3.5)
 LazyData: true
-LazyDataCompression:bzip2
+LazyDataCompression: bzip2
 URL: https://sanin-lab.github.io/SpotGraphs/
