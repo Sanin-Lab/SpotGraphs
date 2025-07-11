@@ -98,18 +98,24 @@ ImageFeature = function(obj, feature = 'nCount', label = F) {
     
     plt = plt +
       geom_label(data = df.labels, 
-                 aes_string(x='x_axis', y='y_axis', label = feature, color=feature))
+                 size = 3,
+                 aes_string(x='x_axis',
+                            y='y_axis', 
+                            label = feature, 
+                            color=feature))
   }
   return(plt)
 }
 ```
 
 ### Plot spotgraph cluster nCounts on tissue images
-```{r Plot counts on tissue images, message=FALSE, warning=FALSE, fig.width=8, fig.height=10, eval = T}
+```{r Plot counts on tissue images, message=FALSE, warning=FALSE, fig.width=10, fig.height=10, eval = T}
 plt.ncount = lapply(names(spe.ls), function(ds.name) {
-  ImageFeature(spe.ls[[ds.name]], feature = 'cluster_nCount', label = F) +
+  ImageFeature(spe.ls[[ds.name]], feature = 'cluster_nCount', label = T) +
     ggtitle(ds.name) +
-    theme(plot.title = element_text(hjust = 0.5, face = 'bold'))
+    theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
+          legend.position = 'none',
+          plot.margin = margin(rep(0.75,4),'cm'))
 })
 
 wrap_plots(plt.ncount, ncol = 2)
@@ -144,55 +150,89 @@ wrap_plots(density_plots, ncol = 2)
 
 
 ### Calculate intervals with various strategies
-```{r, eval = F}
+```{r, fig.width=7, fig.height=12, eval = F}
 
-# Using 5th and 75th percentiles as min/max
-interval_tests = lapply(den.ls, function(den) {
-  int.perc = c(quantile(den$x, 0.05), quantile(den$x, 0.75))
-  int.mean = c(0, mean(den$x))
+plt.tests = list()
+thres.perc.ls = list()
+thres.fixed.ls = list()
+
+for (ds.name in names(den.ls)) {
+  den = den.ls[[ds.name]]
   
-  # thres.perc = approxfun(den$x, den$y) %>% optimise(interval=int.perc)
-  # thres.perc = 10^(thres.perc$minimum)
-  # 
-  # thres.mean = approxfun(den$x, den$y) %>% optimise(interval=int.mean)
-  # thres.mean = 10^(thres.mean$minimum)
+  # quantile window
+  int.perc = c(quantile(den, 0.05), quantile(den, 0.75))
+  thres.perc.ls[[ds.name]] = approxfun(den$x, den$y) %>% optimise(interval=int.perc)
+  thres.perc.ls[[ds.name]] = 10^(thres.perc.ls[[ds.name]]$minimum)
   
+  # fixed window
+  int.fixed = c(quantile(den$x, 0.05), quantile(den$x, 0.75))
+  thres.fixed.ls[[ds.name]] = approxfun(den$x, den$y) %>% optimise(interval=int.fixed)
+  thres.fixed.ls[[ds.name]] = 10^(thres.fixed.ls[[ds.name]]$minimum)
+  
+  # create data frame for plotting
   df = data.frame(x = den$x, y = den$y)
+  
+  # create plots
   plt.base = ggplot(df, aes(x = x, y = y)) +
     geom_line() +
-    coord_cartesian(xlim = c(0, NA)) +
     theme_bw() +
-    theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
-          plot.subtitle = element_text(hjust = 0.5))
+    theme(plot.title = element_text(hjust = 0.5))
   
   plt.perc = plt.base + 
-    geom_vline(xintercept = int.perc, color = 'red')
-    # ggtitle(label = 'percentiles',
-    #         subtitle = thres.perc)
-  plt.mean = plt.base + 
-    geom_vline(xintercept = int.mean, color = 'red')
-    # ggtitle(label = 'mean',
-    #         subtitle = thres.mean)
-  return(wrap_plots(plt.perc, plt.mean))
+    geom_vline(xintercept = int.perc, color = 'red') +
+    geom_vline(xintercept = log10(thres.perc.ls[[ds.name]]), color = 'blue') +
+    ylab(ds.name) +
+    ggtitle(
+      label = paste('thres w/ quantiles int:', 
+                    round(thres.perc.ls[[ds.name]], 2))
+      )
+  plt.fixed = plt.base + 
+    geom_vline(xintercept = int.fixed, color = 'red') +
+    geom_vline(xintercept = log10(thres.fixed.ls[[ds.name]]), color = 'blue') +
+    ggtitle(
+      label = paste('thres w/ fixed int:', 
+                    round(thres.fixed.ls[[ds.name]], 2))
+      ) +
+    theme(axis.title.y = element_blank())
+  
+  plt.tests[[ds.name]] = wrap_plots(plt.perc, plt.fixed)
+}
+
+wrap_plots(plt.tests, ncol = 1)
+```
+
+### Plot which spots would be filtered out with each threshold
+```{r, warning=F, message=F, fig.width=8, fig.height=18, eval=T}
+# add thresholds to each SpatialExperiment object
+for (ds.name in names(spe.ls)) {
+  thres.perc = spe.ls[[ds.name]]$cluster_nCount > thres.perc.ls[[ds.name]]
+  thres.fixed = spe.ls[[ds.name]]$cluster_nCount > thres.fixed.ls[[ds.name]]
+  spe.ls[[ds.name]]$threshold.perc = thres.perc %>% 
+    ifelse('pass', 'nopass') %>% 
+    factor(levels = c('nopass', 'pass'))
+  spe.ls[[ds.name]]$threshold.fixed = thres.fixed %>% 
+    ifelse('pass', 'nopass') %>% 
+    factor(levels = c('nopass', 'pass'))
+  rm(thres.perc, thres.fixed)
+}
+
+# create plots
+plt.thresholds = lapply(names(spe.ls), function(ds.name) {
+  plt1 = ImageFeature(spe.ls[[ds.name]], feature = 'threshold.perc', label = F) +
+    scale_color_manual(values = c('red', 'grey')) +
+    ggtitle(ds.name) +
+    theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
+          legend.position = 'none', 
+          plot.margin = margin(rep(0.75,4),'cm'))
+  plt2 = ImageFeature(spe.ls[[ds.name]], feature = 'threshold.fixed', label = F) +
+    scale_color_manual(values = c('red', 'grey')) +
+    ggtitle(ds.name) +
+    theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
+          legend.position = 'none', 
+          plot.margin = margin(rep(0.75,4),'cm'))
+  return(wrap_plots(plt1, plt2, ncol = 2))
 })
 
-wrap_plots(interval_tests, ncol = 2)
-
-
-# # helper to calculate threshold, given a vector of transcript counts
-# get_threshold = function(cluster_nCount) {
-#   # log the total counts per cluster to smooth out the density
-#   den = density(log10(cluster_nCount))
-# 
-#   # define an interval to check for local minima
-#   int.min = quantile(den$x, 0.05) #previous value of 0 might be to low
-#   int.max = quantile(den$x, 0.75) #maybe 3rd quantile?
-#   interval = c(int.min, int.max)
-# 
-#   # calculate local minima
-#   thres = approxfun(den$x, den$y) %>% optimise(interval=interval)
-#   thres = 10^(thres$minimum)
-#   return(thres)
-# }
+wrap_plots(plt.thresholds, ncol = 1)
 ```
 
