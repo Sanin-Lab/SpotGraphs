@@ -109,7 +109,7 @@ ImageFeature = function(obj, feature = 'nCount', label = F) {
 ```
 
 ### Plot spotgraph cluster nCounts on tissue images
-```{r Plot counts on tissue images, message=FALSE, warning=FALSE, fig.width=10, fig.height=10, eval = T}
+```{r Plot counts on tissue images, message=FALSE, warning=FALSE, fig.width=8, fig.height=10, eval = T}
 plt.ncount = lapply(names(spe.ls), function(ds.name) {
   ImageFeature(spe.ls[[ds.name]], feature = 'cluster_nCount', label = T) +
     ggtitle(ds.name) +
@@ -122,36 +122,16 @@ wrap_plots(plt.ncount, ncol = 2)
 ```
 
 
-### Extract cluster_nCount per dataset
-```{r , eval = T}
-cluster_nCount.ls = lapply(res.ls, function(res) {
-  unique(res$cluster_nCount)
-})
-```
-
-### Plot density distributions for each slide
-```{r, fig.width=7, fig.height=7, eval = T}
-den.ls = lapply(cluster_nCount.ls, function(xx) {
-  den = density(log10(xx))
-})
-
-density_plots = lapply(names(den.ls), function(ds.name) {
-  den = den.ls[[ds.name]]
-  df = data.frame(x = den$x, y = den$y)
-  ggplot(df, aes(x = x, y = y)) +
-    geom_line() +
-    ggtitle(ds.name) +
-    theme_bw() +
-    theme(plot.title = element_text(hjust = 0.5, face = 'bold'))
-})
-
-wrap_plots(density_plots, ncol = 2)
-```
-
-
 ### Calculate intervals with various strategies
-```{r, fig.width=7, fig.height=12, eval = F}
+```{r, fig.width=7, fig.height=12, eval=T}
+# get count densities of each slide
+den.ls = lapply(res.ls, function(res) {
+  nCount = unique(res$cluster_nCount)
+  den = density(log10(nCount))
+  return(den)
+})
 
+# calculate different thresholds for each slide
 plt.tests = list()
 thres.perc.ls = list()
 thres.fixed.ls = list()
@@ -160,7 +140,8 @@ for (ds.name in names(den.ls)) {
   den = den.ls[[ds.name]]
   
   # quantile window
-  int.perc = c(quantile(den, 0.05), quantile(den, 0.75))
+  int.perc = c(spatstat.univar::quantile.density(den, 0.05), 
+               spatstat.univar::quantile.density(den, 0.75))
   thres.perc.ls[[ds.name]] = approxfun(den$x, den$y) %>% optimise(interval=int.perc)
   thres.perc.ls[[ds.name]] = 10^(thres.perc.ls[[ds.name]]$minimum)
   
@@ -196,6 +177,8 @@ for (ds.name in names(den.ls)) {
     theme(axis.title.y = element_blank())
   
   plt.tests[[ds.name]] = wrap_plots(plt.perc, plt.fixed)
+  
+  # rm(plt.base, plt.perc, plt.fixed, int.perc, int.fixed, df)
 }
 
 wrap_plots(plt.tests, ncol = 1)
@@ -219,13 +202,13 @@ for (ds.name in names(spe.ls)) {
 # create plots
 plt.thresholds = lapply(names(spe.ls), function(ds.name) {
   plt1 = ImageFeature(spe.ls[[ds.name]], feature = 'threshold.perc', label = F) +
-    scale_color_manual(values = c('red', 'grey')) +
+    scale_color_manual(values = c('red', 'grey'), drop = F) +
     ggtitle(ds.name) +
     theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
           legend.position = 'none', 
           plot.margin = margin(rep(0.75,4),'cm'))
   plt2 = ImageFeature(spe.ls[[ds.name]], feature = 'threshold.fixed', label = F) +
-    scale_color_manual(values = c('red', 'grey')) +
+    scale_color_manual(values = c('red', 'grey'), drop = F) +
     ggtitle(ds.name) +
     theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
           legend.position = 'none', 
