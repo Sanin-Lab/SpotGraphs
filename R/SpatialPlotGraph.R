@@ -32,7 +32,10 @@ SpatialPlotGraph = function(igraph_object,
   # Check if coordinates are provided, if not assume they are
   # stored in the igraph object from running SpotGraph()
   if (is.null(coord)) {
-    coord = data.frame(coord_x = igraph::V(ig)$coord_x, coord_y = igraph::V(ig)$coord_y)
+    coord = data.frame(
+      coord_x = igraph::V(ig)$coord_x,
+      coord_y = igraph::V(ig)$coord_y
+      )
   } else {
     colnames(coord) = c('coord_x', 'coord_y')
     if(!all(rownames(coord) %in% names(V(ig)))) {
