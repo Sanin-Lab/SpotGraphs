@@ -165,20 +165,21 @@ for (ds.name in names(den.ls)) {
     ylab(ds.name) +
     ggtitle(
       label = paste('thres w/ quantiles int:', 
-                    round(thres.perc.ls[[ds.name]], 2))
+                    round(thres.perc.ls[[ds.name]], 0))
       )
   plt.fixed = plt.base + 
     geom_vline(xintercept = int.fixed, color = 'red') +
     geom_vline(xintercept = log10(thres.fixed.ls[[ds.name]]), color = 'blue') +
     ggtitle(
       label = paste('thres w/ fixed int:', 
-                    round(thres.fixed.ls[[ds.name]], 2))
+                    round(thres.fixed.ls[[ds.name]], 0))
       ) +
     theme(axis.title.y = element_blank())
   
   plt.tests[[ds.name]] = wrap_plots(plt.perc, plt.fixed)
   
-  # rm(plt.base, plt.perc, plt.fixed, int.perc, int.fixed, df)
+  # clean up variables that change every loop
+  rm(den, int.perc, int.fixed, df, plt.base, plt.perc, plt.fixed)
 }
 
 wrap_plots(plt.tests, ncol = 1)
@@ -203,14 +204,16 @@ for (ds.name in names(spe.ls)) {
 plt.thresholds = lapply(names(spe.ls), function(ds.name) {
   plt1 = ImageFeature(spe.ls[[ds.name]], feature = 'threshold.perc', label = F) +
     scale_color_manual(values = c('red', 'grey'), drop = F) +
-    ggtitle(ds.name) +
+    ggtitle(ds.name, subtitle = 'percentiles') +
     theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
+          plot.subtitle = element_text(hjust = 0.5),
           legend.position = 'none', 
           plot.margin = margin(rep(0.75,4),'cm'))
   plt2 = ImageFeature(spe.ls[[ds.name]], feature = 'threshold.fixed', label = F) +
     scale_color_manual(values = c('red', 'grey'), drop = F) +
-    ggtitle(ds.name) +
+    ggtitle(ds.name, subtitle = 'fixed window') +
     theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
+          plot.subtitle = element_text(hjust = 0.5),
           legend.position = 'none', 
           plot.margin = margin(rep(0.75,4),'cm'))
   return(wrap_plots(plt1, plt2, ncol = 2))
