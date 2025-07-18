@@ -26,8 +26,19 @@ the boundary of each neighborhood of spots.
 }
 }
 \description{
-Identify center of some neighborhood of spots, e.g., the center of a tumor
+Score spots using igraph::centr_eigen to identify spots in the center of some region/neighborhood.
 }
 \examples{
-\dontrun{}
+\dontrun{
+df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
+colnames(df) = c('x', 'y')
+nspots = dim(df)[1]
+rownames(df) = paste0('spot', 1:nspots)
+
+igraph::V(ig)$cluster = igraph::cluster_leiden(ig, resolution = 0)$membership
+is_cluster = igraph::V(ig)$cluster=='1'
+names(is_cluster) = names(igraph::V(ig))
+
+res = NeighborhoodCenters(coord = df, is_neighborhood = is_cluster)
+}
 }

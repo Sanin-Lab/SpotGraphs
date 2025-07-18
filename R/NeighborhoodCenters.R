@@ -1,5 +1,8 @@
 #' Identify center of some neighborhood of spots, e.g., the center of a tumor
 #'
+#' @description
+#' Score spots using igraph::centr_eigen to identify spots in the center of some region/neighborhood.
+#'
 #' @param coord A two-column data.frame or matrix, where each column contains x or y coordinates,
 #' where the rownames are spot barcodes/ids.
 #' @param is_neighborhood A boolean vector (`TRUE`/`FALSE`) of equal length as the number of rows
@@ -16,7 +19,18 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{}
+#' \dontrun{
+#' df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
+#' colnames(df) = c('x', 'y')
+#' nspots = dim(df)[1]
+#' rownames(df) = paste0('spot', 1:nspots)
+#'
+#' igraph::V(ig)$cluster = igraph::cluster_leiden(ig, resolution = 0)$membership
+#' is_cluster = igraph::V(ig)$cluster=='1'
+#' names(is_cluster) = names(igraph::V(ig))
+#'
+#' res = NeighborhoodCenters(coord = df, is_neighborhood = is_cluster)
+#' }
 NeighborhoodCenters = function(coord = NULL, is_neighborhood) {
 
   # make sure barcodes in coordinates and label vector are aligned
