@@ -3,6 +3,7 @@
 export("%>%")
 export(CleanSlide)
 export(CutEdges)
+export(NeighborhoodCenters)
 export(SpatialPlotGraph)
 export(SpotGraph)
 importFrom(dplyr,arrange)

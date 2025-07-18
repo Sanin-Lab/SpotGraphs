@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{}
 NeighborhoodCenters = function(coord = NULL, is_neighborhood) {
 
   # make sure barcodes in coordinates and label vector are aligned
