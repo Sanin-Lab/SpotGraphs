@@ -13,7 +13,11 @@ utils::globalVariables(c('barcode',
                          'x',
                          'y',
                          'xend',
-                         'yend'))
+                         'yend',
+                         'clusters',
+                         'name',
+                         'center_eigen',
+                         '.'))
 
 ## usethis namespace: start
 #' @importFrom dplyr arrange
