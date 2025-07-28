@@ -21,13 +21,18 @@
 #' # Plot cluster results
 #' SpatialPlotGraph(igraph_object = ig, group.by = 'is_boundary')
 #' }
-SpatialPlotGraph = function(igraph_object,
+SpatialPlotGraph = function(igraph_object = NULL,
                             coord = NULL,
                             group.by = 'is_boundary',
                             label = FALSE,
                             flip.axes = TRUE,
                             pt.size = 1.6) {
-  ig = igraph_object
+  # Create igraph object from coordinates if igraph object isn't provided
+  if (is.null(igraph_object)) {
+    ig = SpotGraph(coord)
+  } else {
+    ig = igraph_object
+  }
 
   # Check if coordinates are provided, if not assume they are
   # stored in the igraph object from running SpotGraph()
@@ -41,6 +46,10 @@ SpatialPlotGraph = function(igraph_object,
     if(!all(rownames(coord) %in% names(V(ig)))) {
       stop('igraph vertices do not match coordinates')
     }
+  }
+
+  if (is.null(igraph_object) & is.null(coord)) {
+    stop('must provide either igraph_object or coord')
   }
 
   if (flip.axes) {
