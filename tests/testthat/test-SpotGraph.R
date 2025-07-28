@@ -11,14 +11,6 @@ test_that("min.dist is less than max.dist", {
   expect_gt(max.dist, min.dist)
 })
 
-test_that("coordinates are properly stored", {
-  # expect_{}()
-})
-
-test_that("edge weights are expected values (.25, .5, 1)", {
-  # expect_{}()
-})
-
 test_that("SpotGraph produces expected output", {
   coord = readRDS(test_path('fixtures', 'sccs1_coord.rds'))
 
