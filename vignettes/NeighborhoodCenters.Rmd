@@ -1,0 +1,110 @@
+---
+title: "Identify centers or boundaries of some region of interest"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{NeighborhoodCenters}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE, eval=TRUE}
+library(SpotGraphs)
+library(ggplot2)
+library(dplyr)
+library(viridis)
+library(patchwork)
+```
+
+# Overview
+A common task in spatial analysis is to perform some analysis with a region of interest, such as a tumor. In this vignette, we demonstrate how to use the `NeighborhoodCenters()` function to help us identify characteristics such as the center of a region of interest or its boundary. 
+
+## 1. Load data
+We will again use the 10X Visium dataset, downloaded from GSE208253, to demonstrate `NeighborhoodCenters()`.
+
+```{r Load data}
+class(scc_s1)
+dim(scc_s1)
+
+coord = Seurat::GetTissueCoordinates(scc_s1)
+coord = coord[,c('x', 'y')]
+```
+
+## 2. Select a region of interest
+In this vignette, we will use clustering to select some region of interest in this tissue sample, but in practice, this should instead be a region of some biological interest. The region of interest, i.e., neighborhood, is provided to `NeighborhoodCenters()` as a named vector of `TRUE`/`FALSE` values, where the names correspond to spot barcodes in the given dataset.
+```{r Choose a region}
+# create an igraph object with SpotGraph() and perform clustering
+ig = SpotGraph(coord)
+cl = igraph::cluster_fast_greedy(ig)
+cl = factor(cl$membership)
+
+# select cluster 1 and name the boolean vector with vertex names
+roi = cl==1
+names(roi) = names(igraph::V(ig))
+```
+
+## 3. Run `NeighborhoodCenters()`
+```{r Run NeighborhoodCenters}
+res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
+```
+
+The output from this function returns a list, where the first element is a data.frame with the scores from `igraph::centr_eigen()` where `is_neighborhood == T`, and 0 where `is_neighborhood == F`. 
+```{r Plot eigenvector centrality scores, fig.width=7.75, fig.height=7.5}
+print(head(res$eigen.scores))
+
+# Set centrality scores as a vertex attribute in our igraph object
+igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
+igraph::V(ig)$roi_center = names(igraph::V(ig)) %in% res$centers
+igraph::V(ig)$roi_boundary = names(igraph::V(ig)) %in% res$boundary
+
+plt1 = SpatialPlotGraph(ig, group.by = 'centr_eigen') +
+  scale_color_viridis() +
+  theme_void()
+plt2 = SpatialPlotGraph(ig, group.by = 'roi_center') +
+  scale_color_manual(values = c('grey', 'red')) +
+  theme_void() +
+  theme(legend.position = 'none')
+plt3 = SpatialPlotGraph(ig, group.by = 'roi_boundary') +
+  scale_color_manual(values = c('grey', 'red')) +
+  theme_void()
+
+wrap_plots(plt1, plt2, plt3, design = 'A#\nBC')
+```
+
+# 4. Select multiple regions of interest
+The `NeighborhoodCenters()` function is not limited to identifying characteristics of a single region. Users can provide a named boolean vector labeling multiple regions. An example of a common use case for this is when there are several tumor regions within the same tissue section. Here, we instead select two different clusters as regions of interest, instead of just one.
+
+```{r NeighborhoodCenters with multiple regions}
+roi = cl %in% c('1', '2', '5')
+names(roi) = names(igraph::V(ig))
+res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
+```
+
+```{r, fig.width=7.75, fig.height=7.5}
+# Set centrality scores as a vertex attribute in our igraph object
+igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
+igraph::V(ig)$roi_center = names(igraph::V(ig)) %in% res$centers
+igraph::V(ig)$roi_boundary = names(igraph::V(ig)) %in% res$boundary
+
+plt1 = SpatialPlotGraph(ig, group.by = 'centr_eigen') +
+  scale_color_viridis() +
+  theme_void()
+plt2 = SpatialPlotGraph(ig, group.by = 'roi_center') +
+  scale_color_manual(values = c('grey', 'red')) +
+  theme_void() +
+  theme(legend.position = 'none')
+plt3 = SpatialPlotGraph(ig, group.by = 'roi_boundary') +
+  scale_color_manual(values = c('grey', 'red')) +
+  theme_void()
+
+wrap_plots(plt1, plt2, plt3, design = 'A#\nBC')
+```
+
+
+
