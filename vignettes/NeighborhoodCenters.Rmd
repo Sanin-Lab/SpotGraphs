@@ -25,7 +25,7 @@ library(patchwork)
 # Overview
 A common task in spatial analysis is to perform some analysis with a region of interest, such as a tumor. In this vignette, we demonstrate how to use the `NeighborhoodCenters()` function to help us identify characteristics such as the center of a region of interest or its boundary. 
 
-## 1. Load data
+# 1. Load data
 We will again use the 10X Visium dataset, downloaded from GSE208253, to demonstrate `NeighborhoodCenters()`.
 
 ```{r Load data}
@@ -36,7 +36,7 @@ coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = coord[,c('x', 'y')]
 ```
 
-## 2. Select a region of interest
+# 2. Select a region of interest
 In this vignette, we will use clustering to select some region of interest in this tissue sample, but in practice, this should instead be a region of some biological interest. The region of interest, i.e., neighborhood, is provided to `NeighborhoodCenters()` as a named vector of `TRUE`/`FALSE` values, where the names correspond to spot barcodes in the given dataset.
 ```{r Choose a region}
 # create an igraph object with SpotGraph() and perform clustering
@@ -49,7 +49,7 @@ roi = cl==1
 names(roi) = names(igraph::V(ig))
 ```
 
-## 3. Run `NeighborhoodCenters()`
+# 3. Run `NeighborhoodCenters()`
 ```{r Run NeighborhoodCenters}
 res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
 ```
