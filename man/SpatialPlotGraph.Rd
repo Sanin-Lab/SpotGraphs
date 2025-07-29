@@ -5,7 +5,7 @@
 \title{Visualize igraph vertex attribute on tissue x,y coordinates}
 \usage{
 SpatialPlotGraph(
-  igraph_object,
+  igraph_object = NULL,
   coord = NULL,
   group.by = "is_boundary",
   label = FALSE,
