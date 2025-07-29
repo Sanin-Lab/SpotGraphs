@@ -63,14 +63,17 @@ igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
 igraph::V(ig)$roi_center = names(igraph::V(ig)) %in% res$centers
 igraph::V(ig)$roi_boundary = names(igraph::V(ig)) %in% res$boundary
 
-plt1 = SpatialPlotGraph(ig, group.by = 'centr_eigen') +
+plt1 = SpatialPlotGraph(ig, group.by = 'centr_eigen',
+                        pt.size = 0.5, linewidth = 0.1) +
   scale_color_viridis() +
   theme_void()
-plt2 = SpatialPlotGraph(ig, group.by = 'roi_center') +
+plt2 = SpatialPlotGraph(ig, group.by = 'roi_center',
+                        pt.size = 0.5, linewidth = 0.1) +
   scale_color_manual(values = c('grey', 'red')) +
   theme_void() +
   theme(legend.position = 'none')
-plt3 = SpatialPlotGraph(ig, group.by = 'roi_boundary') +
+plt3 = SpatialPlotGraph(ig, group.by = 'roi_boundary', 
+                        pt.size = 0.5, linewidth = 0.1) +
   scale_color_manual(values = c('grey', 'red')) +
   theme_void()
 
@@ -86,25 +89,57 @@ names(roi) = names(igraph::V(ig))
 res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
 ```
 
-```{r, fig.width=7.75, fig.height=7.5}
+```{r multiple region plotting, fig.width=7.75, fig.height=7.5}
 # Set centrality scores as a vertex attribute in our igraph object
 igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
 igraph::V(ig)$roi_center = names(igraph::V(ig)) %in% res$centers
 igraph::V(ig)$roi_boundary = names(igraph::V(ig)) %in% res$boundary
 
-plt1 = SpatialPlotGraph(ig, group.by = 'centr_eigen') +
+plt1 = SpatialPlotGraph(ig, group.by = 'centr_eigen', 
+                        pt.size = 0.5, linewidth = 0.1) +
   scale_color_viridis() +
   theme_void()
-plt2 = SpatialPlotGraph(ig, group.by = 'roi_center') +
+plt2 = SpatialPlotGraph(ig, group.by = 'roi_center', 
+                        pt.size = 0.5, linewidth = 0.1) +
   scale_color_manual(values = c('grey', 'red')) +
   theme_void() +
   theme(legend.position = 'none')
-plt3 = SpatialPlotGraph(ig, group.by = 'roi_boundary') +
+plt3 = SpatialPlotGraph(ig, group.by = 'roi_boundary', 
+                        pt.size = 0.5, linewidth = 0.1) +
   scale_color_manual(values = c('grey', 'red')) +
   theme_void()
 
 wrap_plots(plt1, plt2, plt3, design = 'A#\nBC')
 ```
 
+# 5. Calculate distance between each spot and ROI center
+```{r ROI distances, fig.width=8, fig.height=4.75}
+roi_dist = igraph::distances(ig, weights = NA)[,res$centers] %>% 
+  apply(1, min)
+boundary_dist = igraph::distances(ig, weights = NA)[,res$boundary] %>% 
+  apply(1, min)
+# boundary_dist = ifelse(!roi, boundary_dist, 0)
+
+igraph::V(ig)$roi_dist = roi_dist
+igraph::V(ig)$boundary_dist = boundary_dist
+
+plt.dist = SpatialPlotGraph(ig, group.by = 'roi_dist',
+                 pt.size = 0.5, linewidth = 0.1) +
+  scale_color_distiller(palette = 'RdBu', direction = 1) +
+  ggtitle('distance to ROI centers') +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
+        legend.position = 'none')
+plt.boundarydist = SpatialPlotGraph(ig, group.by = 'boundary_dist',
+                 pt.size = 0.5, linewidth = 0.1) +
+  scale_color_distiller(palette = 'RdBu', direction = 1) +
+  ggtitle('distance to ROI boundaries') +
+  guides(color = guide_colorbar(title = 'distance'),
+         alpha = guide_none()) +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5, face = 'bold'))
+
+wrap_plots(plt.dist, plt.boundarydist, nrow = 1)
+```
 
 
