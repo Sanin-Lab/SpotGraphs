@@ -36,7 +36,7 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../articles/SpotGraphs.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="active nav-item dropdown">
+<li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/NeighborhoodCenters.html">Identify centers or boundaries of some region of interest</a></li>
@@ -84,9 +84,10 @@ region of interest, such as a tumor. In this vignette, we demonstrate
 how to use the <code><a href="../reference/NeighborhoodCenters.html">NeighborhoodCenters()</a></code> function to help us
 identify characteristics such as the center of a region of interest or
 its boundary.</p>
-<div class="section level3">
-<h3 id="load-data">1. Load data<a class="anchor" aria-label="anchor" href="#load-data"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="load-data">1. Load data<a class="anchor" aria-label="anchor" href="#load-data"></a>
+</h2>
 <p>We will again use the 10X Visium dataset, downloaded from GSE208253,
 to demonstrate <code><a href="../reference/NeighborhoodCenters.html">NeighborhoodCenters()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -101,9 +102,9 @@ to demonstrate <code><a href="../reference/NeighborhoodCenters.html">Neighborhoo
 <span><span class="va">coord</span> <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
 <span><span class="va">coord</span> <span class="op">=</span> <span class="va">coord</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'x'</span>, <span class="st">'y'</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="select-a-region-of-interest">2. Select a region of interest<a class="anchor" aria-label="anchor" href="#select-a-region-of-interest"></a>
-</h3>
+<div class="section level2">
+<h2 id="select-a-region-of-interest">2. Select a region of interest<a class="anchor" aria-label="anchor" href="#select-a-region-of-interest"></a>
+</h2>
 <p>In this vignette, we will use clustering to select some region of
 interest in this tissue sample, but in practice, this should instead be
 a region of some biological interest. The region of interest, i.e.,
@@ -120,9 +121,9 @@ names correspond to spot barcodes in the given dataset.</p>
 <span><span class="va">roi</span> <span class="op">=</span> <span class="va">cl</span><span class="op">==</span><span class="fl">1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">roi</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">ig</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="run-neighborhoodcenters">3. Run <code>NeighborhoodCenters()</code><a class="anchor" aria-label="anchor" href="#run-neighborhoodcenters"></a>
-</h3>
+<div class="section level2">
+<h2 id="run-neighborhoodcenters">3. Run <code>NeighborhoodCenters()</code><a class="anchor" aria-label="anchor" href="#run-neighborhoodcenters"></a>
+</h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/NeighborhoodCenters.html">NeighborhoodCenters</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span>, is_neighborhood <span class="op">=</span> <span class="va">roi</span><span class="op">)</span></span></code></pre></div>
 <p>The output from this function returns a list, where the first element
@@ -160,7 +161,6 @@ where <code>is_neighborhood == T</code>, and 0 where
 <span></span>
 <span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt1</span>, <span class="va">plt2</span>, <span class="va">plt3</span>, design <span class="op">=</span> <span class="st">'A#\nBC'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NeighborhoodCenters_files/figure-html/Plot%20eigenvector%20centrality%20scores-1.png" width="744"></p>
-</div>
 </div>
 <div class="section level2">
 <h2 id="select-multiple-regions-of-interest">4. Select multiple regions of interest<a class="anchor" aria-label="anchor" href="#select-multiple-regions-of-interest"></a>
