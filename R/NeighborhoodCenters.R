@@ -59,7 +59,11 @@ NeighborhoodCenters = function(coord = NULL, is_neighborhood) {
   v.scores = v.scores[match(names(igraph::V(ig)), names(v.scores))]
   igraph::V(ig)$center_eigen = v.scores
 
-  # Identify center vertices of tumor clusters
+  # Identify boundary vertices
+  nbh_boundary = igraph::degree(ig) < max(igraph::degree(ig))
+  boundary = names(igraph::V(ig))[nbh_boundary & is_neighborhood]
+
+  # Identify center vertices
   centers = as.data.frame(igraph::vertex_attr(ig)) %>%
     filter(.by = clusters,
            is_neighborhood &
@@ -74,10 +78,9 @@ NeighborhoodCenters = function(coord = NULL, is_neighborhood) {
   # Ensure that the output is in the same order as the input
   finalscores = finalscores[match(names(is_neighborhood), finalscores$barcode),]
 
-  # output = list(eigen.scores = finalscores,
-  #               centers = centers,
-  #               boundaries = boundaries)
+  # Format and return the output
   output = list(eigen.scores = finalscores,
-                centers = centers)
+                centers = centers,
+                boundary = boundary)
   return(output)
 }
