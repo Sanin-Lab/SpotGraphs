@@ -10,6 +10,7 @@ SpatialPlotGraph(
   group.by = "is_boundary",
   label = FALSE,
   flip.axes = TRUE,
+  linewidth = 0.5,
   pt.size = 1.6
 )
 }
@@ -25,6 +26,8 @@ present in \code{vertex_attr(ig)}.}
 \item{label}{Logical, whether to label groups on the plot based on \code{group.by}.}
 
 \item{flip.axes}{Default is TRUE. Invert the x and y axes, typically needed with coordinates from Visium Seurat objects to align the spots with the tissue image.}
+
+\item{linewidth}{Numeric input to determine width of segments between nodes. Used in \verb{geom_segment().}}
 
 \item{pt.size}{Numeric input to determine size of each point on the plot. Used as the size parameter in \code{geom_point()}.}
 }

@@ -7,6 +7,7 @@
 #' present in `vertex_attr(ig)`.
 #' @param label Logical, whether to label groups on the plot based on `group.by`.
 #' @param flip.axes Default is TRUE. Invert the x and y axes, typically needed with coordinates from Visium Seurat objects to align the spots with the tissue image.
+#' @param linewidth Numeric input to determine width of segments between nodes. Used in `geom_segment().`
 #' @param pt.size Numeric input to determine size of each point on the plot. Used as the size parameter in `geom_point()`.
 #' @return a ggplot object
 #' @export
@@ -26,6 +27,7 @@ SpatialPlotGraph = function(igraph_object = NULL,
                             group.by = 'is_boundary',
                             label = FALSE,
                             flip.axes = TRUE,
+                            linewidth = 0.5,
                             pt.size = 1.6) {
   # Create igraph object from coordinates if igraph object isn't provided
   if (is.null(igraph_object)) {
@@ -66,7 +68,8 @@ SpatialPlotGraph = function(igraph_object = NULL,
 
   # Create plot
   plt = ggplot(df, aes(x = x, y = y)) +
-    geom_segment(aes(xend = xend, yend = yend, alpha = weight)) +
+    geom_segment(aes(xend = xend, yend = yend, alpha = weight),
+                 linewidth = linewidth) +
     geom_point(aes(color = groups), size = pt.size) +
     guides(color = guide_legend(title = group.by)) +
     theme_classic()
