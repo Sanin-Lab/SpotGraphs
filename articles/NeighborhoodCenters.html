@@ -36,7 +36,7 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../articles/SpotGraphs.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/NeighborhoodCenters.html">Identify centers or boundaries of some region of interest</a></li>
@@ -165,12 +165,12 @@ where <code>is_neighborhood == T</code>, and 0 where
 <div class="section level2">
 <h2 id="select-multiple-regions-of-interest">4. Select multiple regions of interest<a class="anchor" aria-label="anchor" href="#select-multiple-regions-of-interest"></a>
 </h2>
-<p>The <code><a href="../reference/NeighborhoodCenters.html">NeighborhoodCenters()</a></code> function is not limited to
-identifying characteristics of a single region. Users can provide a
-named boolean vector labeling multiple regions. An example of a common
-use case for this is when there are several tumor regions within the
-same tissue section. Here, we instead select two different clusters as
-regions of interest, instead of just one.</p>
+<p>The <code><a href="../reference/NeighborhoodCenters.html">NeighborhoodCenters()</a></code> function can also identify
+characteristics of multiple regions by providing a named boolean vector
+indicating whether a spot is within any of these regions. This can be
+useful when there are several tumor regions within the same tissue
+section. Here, we select three different clusters as regions of
+interest, instead of just one.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">roi</span> <span class="op">=</span> <span class="va">cl</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'1'</span>, <span class="st">'2'</span>, <span class="st">'5'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">roi</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">ig</span><span class="op">)</span><span class="op">)</span></span>
