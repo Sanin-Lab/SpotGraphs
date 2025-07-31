@@ -222,3 +222,53 @@ plt.thresholds = lapply(names(spe.ls), function(ds.name) {
 wrap_plots(plt.thresholds, ncol = 1)
 ```
 
+### Use eccentricity to determine which spots should be filtered out
+eccentricity = the max distance between one spot and all other spots
+```{r eccentricity, message=FALSE, fig.width=8, fig.height=10}
+# Create igraph objects for each SPE object
+ig.ls = lapply(spe.ls, function(spe) {
+  coord = SpatialExperiment::spatialCoords(spe) %>% as.data.frame()
+  colnames(coord) = c('x', 'y')
+  SpotGraph(coord = coord)
+})
+
+# Calculate eccentricity of all points on each slide
+for (id in names(ig.ls)) {
+  igraph::V(ig.ls[[id]])$ecc = igraph::eccentricity(ig.ls[[id]], weights = NA)
+}
+
+# Plot eccentricity
+plt.ecc = lapply(names(ig.ls), function(id) {
+  SpatialPlotGraph(ig.ls[[id]], group.by = 'ecc') +
+    scale_color_viridis() +
+    ggtitle(id) +
+    guides(alpha = guide_none(),
+           color = guide_colorbar(title = 'ecc')) +
+    theme_void() +
+    theme(plot.title = element_text(hjust = 0.5, face = 'bold'))
+})
+wrap_plots(plt.ecc, ncol = 2)
+```
+
+```{r plot eccentricity threshold, message=FALSE, fig.width=8, fig.height=10}
+plt.eccthres = lapply(names(ig.ls), function(id) {
+  ig = ig.ls[[id]]
+  thres = 5
+  igraph::V(ig)$ecc_thres = ifelse(igraph::V(ig)$ecc > thres, 'pass', 'nopass') %>% 
+    factor(levels = c('nopass', 'pass'))
+  
+  spe = spe.ls[[id]]
+  spe$ecc_thres = igraph::V(ig)$ecc_thres
+  
+  ImageFeature(spe, feature = 'ecc_thres') +
+    scale_color_manual(values = c('red', 'grey'), drop = F) +
+    ggtitle(id) +
+    theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
+          legend.position = 'none', 
+          plot.margin = margin(rep(0.75,4),'cm'))
+})
+
+wrap_plots(plt.eccthres, ncol = 2)
+```
+
+

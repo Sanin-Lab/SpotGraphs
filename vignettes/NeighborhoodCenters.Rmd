@@ -81,7 +81,7 @@ wrap_plots(plt1, plt2, plt3, design = 'A#\nBC')
 ```
 
 # 4. Select multiple regions of interest
-The `NeighborhoodCenters()` function is not limited to identifying characteristics of a single region. Users can provide a named boolean vector labeling multiple regions. An example of a common use case for this is when there are several tumor regions within the same tissue section. Here, we instead select two different clusters as regions of interest, instead of just one.
+The `NeighborhoodCenters()` function can also identify characteristics of multiple regions by providing a named boolean vector indicating whether a spot is within any of these regions. This can be useful when there are several tumor regions within the same tissue section. Here, we select three different clusters as regions of interest, instead of just one.
 
 ```{r NeighborhoodCenters with multiple regions}
 roi = cl %in% c('1', '2', '5')
