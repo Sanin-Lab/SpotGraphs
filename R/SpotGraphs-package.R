@@ -27,6 +27,7 @@ utils::globalVariables(c('barcode',
 #' @importFrom dplyr reframe
 #' @importFrom dplyr select
 #' @importFrom ggplot2 aes
+#' @importFrom ggplot2 aes_string
 #' @importFrom ggplot2 geom_label
 #' @importFrom ggplot2 geom_point
 #' @importFrom ggplot2 geom_segment
