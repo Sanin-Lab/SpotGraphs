@@ -59,16 +59,16 @@ SpotGraph = function(coord, dist.buffer = 1.05, max.dist = NULL) {
   is_boundary = igraph::degree(ig) < max(igraph::degree(ig))
   igraph::V(ig)$is_boundary = is_boundary
 
-  # calculate edge weights based on connections to boundary nodes
-  boundary_nodes = names(is_boundary)[is_boundary]
-  weights = igraph::as_ids(E(ig)) %>% stringr::str_split('\\|') %>%
-    sapply(function(nodes) {
-      xx = ifelse(nodes %in% boundary_nodes, 0.5, 1)
-      return(prod(xx))
-    })
-
-  # Add weights to graph
-  igraph::E(ig)$weight <- weights
+  # # calculate edge weights based on connections to boundary nodes
+  # boundary_nodes = names(is_boundary)[is_boundary]
+  # weights = igraph::as_ids(E(ig)) %>% stringr::str_split('\\|') %>%
+  #   sapply(function(nodes) {
+  #     xx = ifelse(nodes %in% boundary_nodes, 0.5, 1)
+  #     return(prod(xx))
+  #   })
+  #
+  # # Add weights to graph
+  # igraph::E(ig)$weight <- weights
 
   return(ig)
 }
