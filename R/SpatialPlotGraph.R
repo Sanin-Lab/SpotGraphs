@@ -64,23 +64,30 @@ SpatialPlotGraph = function(igraph_object = NULL,
   # Create data.frame with all igraph vertex attributes and
   # coordinates for geom_segment using ggnetwork
   df = ggnetwork::ggnetwork(ig, layout = as.matrix(coord))
-  df$groups = df[,group.by]
 
-  # Create plot
+  # Create base plot
   plt = ggplot(df, aes(x = x, y = y)) +
-    geom_segment(aes(xend = xend, yend = yend, alpha = weight),
+    geom_segment(aes(xend = xend, yend = yend),
                  linewidth = linewidth) +
-    geom_point(aes(color = groups), size = pt.size) +
-    guides(color = guide_legend(title = group.by)) +
     theme_classic()
+
+  # Add vertices based on whether group.by is present or not
+  if (group.by %in% colnames(df)) {
+    plt = plt +
+      geom_point(aes_string(color = group.by), size = pt.size) +
+      guides(color = guide_legend(title = group.by))
+  } else {
+    plt = plt +
+      geom_point(size = pt.size)
+  }
 
   # Label groups if desired
   if (label) {
     label.df = df %>%
-      dplyr::reframe(.by = groups, x = mean(x), y = mean(y))
+      dplyr::reframe(.by = group.by, x = mean(x), y = mean(y))
     plt = plt +
       geom_label(data = label.df,
-                 aes(x = x, y = y, label = groups, fill = groups),
+                 aes_string(x = 'x', y = 'y', label = group.by, fill = group.by),
                  show.legend = F)
   }
   return(plt)
