@@ -45,7 +45,7 @@ NeighborhoodCenters = function(coord = NULL, is_neighborhood) {
                 cluster.col = 'is_neighborhood')
 
   # Clustering to label each connected community
-  cl = factor(igraph::cluster_leiden(ig, resolution = 0)$membership)
+  cl = factor(igraph::components(ig)$membership)
   igraph::V(ig)$clusters = cl
 
   # Calculate the centralization eigenvector for each cluster

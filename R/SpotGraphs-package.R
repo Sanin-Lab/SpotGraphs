@@ -38,6 +38,7 @@ utils::globalVariables(c('barcode',
 #' @importFrom igraph as_ids
 #' @importFrom igraph cluster_fast_greedy
 #' @importFrom igraph cluster_louvain
+#' @importFrom igraph components
 #' @importFrom igraph degree
 #' @importFrom igraph E
 #' @importFrom igraph graph_from_edgelist
