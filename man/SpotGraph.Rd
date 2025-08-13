@@ -4,10 +4,22 @@
 \alias{SpotGraph}
 \title{Creates an igraph object given x,y coordinates}
 \usage{
-SpotGraph(coord, dist.buffer = 1.05, max.dist = NULL)
+SpotGraph(
+  coord,
+  delaunay = F,
+  delaunay.trim = T,
+  dist.buffer = 1.05,
+  max.dist = NULL
+)
 }
 \arguments{
 \item{coord}{A two-column data.frame or matrix, where each column contains x or y coordinates.}
+
+\item{delaunay}{Whether to use Delaunay triangulation to identify edges for network construction.
+Default is FALSE.}
+
+\item{delaunay.trim}{If TRUE (default) and delaunay = TRUE, then edge lengths longer than max.dist
+will be removed after Delaunay triangulation.}
 
 \item{dist.buffer}{Influences the maximum distance a node is allowed to be from another
 node to be considered a neighbor. Only used if \code{max.dist = NULL}.}

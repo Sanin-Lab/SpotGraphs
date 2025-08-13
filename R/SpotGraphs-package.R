@@ -45,6 +45,7 @@ utils::globalVariables(c('barcode',
 #' @importFrom igraph set_vertex_attr
 #' @importFrom igraph V
 #' @importFrom igraph vertex_attr
+#' @importFrom interp tri.mesh
 #' @importFrom rlang .data
 #' @importFrom stats approxfun
 #' @importFrom stats density
