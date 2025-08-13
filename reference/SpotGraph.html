@@ -49,7 +49,13 @@ are immediately adjacent to each other.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">SpotGraph</span><span class="op">(</span><span class="va">coord</span>, dist.buffer <span class="op">=</span> <span class="fl">1.05</span>, max.dist <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">SpotGraph</span><span class="op">(</span></span>
+<span>  <span class="va">coord</span>,</span>
+<span>  delaunay <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  delaunay.trim <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>  dist.buffer <span class="op">=</span> <span class="fl">1.05</span>,</span>
+<span>  max.dist <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,6 +64,16 @@ are immediately adjacent to each other.</p>
 
 <dl><dt id="arg-coord">coord<a class="anchor" aria-label="anchor" href="#arg-coord"></a></dt>
 <dd><p>A two-column data.frame or matrix, where each column contains x or y coordinates.</p></dd>
+
+
+<dt id="arg-delaunay">delaunay<a class="anchor" aria-label="anchor" href="#arg-delaunay"></a></dt>
+<dd><p>Whether to use Delaunay triangulation to identify edges for network construction.
+Default is FALSE.</p></dd>
+
+
+<dt id="arg-delaunay-trim">delaunay.trim<a class="anchor" aria-label="anchor" href="#arg-delaunay-trim"></a></dt>
+<dd><p>If TRUE (default) and delaunay = TRUE, then edge lengths longer than max.dist
+will be removed after Delaunay triangulation.</p></dd>
 
 
 <dt id="arg-dist-buffer">dist.buffer<a class="anchor" aria-label="anchor" href="#arg-dist-buffer"></a></dt>
