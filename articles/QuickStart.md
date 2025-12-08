@@ -1,0 +1,34 @@
+# QuickStart
+
+``` r
+library(SpotGraphs)
+library(TENxVisiumData)
+library(dplyr)
+```
+
+## Load example dataset
+
+``` r
+# retrieve data from TENxVisium
+eh = ExperimentHub::ExperimentHub()
+q = AnnotationHub::query(eh, 'TENxVisium')
+id = q$ah_id[q$title=='HumanGlioblastoma_v3.13']
+spe = eh[[id]]
+```
+
+## Filter stray spots
+
+``` r
+# 1. prepare CleanSlide() inputs
+coord.xy = SpatialExperiment::spatialCoords(spe) %>% as.data.frame()
+ncount = colSums(assay(spe))
+
+# 2. run CleanSlide()
+res = CleanSlide(coord = coord.xy, nCount = ncount)
+
+# 3. store results in SpatialExperiment object
+colData(spe) = cbind(colData(spe), res)
+
+# 4. apply filter automatically determined by threshold calculation
+spe = spe[,spe$threshold]
+```

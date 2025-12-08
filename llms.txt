@@ -1,0 +1,76 @@
+# SpotGraphs
+
+## Functions to aid in Visium spatial transcriptomics data analysis with igraph
+
+## Motivation
+
+## Method overview
+
+## Installation
+
+## Usage
+
+## Tutorials and Applications
+
+### Quick overview
+
+### Creating and igraph object
+
+### Filtering low quality spots on tissue debris
+
+### Identifying centers of neighborhoods
+
+## Current functions in this repo:
+
+1.  `SpotGraph(coord, dist.buffer = 1.05, max.dist = NULL)`
+    - this will create an igraph object given a 2-column data frame or
+      matrix of x,y coordinates
+    - each node = a spot, where an edge exists between two spots if they
+      are adjacent to each other
+    - returns an igraph object
+2.  `CleanSlide(coord, nCount)`
+    - takes a 2-column data frame or matrix of x,y coordinates and calls
+      SpotGraph to create an igraph object
+    - performs modularity maximization to group connected communities of
+      spots
+    - adds total transcripts together per-cluster (nCount)
+    - calculates a threshold to identify low quality/small communities
+      of spots
+    - returns a data frame with per-spot cluster results, total counts
+      per cluster, and whether the cluster passed the automatically
+      detected threshold
+3.  `SpatialPlotGraph(igraph_object, coord = NULL, group.by, label = T)`
+    - use the original x,y coordinates to plot some vertex_attr in the
+      corresponding igraph object
+4.  `CutEdges(igraph_object, cluster_pairs = NULL, cluster.col = "cluster")`
+    - remove all edges between specified groups of spots in an igraph
+      object
+
+# Package index
+
+## All functions
+
+- [`CleanSlide()`](https://sanin-lab.github.io/SpotGraphs/reference/CleanSlide.md)
+  : Identify spots isolated from the largest groups of immediately
+  adjacent spots
+- [`CutEdges()`](https://sanin-lab.github.io/SpotGraphs/reference/CutEdges.md)
+  : Remove all edges that lie between pairs of clusters
+- [`NeighborhoodCenters()`](https://sanin-lab.github.io/SpotGraphs/reference/NeighborhoodCenters.md)
+  : Identify center of some neighborhood of spots, e.g., the center of a
+  tumor
+- [`SpatialPlotGraph()`](https://sanin-lab.github.io/SpotGraphs/reference/SpatialPlotGraph.md)
+  : Visualize igraph vertex attribute on tissue x,y coordinates
+- [`SpotGraph()`](https://sanin-lab.github.io/SpotGraphs/reference/SpotGraph.md)
+  : Creates an igraph object given x,y coordinates
+- [`scc_s1`](https://sanin-lab.github.io/SpotGraphs/reference/scc_s1.md)
+  : Oral SCC Visium spatial transcriptomics data
+
+# Articles
+
+### All vignettes
+
+- [Identify centers or boundaries of some region of
+  interest](https://sanin-lab.github.io/SpotGraphs/articles/NeighborhoodCenters.md):
+- [QuickStart](https://sanin-lab.github.io/SpotGraphs/articles/QuickStart.md):
+- [SpotGraphs](https://sanin-lab.github.io/SpotGraphs/articles/SpotGraphs.md):
+- [ThresholdTests](https://sanin-lab.github.io/SpotGraphs/articles/ThresholdTests.md):
