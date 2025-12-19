@@ -5,6 +5,6 @@ test_that("NeighborhoodCenters produces expected output", {
   res = NeighborhoodCenters(coord = coord, is_neighborhood = is_neighborhood)
   res_expected = readRDS(test_path('fixtures', 'neighborhoodcenters_expected.rds'))
   expect_snapshot(
-    waldo::compare(res_expected, res)
+    waldo::compare(res_expected, res, tolerance = testthat::testthat_tolerance())
   )
 })

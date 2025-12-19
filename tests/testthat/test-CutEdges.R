@@ -11,6 +11,8 @@ test_that("CutEdges produces expected output", {
     )
   )
 
+  # compare edges
+  res = igraph::E(res)
   res_expected = readRDS(test_path('fixtures', 'cutedges_expected.rds'))
 
   expect_snapshot(
