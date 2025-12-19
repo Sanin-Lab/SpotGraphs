@@ -6,8 +6,8 @@ test_that("CutEdges produces expected output", {
   res = CutEdges(
     igraph_object = ig,
     cluster_pairs = list(
-      c('1', '12'),
-      c('1', '4')
+      c('5', '2'),
+      c('5', '4')
     )
   )
 
