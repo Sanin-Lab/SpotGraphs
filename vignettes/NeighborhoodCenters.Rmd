@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup, message=FALSE, eval=TRUE}
 library(SpotGraphs)
+library(Seurat)
 library(ggplot2)
 library(dplyr)
 library(viridis)
