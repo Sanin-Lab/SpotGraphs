@@ -87,7 +87,7 @@ SpatialPlotGraph = function(igraph_object = NULL,
       dplyr::reframe(.by = all_of(group.by), x = mean(x), y = mean(y))
     plt = plt +
       geom_label(data = label.df,
-                 aes(x = 'x', y = 'y', label = .data[[group.by]], fill = .data[[group.by]]),
+                 aes(x = x, y = y, label = .data[[group.by]], fill = .data[[group.by]]),
                  show.legend = F)
   }
   return(plt)
