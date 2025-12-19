@@ -72,7 +72,6 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sanin-lab.github.io/SpotGraphs/">SpotGraphs</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/helenalc/TENxVisiumData" class="external-link">TENxVisiumData</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span></span>
@@ -85,12 +84,25 @@ dataset from a squamous cell carcinoma patient, downloaded from
 GSE208253. The raw data from GEO is provided as a Seurat object in this
 package to use as an example.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">scc_s1</span> <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/UpdateSeuratObject.html" class="external-link">UpdateSeuratObject</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Validating object structure</span></span>
+<span><span class="co">#&gt; Updating object slots</span></span>
+<span><span class="co">#&gt; Ensuring keys are in the proper structure</span></span>
+<span><span class="co">#&gt; Ensuring keys are in the proper structure</span></span>
+<span><span class="co">#&gt; Ensuring feature names don't have underscores or pipes</span></span>
+<span><span class="co">#&gt; Updating slots in Spatial</span></span>
+<span><span class="co">#&gt; Updating slots in slice1</span></span>
+<span><span class="co">#&gt; Warning: Not validating Centroids objects</span></span>
+<span><span class="co">#&gt; Updated Centroids object 'centroids' in FOV 'slice1'</span></span>
+<span><span class="co">#&gt; Updated boundaries in FOV 'slice1'</span></span>
+<span><span class="co">#&gt; Validating object structure for Assay5 'Spatial'</span></span>
+<span><span class="co">#&gt; Validating object structure for VisiumV2 'slice1'</span></span>
+<span><span class="co">#&gt; Object representation is consistent with the most current Seurat version</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Seurat"</span></span>
 <span><span class="co">#&gt; attr(,"package")</span></span>
 <span><span class="co">#&gt; [1] "SeuratObject"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required namespace: SeuratObject</span></span>
 <span><span class="co">#&gt; [1] 36601  1185</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -115,18 +127,18 @@ the spots on our slide.</p>
 <span><span class="va">coord</span> <span class="op">=</span> <span class="va">coord</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'x'</span>, <span class="st">'y'</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">coord</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                        x     y</span></span>
-<span><span class="co">#&gt; AAACACCAATAACTGC-1 16571  4809</span></span>
-<span><span class="co">#&gt; AAACAGGGTCTATATT-1 13546  3944</span></span>
-<span><span class="co">#&gt; AAACCGTTCGTCCAGG-1 14812  8142</span></span>
-<span><span class="co">#&gt; AAACGAGACGGTTGAT-1 10536 13505</span></span>
-<span><span class="co">#&gt; AAACTGCTGGCTCCAA-1 13053 11764</span></span>
-<span><span class="co">#&gt; AAAGACTGGGCGCTTT-1  9011  4240</span></span>
+<span><span class="co">#&gt; AAACACCAATAACTGC-1  4809 16571</span></span>
+<span><span class="co">#&gt; AAACAGGGTCTATATT-1  3944 13546</span></span>
+<span><span class="co">#&gt; AAACCGTTCGTCCAGG-1  8142 14812</span></span>
+<span><span class="co">#&gt; AAACGAGACGGTTGAT-1 13505 10536</span></span>
+<span><span class="co">#&gt; AAACTGCTGGCTCCAA-1 11764 13053</span></span>
+<span><span class="co">#&gt; AAAGACTGGGCGCTTT-1  4240  9011</span></span>
 <span></span>
 <span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpotGraph.html">SpotGraph</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span><span class="op">)</span></span>
 <span><span class="va">ig</span></span>
-<span><span class="co">#&gt; IGRAPH e0991e5 UN-- 1185 3189 -- </span></span>
+<span><span class="co">#&gt; IGRAPH a774ec7 UN-- 1185 3189 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)</span></span>
-<span><span class="co">#&gt; + edges from e0991e5 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from a774ec7 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] AAACACCAATAACTGC-1--AGGCGGTTTGTCCCGC-1</span></span>
 <span><span class="co">#&gt;  [2] AAACACCAATAACTGC-1--CTCGTCGAGGGCTCAT-1</span></span>
 <span><span class="co">#&gt;  [3] AAACACCAATAACTGC-1--GAAACATAGGAAACAG-1</span></span>
@@ -154,14 +166,6 @@ in our plots.</p>
 <span>                           group.by <span class="op">=</span> <span class="st">'is_boundary'</span>, </span>
 <span>                           flip.axes <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>                           pt.size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: `aes_string()` was deprecated in ggplot2 3.0.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use tidy evaluation idioms with `aes()`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See also `vignette("ggplot2-in-packages")` for more information.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">SpotGraphs</span> package.</span></span>
-<span><span class="co">#&gt;   Please report the issue to the authors.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span></span>
 <span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt.ggnet</span>, <span class="va">plt.spg</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SpotGraphs_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="864"></p>

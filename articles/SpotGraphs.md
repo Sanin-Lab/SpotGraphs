@@ -2,7 +2,6 @@
 
 ``` r
 library(SpotGraphs)
-library(TENxVisiumData)
 library(dplyr)
 library(ggplot2)
 library(viridis)
@@ -17,12 +16,25 @@ GSE208253. The raw data from GEO is provided as a Seurat object in this
 package to use as an example.
 
 ``` r
+scc_s1 = Seurat::UpdateSeuratObject(scc_s1)
+#> Validating object structure
+#> Updating object slots
+#> Ensuring keys are in the proper structure
+#> Ensuring keys are in the proper structure
+#> Ensuring feature names don't have underscores or pipes
+#> Updating slots in Spatial
+#> Updating slots in slice1
+#> Warning: Not validating Centroids objects
+#> Updated Centroids object 'centroids' in FOV 'slice1'
+#> Updated boundaries in FOV 'slice1'
+#> Validating object structure for Assay5 'Spatial'
+#> Validating object structure for VisiumV2 'slice1'
+#> Object representation is consistent with the most current Seurat version
 class(scc_s1)
 #> [1] "Seurat"
 #> attr(,"package")
 #> [1] "SeuratObject"
 dim(scc_s1)
-#> Loading required namespace: SeuratObject
 #> [1] 36601  1185
 ```
 
@@ -47,18 +59,18 @@ coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = coord[,c('x', 'y')]
 head(coord)
 #>                        x     y
-#> AAACACCAATAACTGC-1 16571  4809
-#> AAACAGGGTCTATATT-1 13546  3944
-#> AAACCGTTCGTCCAGG-1 14812  8142
-#> AAACGAGACGGTTGAT-1 10536 13505
-#> AAACTGCTGGCTCCAA-1 13053 11764
-#> AAAGACTGGGCGCTTT-1  9011  4240
+#> AAACACCAATAACTGC-1  4809 16571
+#> AAACAGGGTCTATATT-1  3944 13546
+#> AAACCGTTCGTCCAGG-1  8142 14812
+#> AAACGAGACGGTTGAT-1 13505 10536
+#> AAACTGCTGGCTCCAA-1 11764 13053
+#> AAAGACTGGGCGCTTT-1  4240  9011
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH e0991e5 UN-- 1185 3189 -- 
+#> IGRAPH a774ec7 UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from e0991e5 (vertex names):
+#> + edges from a774ec7 (vertex names):
 #>  [1] AAACACCAATAACTGC-1--AGGCGGTTTGTCCCGC-1
 #>  [2] AAACACCAATAACTGC-1--CTCGTCGAGGGCTCAT-1
 #>  [3] AAACACCAATAACTGC-1--GAAACATAGGAAACAG-1
@@ -89,14 +101,6 @@ plt.spg = SpatialPlotGraph(igraph_object = ig,
                            group.by = 'is_boundary', 
                            flip.axes = T, 
                            pt.size = 0.5)
-#> Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
-#> ℹ Please use tidy evaluation idioms with `aes()`.
-#> ℹ See also `vignette("ggplot2-in-packages")` for more information.
-#> ℹ The deprecated feature was likely used in the SpotGraphs package.
-#>   Please report the issue to the authors.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
 
 patchwork::wrap_plots(plt.ggnet, plt.spg)
 ```

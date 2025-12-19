@@ -2,6 +2,7 @@
 
 ``` r
 library(SpotGraphs)
+library(Seurat)
 library(ggplot2)
 library(dplyr)
 library(viridis)
@@ -24,12 +25,25 @@ demonstrate
 [`NeighborhoodCenters()`](https://sanin-lab.github.io/SpotGraphs/reference/NeighborhoodCenters.md).
 
 ``` r
+scc_s1 = UpdateSeuratObject(scc_s1)
+#> Validating object structure
+#> Updating object slots
+#> Ensuring keys are in the proper structure
+#> Ensuring keys are in the proper structure
+#> Ensuring feature names don't have underscores or pipes
+#> Updating slots in Spatial
+#> Updating slots in slice1
+#> Warning: Not validating Centroids objects
+#> Updated Centroids object 'centroids' in FOV 'slice1'
+#> Updated boundaries in FOV 'slice1'
+#> Validating object structure for Assay5 'Spatial'
+#> Validating object structure for VisiumV2 'slice1'
+#> Object representation is consistent with the most current Seurat version
 class(scc_s1)
 #> [1] "Seurat"
 #> attr(,"package")
 #> [1] "SeuratObject"
 dim(scc_s1)
-#> Loading required namespace: SeuratObject
 #> [1] 36601  1185
 
 coord = Seurat::GetTissueCoordinates(scc_s1)
@@ -87,14 +101,6 @@ plt1 = SpatialPlotGraph(ig, group.by = 'centr_eigen',
                         pt.size = 0.5, linewidth = 0.1) +
   scale_color_viridis() +
   theme_void()
-#> Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
-#> ℹ Please use tidy evaluation idioms with `aes()`.
-#> ℹ See also `vignette("ggplot2-in-packages")` for more information.
-#> ℹ The deprecated feature was likely used in the SpotGraphs package.
-#>   Please report the issue to the authors.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
 plt2 = SpatialPlotGraph(ig, group.by = 'roi_center',
                         pt.size = 0.5, linewidth = 0.1) +
   scale_color_manual(values = c('grey', 'red')) +
