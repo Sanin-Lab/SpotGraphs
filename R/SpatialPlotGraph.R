@@ -74,7 +74,7 @@ SpatialPlotGraph = function(igraph_object = NULL,
   # Add vertices based on whether group.by is present or not
   if (group.by %in% colnames(df)) {
     plt = plt +
-      geom_point(aes_string(color = group.by), size = pt.size) +
+      geom_point(aes(color = .data[[group.by]]), size = pt.size) +
       guides(color = guide_legend(title = group.by))
   } else {
     plt = plt +
@@ -84,10 +84,10 @@ SpatialPlotGraph = function(igraph_object = NULL,
   # Label groups if desired
   if (label) {
     label.df = df %>%
-      dplyr::reframe(.by = group.by, x = mean(x), y = mean(y))
+      dplyr::reframe(.by = all_of(group.by), x = mean(x), y = mean(y))
     plt = plt +
       geom_label(data = label.df,
-                 aes_string(x = 'x', y = 'y', label = group.by, fill = group.by),
+                 aes(x = 'x', y = 'y', label = .data[[group.by]], fill = .data[[group.by]]),
                  show.legend = F)
   }
   return(plt)
