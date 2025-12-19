@@ -32,6 +32,7 @@ utils::globalVariables(c('barcode',
 #' @importFrom ggplot2 geom_point
 #' @importFrom ggplot2 geom_segment
 #' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 guide_colourbar
 #' @importFrom ggplot2 guide_legend
 #' @importFrom ggplot2 guides
 #' @importFrom ggplot2 theme_classic
