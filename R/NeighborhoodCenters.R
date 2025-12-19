@@ -32,12 +32,24 @@
 #' res = NeighborhoodCenters(coord = df, is_neighborhood = is_cluster)
 #' }
 NeighborhoodCenters = function(coord = NULL, is_neighborhood) {
+  # check if is_neighborhood vector is boolean
+  if (!is.logical(is_neighborhood)) {
+    stop('is_neighborhood should be logical (TRUE/FALSE) indicating neighborhood membership')
+  }
 
-  # make sure barcodes in coordinates and label vector are aligned
-  coord = coord[match(rownames(coord), names(is_neighborhood)),]
+  # Ensure spots in is_neighborhood and coord are aligned with each other
+  # - if is_neighborhood is not named with spot ids (i.e., barcodes), assume
+  #   that they are properly ordered in the same way as the coordinate matrix
+  if (!is.null(names(is_neighborhood))) {
+    coord = coord[match(rownames(coord), names(is_neighborhood)),]
+  } else {
+    names(is_neighborhood) = rownames(coord)
+  }
+
+  # Create igraph object
   ig = SpotGraph(coord)
 
-  # Remove edges between tumor and non-tumor spots
+  # Remove edges between neighborhood and non-neighborhood spots
   is_neighborhood = is_neighborhood[match(names(igraph::V(ig)), names(is_neighborhood))]
   igraph::V(ig)$is_neighborhood = is_neighborhood
   ig = CutEdges(igraph_object = ig,
