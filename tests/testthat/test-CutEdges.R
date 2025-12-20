@@ -11,11 +11,13 @@ test_that("CutEdges produces expected output", {
     )
   )
 
-  # compare edges
-  res = igraph::E(res)
   res_expected = readRDS(test_path('fixtures', 'cutedges_expected.rds'))
 
+  # compare adjacency matrices
+  res.adj = igraph::as_adjacency_matrix(res)
+  res_expected.adj = igraph::as_adjacency_matrix(res_expected)
+
   expect_snapshot(
-    waldo::compare(res_expected, res)
+    waldo::compare(res_expected.adj, res.adj)
   )
 })
