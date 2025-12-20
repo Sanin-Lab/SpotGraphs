@@ -17,7 +17,10 @@ test_that("SpotGraph produces expected output", {
   res = SpotGraph(coord = coord)
   res_expected = readRDS(test_path('fixtures', 'sccs1_igraph.rds'))
 
+  res.adj = igraph::as_adjacency_matrix(res)
+  res_expected.adj = igraph::as_adjacency_matrix(res_expected)
+
   expect_snapshot(
-    waldo::compare(res_expected, res)
+    waldo::compare(res_expected.adj, res.adj)
   )
 })
