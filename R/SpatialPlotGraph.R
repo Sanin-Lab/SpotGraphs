@@ -24,7 +24,7 @@
 #' }
 SpatialPlotGraph = function(igraph_object = NULL,
                             coord = NULL,
-                            group.by = 'is_boundary',
+                            group.by = NULL,
                             label = FALSE,
                             flip.axes = TRUE,
                             linewidth = 0.5,
@@ -76,13 +76,14 @@ SpatialPlotGraph = function(igraph_object = NULL,
     plt = plt +
       geom_point(aes(color = .data[[group.by]]), size = pt.size) +
       guides(color = guide_legend(title = group.by))
+
+    # swap legend to colourbar if group.by is continuous
+    if (is.numeric(df[,group.by])) {
+      plt = plt + guides(color = guide_colourbar())
+    }
   } else {
     plt = plt +
       geom_point(size = pt.size)
-  }
-
-  if (is.numeric(df[,group.by])) {
-    plt = plt + guides(color = guide_colourbar())
   }
 
   # Label groups if desired
