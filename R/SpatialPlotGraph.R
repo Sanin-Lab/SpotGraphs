@@ -72,6 +72,7 @@ SpatialPlotGraph = function(igraph_object = NULL,
     theme_classic()
 
   # Add vertices based on whether group.by is present or not
+  group.by = ifelse(is.null(group.by), NA, group.by)
   if (group.by %in% colnames(df)) {
     plt = plt +
       geom_point(aes(color = .data[[group.by]]), size = pt.size) +
