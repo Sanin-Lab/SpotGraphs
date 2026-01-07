@@ -7,7 +7,7 @@
 SpatialPlotGraph(
   igraph_object = NULL,
   coord = NULL,
-  group.by = "is_boundary",
+  group.by = NULL,
   label = FALSE,
   flip.axes = TRUE,
   linewidth = 0.5,
