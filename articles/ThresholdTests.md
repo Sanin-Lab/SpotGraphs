@@ -43,6 +43,8 @@ res.ls = lapply(spe.ls, function(spe) {
 })
 ```
 
+![](ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-1.png)![](ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-2.png)![](ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-3.png)![](ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-4.png)![](ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-5.png)![](ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-6.png)
+
 ### Store the result dataframe in each SpatialExperiment object
 
 ``` r

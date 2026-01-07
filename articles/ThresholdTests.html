@@ -113,6 +113,7 @@ distributions<a class="anchor" aria-label="anchor" href="#load-several-datasets-
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">coord</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'x'</span>, <span class="st">'y'</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/CleanSlide.html">CleanSlide</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span>, nCount <span class="op">=</span> <span class="va">spe</span><span class="op">$</span><span class="va">nCount</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-1.png" class="r-plt" alt="" width="700"><img src="ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-2.png" class="r-plt" alt="" width="700"><img src="ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-3.png" class="r-plt" alt="" width="700"><img src="ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-4.png" class="r-plt" alt="" width="700"><img src="ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-5.png" class="r-plt" alt="" width="700"><img src="ThresholdTests_files/figure-html/Calculate%20total%20transcripts%20in%20each%20cluster-6.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="store-the-result-dataframe-in-each-spatialexperiment-object">Store the result dataframe in each SpatialExperiment object<a class="anchor" aria-label="anchor" href="#store-the-result-dataframe-in-each-spatialexperiment-object"></a>
@@ -182,7 +183,7 @@ distributions<a class="anchor" aria-label="anchor" href="#load-several-datasets-
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt.ncount</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ThresholdTests_files/figure-html/Plot%20counts%20on%20tissue%20images-1.png" class="r-plt" width="768"></p>
+<p><img src="ThresholdTests_files/figure-html/Plot%20counts%20on%20tissue%20images-1.png" class="r-plt" alt="" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="calculate-intervals-with-various-strategies">Calculate intervals with various strategies<a class="anchor" aria-label="anchor" href="#calculate-intervals-with-various-strategies"></a>
@@ -247,7 +248,7 @@ distributions<a class="anchor" aria-label="anchor" href="#load-several-datasets-
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt.tests</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ThresholdTests_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" width="672"></p>
+<p><img src="ThresholdTests_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="plot-which-spots-would-be-filtered-out-with-each-threshold">Plot which spots would be filtered out with each threshold<a class="anchor" aria-label="anchor" href="#plot-which-spots-would-be-filtered-out-with-each-threshold"></a>
@@ -286,7 +287,7 @@ distributions<a class="anchor" aria-label="anchor" href="#load-several-datasets-
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt.thresholds</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ThresholdTests_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="768"></p>
+<p><img src="ThresholdTests_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="use-eccentricity-to-determine-which-spots-should-be-filtered-out">Use eccentricity to determine which spots should be filtered
@@ -318,7 +319,7 @@ spots</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span>, face <span class="op">=</span> <span class="st">'bold'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt.ecc</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ThresholdTests_files/figure-html/eccentricity-1.png" class="r-plt" width="768"></p>
+<p><img src="ThresholdTests_files/figure-html/eccentricity-1.png" class="r-plt" alt="" width="768"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plt.eccthres</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ig.ls</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ig</span> <span class="op">=</span> <span class="va">ig.ls</span><span class="op">[[</span><span class="va">id</span><span class="op">]</span><span class="op">]</span></span>
@@ -356,7 +357,7 @@ spots</p>
 <span><span class="co">#&gt; Warning in unit(c(t, r, b, l), unit): NAs introduced by coercion</span></span>
 <span></span>
 <span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt.eccthres</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ThresholdTests_files/figure-html/plot%20eccentricity%20threshold-1.png" class="r-plt" width="768"></p>
+<p><img src="ThresholdTests_files/figure-html/plot%20eccentricity%20threshold-1.png" class="r-plt" alt="" width="768"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

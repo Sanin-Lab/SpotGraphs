@@ -62,6 +62,8 @@
   : Visualize igraph vertex attribute on tissue x,y coordinates
 - [`SpotGraph()`](https://sanin-lab.github.io/SpotGraphs/reference/SpotGraph.md)
   : Creates an igraph object given x,y coordinates
+- [`get_threshold()`](https://sanin-lab.github.io/SpotGraphs/reference/get_threshold.md)
+  : Calculate a threshold given some set of statistics
 - [`scc_s1`](https://sanin-lab.github.io/SpotGraphs/reference/scc_s1.md)
   : Oral SCC Visium spatial transcriptomics data
 

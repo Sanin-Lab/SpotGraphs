@@ -9,14 +9,14 @@
 
 ## Citation
 
-Lee A, Sanin D (2025). *SpotGraphs: Generate igraph Objects With Visium
+Lee A, Sanin D (2026). *SpotGraphs: Generate igraph Objects With Visium
 Spot Coordinates For Basic Analysis Tasks*. R package version
 0.0.0.9000, <https://sanin-lab.github.io/SpotGraphs/>.
 
     @Manual{,
       title = {SpotGraphs: Generate igraph Objects With Visium Spot Coordinates For Basic Analysis Tasks},
       author = {Alex Lee and David Sanin},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.0.0.9000},
       url = {https://sanin-lab.github.io/SpotGraphs/},
     }

@@ -68,9 +68,9 @@ head(coord)
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH e1309f2 UN-- 1185 3189 -- 
+#> IGRAPH c0162db UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from e1309f2 (vertex names):
+#> + edges from c0162db (vertex names):
 #>  [1] AAACACCAATAACTGC-1--AGGCGGTTTGTCCCGC-1
 #>  [2] AAACACCAATAACTGC-1--CTCGTCGAGGGCTCAT-1
 #>  [3] AAACACCAATAACTGC-1--GAAACATAGGAAACAG-1
@@ -141,6 +141,11 @@ to re-insert back into the original Seurat object.
 
 ``` r
 res = CleanSlide(coord, nCount = nCounts)
+```
+
+![](SpotGraphs_files/figure-html/unnamed-chunk-6-1.png)
+
+``` r
 scc_s1 = Seurat::AddMetaData(scc_s1, res)
 ```
 
