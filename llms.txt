@@ -1,4 +1,4 @@
-# SpotGraphs [![R-CMD-check](https://github.com/Sanin-Lab/SpotGraphs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Sanin-Lab/SpotGraphs/actions/workflows/R-CMD-check.yaml)
+# SpotGraphs
 
 ## Functions to aid in spatial transcriptomics data analysis
 
