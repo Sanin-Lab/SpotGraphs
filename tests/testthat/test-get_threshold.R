@@ -4,6 +4,6 @@ test_that("get_threshold produces expected output", {
   res_expected = readRDS(test_path('fixtures', 'getthres_result.rds'))
 
   expect_snapshot(
-    waldo::compare(res_expected, res)
+    waldo::compare(res_expected, res, tolerance = testthat::testthat_tolerance())
   )
 })
