@@ -60,85 +60,41 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="spotgraphs-">SpotGraphs 
-<a class="anchor" aria-label="anchor" href="#spotgraphs-"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="spotgraphs-r-cmd-check-">SpotGraphs <a href="https://github.com/Sanin-Lab/SpotGraphs/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/Sanin-Lab/SpotGraphs/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> 
+<a class="anchor" aria-label="anchor" href="#spotgraphs-r-cmd-check-"></a>
 </h1>
 </div>
 <div class="section level2">
-<h2 id="functions-to-aid-in-visium-spatial-transcriptomics-data-analysis-with-igraph">Functions to aid in Visium spatial transcriptomics data analysis with igraph<a class="anchor" aria-label="anchor" href="#functions-to-aid-in-visium-spatial-transcriptomics-data-analysis-with-igraph"></a>
+<h2 id="functions-to-aid-in-spatial-transcriptomics-data-analysis">Functions to aid in spatial transcriptomics data analysis<a class="anchor" aria-label="anchor" href="#functions-to-aid-in-spatial-transcriptomics-data-analysis"></a>
 </h2>
 </div>
 <div class="section level2">
 <h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
 </h2>
+<p>Current spatial transcriptomic analysis pipelines in R focus on pre-processing and visualization, while providing limited tools to interact with the “spatial” aspect of this data. To address this limitation, we provide a set of tools that allow more flexibility when working with the spatial coordinates to enable further filtering of low quality spots on tissue debris, edit spot-level adjacencies, and identify centers or boundaries of user-defined neighborhoods of interest.</p>
+<p>This package allows users to simply provide the x,y-coordinates of their spatial data to create an igraph object with the <code><a href="reference/SpotGraph.html">SpotGraph()</a></code> function, from which various graph-based statistics can be calculated and stored as meta data in the user’s original Seurat or SpatialExperiment object.</p>
 </div>
 <div class="section level2">
 <h2 id="method-overview">Method overview<a class="anchor" aria-label="anchor" href="#method-overview"></a>
 </h2>
+<p>To construct a graph given x,y-coordinates of spatial data, the SpotGraph() function implements two approaches to identifying neighboring spots to build an adjacency matrix, either based on Euclidean distance or with Delaunay triangulation. See our manuscript for more details.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
+<p>To install the latest version of our package, run:</p>
+<p><code>devtools::install_github("Sanin-Lab/SpotGraphs")</code></p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
+<p>To create an igraph object from spatial data, the only required input into the <code><a href="reference/SpotGraph.html">SpotGraph()</a></code> function is a data frame or matrix with two columns corresponding to x,y-coordinates.</p>
+<p><code>SpotGraph(coord.df)</code></p>
 </div>
 <div class="section level2">
 <h2 id="tutorials-and-applications">Tutorials and Applications<a class="anchor" aria-label="anchor" href="#tutorials-and-applications"></a>
 </h2>
-<div class="section level3">
-<h3 id="quick-overview">Quick overview<a class="anchor" aria-label="anchor" href="#quick-overview"></a>
-</h3>
-</div>
-<div class="section level3">
-<h3 id="creating-and-igraph-object">Creating and igraph object<a class="anchor" aria-label="anchor" href="#creating-and-igraph-object"></a>
-</h3>
-</div>
-<div class="section level3">
-<h3 id="filtering-low-quality-spots-on-tissue-debris">Filtering low quality spots on tissue debris<a class="anchor" aria-label="anchor" href="#filtering-low-quality-spots-on-tissue-debris"></a>
-</h3>
-</div>
-<div class="section level3">
-<h3 id="identifying-centers-of-neighborhoods">Identifying centers of neighborhoods<a class="anchor" aria-label="anchor" href="#identifying-centers-of-neighborhoods"></a>
-</h3>
-</div>
-</div>
-<div class="section level2">
-<h2 id="current-functions-in-this-repo">Current functions in this repo:<a class="anchor" aria-label="anchor" href="#current-functions-in-this-repo"></a>
-</h2>
-<ol style="list-style-type: decimal">
-<li>
-<code>SpotGraph(coord, dist.buffer = 1.05, max.dist = NULL)</code>
-<ul>
-<li>this will create an igraph object given a 2-column data frame or matrix of x,y coordinates</li>
-<li>each node = a spot, where an edge exists between two spots if they are adjacent to each other</li>
-<li>returns an igraph object</li>
-</ul>
-</li>
-<li>
-<code>CleanSlide(coord, nCount)</code>
-<ul>
-<li>takes a 2-column data frame or matrix of x,y coordinates and calls SpotGraph to create an igraph object</li>
-<li>performs modularity maximization to group connected communities of spots</li>
-<li>adds total transcripts together per-cluster (nCount)</li>
-<li>calculates a threshold to identify low quality/small communities of spots</li>
-<li>returns a data frame with per-spot cluster results, total counts per cluster, and whether the cluster passed the automatically detected threshold</li>
-</ul>
-</li>
-<li>
-<code>SpatialPlotGraph(igraph_object, coord = NULL, group.by, label = T)</code>
-<ul>
-<li>use the original x,y coordinates to plot some vertex_attr in the corresponding igraph object</li>
-</ul>
-</li>
-<li>
-<code>CutEdges(igraph_object, cluster_pairs = NULL, cluster.col = "cluster")</code>
-<ul>
-<li>remove all edges between specified groups of spots in an igraph object</li>
-</ul>
-</li>
-</ol>
+<p>See documentation website for in-depth walkthroughs.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
