@@ -77,7 +77,7 @@
 <div class="section level2">
 <h2 id="method-overview">Method overview<a class="anchor" aria-label="anchor" href="#method-overview"></a>
 </h2>
-<p>To construct a graph given x,y-coordinates of spatial data, the SpotGraph() function implements two approaches to identifying neighboring spots to build an adjacency matrix, either based on Euclidean distance or with Delaunay triangulation. See our manuscript for more details.</p>
+<p>To construct a graph given x,y-coordinates of spatial data, the <code><a href="reference/SpotGraph.html">SpotGraph()</a></code> function implements two approaches to identifying neighboring spots to build an adjacency matrix, either based on Euclidean distance or with Delaunay triangulation. See our manuscript for more details.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -89,7 +89,13 @@
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <p>To create an igraph object from spatial data, the only required input into the <code><a href="reference/SpotGraph.html">SpotGraph()</a></code> function is a data frame or matrix with two columns corresponding to x,y-coordinates.</p>
-<p><code>SpotGraph(coord.df)</code></p>
+<p><code>ig = SpotGraph(coord.df)</code></p>
+<p>From the igraph object, we can now apply igraph functions, which can either be stored in the same igraph object, or stored as additional meta data columns. For example, one could calculate the number of connections (i.e., adjacent spots) per spot:</p>
+<p><code>V(ig)$degree = igraph::degree(ig)</code></p>
+<p>Or perform clustering, given spot-level adjacencies:</p>
+<p><code>cl = igraph::cluster_fast_greedy(ig)</code></p>
+<p>Which can be stored back into the original coordinates data frame:</p>
+<p><code>coord.df$igraph_clusters = factor(cl$membership)</code></p>
 </div>
 <div class="section level2">
 <h2 id="tutorials-and-applications">Tutorials and Applications<a class="anchor" aria-label="anchor" href="#tutorials-and-applications"></a>

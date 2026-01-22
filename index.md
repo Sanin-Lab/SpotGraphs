@@ -23,10 +23,10 @@ SpatialExperiment object.
 ## Method overview
 
 To construct a graph given x,y-coordinates of spatial data, the
-SpotGraph() function implements two approaches to identifying
-neighboring spots to build an adjacency matrix, either based on
-Euclidean distance or with Delaunay triangulation. See our manuscript
-for more details.
+[`SpotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpotGraph.md)
+function implements two approaches to identifying neighboring spots to
+build an adjacency matrix, either based on Euclidean distance or with
+Delaunay triangulation. See our manuscript for more details.
 
 ## Installation
 
@@ -42,7 +42,22 @@ into the
 function is a data frame or matrix with two columns corresponding to
 x,y-coordinates.
 
-`SpotGraph(coord.df)`
+`ig = SpotGraph(coord.df)`
+
+From the igraph object, we can now apply igraph functions, which can
+either be stored in the same igraph object, or stored as additional meta
+data columns. For example, one could calculate the number of connections
+(i.e., adjacent spots) per spot:
+
+`V(ig)$degree = igraph::degree(ig)`
+
+Or perform clustering, given spot-level adjacencies:
+
+`cl = igraph::cluster_fast_greedy(ig)`
+
+Which can be stored back into the original coordinates data frame:
+
+`coord.df$igraph_clusters = factor(cl$membership)`
 
 ## Tutorials and Applications
 
