@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SpotGraphs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,6 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/NeighborhoodCenters.html">Identify centers or boundaries of some region of interest</a></li>
     <li><a class="dropdown-item" href="../articles/QuickStart.html">QuickStart</a></li>
-    <li><a class="dropdown-item" href="../articles/ThresholdTests.html">ThresholdTests</a></li>
   </ul>
 </li>
       </ul>
@@ -72,8 +71,10 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sanin-lab.github.io/SpotGraphs/">SpotGraphs</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/briatte/ggnetwork" class="external-link">ggnetwork</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
@@ -123,7 +124,7 @@ through the network between each spot</li>
 <p>To construct an igraph object, all we need are the x,y coordinates of
 the spots on our slide.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">coord</span> <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">coord</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
 <span><span class="va">coord</span> <span class="op">=</span> <span class="va">coord</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'x'</span>, <span class="st">'y'</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">coord</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                        x     y</span></span>
@@ -136,9 +137,9 @@ the spots on our slide.</p>
 <span></span>
 <span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpotGraph.html">SpotGraph</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span><span class="op">)</span></span>
 <span><span class="va">ig</span></span>
-<span><span class="co">#&gt; IGRAPH 32a7b29 UN-- 1185 3189 -- </span></span>
+<span><span class="co">#&gt; IGRAPH f4f7dd6 UN-- 1185 3189 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)</span></span>
-<span><span class="co">#&gt; + edges from 32a7b29 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from f4f7dd6 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] AAACACCAATAACTGC-1--AGGCGGTTTGTCCCGC-1</span></span>
 <span><span class="co">#&gt;  [2] AAACACCAATAACTGC-1--CTCGTCGAGGGCTCAT-1</span></span>
 <span><span class="co">#&gt;  [3] AAACACCAATAACTGC-1--GAAACATAGGAAACAG-1</span></span>
@@ -176,59 +177,91 @@ in our plots.</p>
 <p>One of the main features of the SpotGraph package is to identify
 spots on a slide that lie on top of tissue debris disconnected from the
 rest of the tissue sample. These are uninformative and are a technical
-artifact from sample processing, so we’d like to exclude these from our
-downstream analysis. The <code><a href="../reference/CleanSlide.html">CleanSlide()</a></code> function provides a
-simple way to automatically identify these spots, based on connectivity
-to other spots and the number of transcripts detected within each
-community of spots.</p>
-<p>First, we extract the two inputs required for the
-<code><a href="../reference/CleanSlide.html">CleanSlide()</a></code> function:</p>
+artifacts from sample processing, so we’d like to exclude these from our
+downstream analysis. We can identify whether a spot is surrounded by
+other spots using the <code><a href="https://r.igraph.org/reference/degree.html" class="external-link">igraph::degree()</a></code> function, and filter
+out spots that are by themselves or only adjacent to one other spot with
+<code><a href="https://r.igraph.org/reference/subgraph.html" class="external-link">igraph::subgraph()</a></code>:</p>
 <ol style="list-style-type: decimal">
-<li>the x,y coordinates of each spot in our dataset</li>
-<li>a vector of transcript counts detected in each spot</li>
+<li>First, extract the x,y coordinates of each spot in our dataset</li>
+<li>Create and igraph object with <code><a href="../reference/SpotGraph.html">SpotGraph()</a></code>
+</li>
+<li>Calculate the number of connections per-spot with
+<code><a href="https://r.igraph.org/reference/degree.html" class="external-link">igraph::degree()</a></code>
+</li>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">coord</span> <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">coord</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
 <span><span class="va">coord</span> <span class="op">=</span> <span class="va">coord</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'x'</span>, <span class="st">'y'</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="va">nCounts</span> <span class="op">=</span> <span class="va">scc_s1</span><span class="op">$</span><span class="va">nCount_Spatial</span></span></code></pre></div>
-<p>The output of <code><a href="../reference/CleanSlide.html">CleanSlide()</a></code> is a data.frame with the same
-number of rows as the input coordinate data.frame or matrix that can be
-directly used with <code><a href="https://satijalab.github.io/seurat-object/reference/AddMetaData.html" class="external-link">Seurat::AddMetaData()</a></code> to re-insert back
-into the original Seurat object.</p>
+<span></span>
+<span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpotGraph.html">SpotGraph</a></span><span class="op">(</span><span class="va">coord</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">n_connections</span> <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/degree.html" class="external-link">degree</a></span><span class="op">(</span><span class="va">ig</span><span class="op">)</span></span></code></pre></div>
+<p>We can now plot the number of connections (i.e., the results of
+<code><a href="https://r.igraph.org/reference/degree.html" class="external-link">igraph::degree()</a></code>) by storing these results back into the
+original Seurat object that we started with. Additionally, we can add
+another metadata column to indicate whether each spot is adjacent to
+more than one other spot.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/CleanSlide.html">CleanSlide</a></span><span class="op">(</span><span class="va">coord</span>, nCount <span class="op">=</span> <span class="va">nCounts</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="700"></p>
+<code class="sourceCode R"><span><span class="va">scc_s1</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/AddMetaData.html" class="external-link">AddMetaData</a></span><span class="op">(</span><span class="va">scc_s1</span>, <span class="va">n_connections</span>, <span class="st">'degree'</span><span class="op">)</span></span>
+<span><span class="va">scc_s1</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/AddMetaData.html" class="external-link">AddMetaData</a></span><span class="op">(</span><span class="va">scc_s1</span>, <span class="va">n_connections</span><span class="op">&gt;</span><span class="fl">1</span>, <span class="st">'adj_threshold'</span><span class="op">)</span></span></code></pre></div>
+<p>We can now observe the results of <code><a href="https://r.igraph.org/reference/degree.html" class="external-link">igraph::degree()</a></code> with
+<code><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">Seurat::SpatialFeaturePlot()</a></code>. Spots colored in red are the
+spots that we’ve identified to only have one adjacent spot or are by
+themselves on our slide. With this method, we would be able to further
+remove low quality spots from our data, entirely based on spot-level
+adjacencies.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">scc_s1</span> <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/AddMetaData.html" class="external-link">AddMetaData</a></span><span class="op">(</span><span class="va">scc_s1</span>, <span class="va">res</span><span class="op">)</span></span></code></pre></div>
-<p>We can now observe the results of <code><a href="../reference/CleanSlide.html">CleanSlide()</a></code> with
-<code><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">Seurat::SpatialDimPlot()</a></code></p>
+<code class="sourceCode R"><span><span class="va">plt.deg</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">scc_s1</span>, feature <span class="op">=</span> <span class="st">'degree'</span>, image.alpha <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_distiller</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">'Blues'</span><span class="op">)</span></span>
+<span><span class="va">plt.degfilter</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialDimPlot</a></span><span class="op">(</span><span class="va">scc_s1</span>, group.by <span class="op">=</span> <span class="st">'adj_threshold'</span>, image.alpha <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'red'</span>, <span class="st">'grey90'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt.deg</span>, <span class="va">plt.degfilter</span><span class="op">)</span></span></code></pre></div>
+<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="864"></p>
+<p>Alternatively, we could perform clustering using the spot adjacencies
+we identified with <code><a href="../reference/SpotGraph.html">SpotGraph()</a></code>. We set the
+<code>resolution = 0</code> to group all spots together that are
+connected in any way. We can store these clustering results back into
+our Seurat object and again, plot with
+<code><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">Seurat::SpatialDimPlot()</a></code>. After clustering, we can choose
+to keep only clusters 1 and 2, which will let us remove any low quality
+spots that are disconnected from most of the tissue sample in our
+data.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialDimPlot</a></span><span class="op">(</span><span class="va">scc_s1</span>, group.by <span class="op">=</span> <span class="st">'threshold'</span>, image.alpha <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="576"></p>
-<p>We can agree with these results and directly apply the threshold to
-filter out these spots with <code>subset(scc_s1, threshold)</code>, or
-we can manually identify groups of spots that we want to filter out. The
-‘ig_cluster’ metadata column stores communities of spots, where each
-spot is immediately adjacent to other spots.</p>
+<code class="sourceCode R"><span><span class="va">cl</span> <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/cluster_louvain.html" class="external-link">cluster_louvain</a></span><span class="op">(</span><span class="va">ig</span>, resolution <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">scc_s1</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/AddMetaData.html" class="external-link">AddMetaData</a></span><span class="op">(</span><span class="va">scc_s1</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cl</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span>, <span class="st">'igraph_clusters'</span><span class="op">)</span></span>
+<span><span class="va">plt.cl</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialDimPlot</a></span><span class="op">(</span></span>
+<span>  object <span class="op">=</span> <span class="va">scc_s1</span>, </span>
+<span>  group.by <span class="op">=</span> <span class="st">'igraph_clusters'</span>, </span>
+<span>  image.alpha <span class="op">=</span> <span class="fl">0.6</span>, </span>
+<span>  label <span class="op">=</span> <span class="cn">T</span>, </span>
+<span>  label.size <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html" class="external-link">NoLegend</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  </span>
+<span></span>
+<span><span class="va">scc_s1</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/AddMetaData.html" class="external-link">AddMetaData</a></span><span class="op">(</span><span class="va">scc_s1</span>, <span class="va">cl</span><span class="op">$</span><span class="va">membership</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'1'</span>,<span class="st">'2'</span><span class="op">)</span>, <span class="st">'cl_threshold'</span><span class="op">)</span></span>
+<span><span class="va">plt.clfitler</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialDimPlot</a></span><span class="op">(</span></span>
+<span>  object <span class="op">=</span> <span class="va">scc_s1</span>, </span>
+<span>  group.by <span class="op">=</span> <span class="st">'cl_threshold'</span>, </span>
+<span>  image.alpha <span class="op">=</span> <span class="fl">0.6</span></span>
+<span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'red'</span>, <span class="st">'grey90'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt.cl</span>, <span class="va">plt.clfitler</span><span class="op">)</span></span></code></pre></div>
+<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="864"></p>
+<p>We will apply the filter determined from using the igraph clustering
+method.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialDimPlot</a></span><span class="op">(</span><span class="va">scc_s1</span>, group.by <span class="op">=</span> <span class="st">'ig_cluster'</span>, image.alpha <span class="op">=</span> <span class="fl">0.6</span>, label <span class="op">=</span> <span class="cn">T</span>, label.size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="576"></p>
-<p>In this case, we could manually remove clusters 9, 10, 23, 24, 26,
-22, 15, 18, 19, 17, 20, and 25.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spot_clusters_to_remove</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">10</span>, <span class="fl">23</span>, <span class="fl">24</span>, <span class="fl">26</span>, <span class="fl">22</span>, <span class="fl">15</span>, <span class="fl">18</span>, <span class="fl">19</span>, <span class="fl">17</span>, <span class="fl">20</span>, <span class="fl">25</span><span class="op">)</span></span>
-<span><span class="va">scc_s1</span> <span class="op">=</span> <span class="va">scc_s1</span><span class="op">[</span>, <span class="op">!</span><span class="va">scc_s1</span><span class="op">$</span><span class="va">ig_cluster</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">spot_clusters_to_remove</span><span class="op">]</span></span>
-<span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">scc_s1</span>, features <span class="op">=</span> <span class="st">'nCount_Spatial'</span>, pt.size.factor <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SpotGraphs_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="576"></p>
+<code class="sourceCode R"><span><span class="co"># Apply filter to keep igraph clusters 1 and 2</span></span>
+<span><span class="va">scc_s1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">scc_s1</span>, subset <span class="op">=</span> <span class="va">cl_threshold</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="cutedges">CutEdges<a class="anchor" aria-label="anchor" href="#cutedges"></a>
 </h2>
 <p>When working with an igraph object, it may be desirable to remove all
 edges between two groups of spots.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create igraph object</span></span>
-<span><span class="va">coord</span> <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
+<span><span class="va">coord</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
 <span><span class="va">coord</span> <span class="op">=</span> <span class="va">coord</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'x'</span>, <span class="st">'y'</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpotGraph.html">SpotGraph</a></span><span class="op">(</span><span class="va">coord</span><span class="op">)</span></span>
 <span></span>
@@ -241,7 +274,7 @@ edges between two groups of spots.</p>
 <span>        legend.position <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Remove edges between pairs of clusters</span></span>
-<span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/CutEdges.html">CutEdges</a></span><span class="op">(</span><span class="va">ig</span>, cluster_pairs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span>, cluster.col <span class="op">=</span> <span class="st">'clusters'</span><span class="op">)</span></span>
+<span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/CutEdges.html">CutEdges</a></span><span class="op">(</span><span class="va">ig</span>, cluster_pairs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">7</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">8</span><span class="op">)</span><span class="op">)</span>, cluster.col <span class="op">=</span> <span class="st">'clusters'</span><span class="op">)</span></span>
 <span><span class="va">plt2</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpatialPlotGraph.html">SpatialPlotGraph</a></span><span class="op">(</span><span class="va">ig</span>, group.by <span class="op">=</span> <span class="st">'clusters'</span>, label <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'after'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -249,9 +282,9 @@ edges between two groups of spots.</p>
 <span>        legend.position <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">plt3</span> <span class="op">=</span> <span class="va">plt2</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.35</span>,<span class="fl">0.8</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.4</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.15</span>,<span class="fl">0.65</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.15</span>, <span class="fl">0.65</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">'after/zoomed'</span><span class="op">)</span></span>
-<span><span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt1</span>, <span class="va">plt2</span>, <span class="va">plt3</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">plt1</span>, <span class="va">plt2</span>, <span class="va">plt3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SpotGraphs_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="1056"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

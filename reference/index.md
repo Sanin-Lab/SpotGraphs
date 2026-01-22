@@ -2,9 +2,6 @@
 
 ## All functions
 
-- [`CleanSlide()`](https://sanin-lab.github.io/SpotGraphs/reference/CleanSlide.md)
-  : Identify spots isolated from the largest groups of immediately
-  adjacent spots
 - [`CutEdges()`](https://sanin-lab.github.io/SpotGraphs/reference/CutEdges.md)
   : Remove all edges that lie between pairs of clusters
 - [`NeighborhoodCenters()`](https://sanin-lab.github.io/SpotGraphs/reference/NeighborhoodCenters.md)

@@ -2,8 +2,10 @@
 
 ``` r
 library(SpotGraphs)
+library(Seurat)
 library(dplyr)
 library(ggplot2)
+library(patchwork)
 library(viridis)
 library(ggnetwork)
 ```
@@ -55,7 +57,7 @@ To construct an igraph object, all we need are the x,y coordinates of
 the spots on our slide.
 
 ``` r
-coord = Seurat::GetTissueCoordinates(scc_s1)
+coord = GetTissueCoordinates(scc_s1)
 coord = coord[,c('x', 'y')]
 head(coord)
 #>                        x     y
@@ -68,9 +70,9 @@ head(coord)
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH 32a7b29 UN-- 1185 3189 -- 
+#> IGRAPH f4f7dd6 UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from 32a7b29 (vertex names):
+#> + edges from f4f7dd6 (vertex names):
 #>  [1] AAACACCAATAACTGC-1--AGGCGGTTTGTCCCGC-1
 #>  [2] AAACACCAATAACTGC-1--CTCGTCGAGGGCTCAT-1
 #>  [3] AAACACCAATAACTGC-1--GAAACATAGGAAACAG-1
@@ -112,76 +114,100 @@ patchwork::wrap_plots(plt.ggnet, plt.spg)
 One of the main features of the SpotGraph package is to identify spots
 on a slide that lie on top of tissue debris disconnected from the rest
 of the tissue sample. These are uninformative and are a technical
-artifact from sample processing, so we’d like to exclude these from our
-downstream analysis. The
-[`CleanSlide()`](https://sanin-lab.github.io/SpotGraphs/reference/CleanSlide.md)
-function provides a simple way to automatically identify these spots,
-based on connectivity to other spots and the number of transcripts
-detected within each community of spots.
+artifacts from sample processing, so we’d like to exclude these from our
+downstream analysis. We can identify whether a spot is surrounded by
+other spots using the
+[`igraph::degree()`](https://r.igraph.org/reference/degree.html)
+function, and filter out spots that are by themselves or only adjacent
+to one other spot with
+[`igraph::subgraph()`](https://r.igraph.org/reference/subgraph.html):
 
-First, we extract the two inputs required for the
-[`CleanSlide()`](https://sanin-lab.github.io/SpotGraphs/reference/CleanSlide.md)
-function:
-
-1.  the x,y coordinates of each spot in our dataset
-2.  a vector of transcript counts detected in each spot
+1.  First, extract the x,y coordinates of each spot in our dataset
+2.  Create and igraph object with
+    [`SpotGraph()`](https://sanin-lab.github.io/SpotGraphs/reference/SpotGraph.md)
+3.  Calculate the number of connections per-spot with
+    [`igraph::degree()`](https://r.igraph.org/reference/degree.html)
 
 ``` r
-coord = Seurat::GetTissueCoordinates(scc_s1)
+coord = GetTissueCoordinates(scc_s1)
 coord = coord[,c('x', 'y')]
-nCounts = scc_s1$nCount_Spatial
+
+ig = SpotGraph(coord)
+
+n_connections = igraph::degree(ig)
 ```
 
-The output of
-[`CleanSlide()`](https://sanin-lab.github.io/SpotGraphs/reference/CleanSlide.md)
-is a data.frame with the same number of rows as the input coordinate
-data.frame or matrix that can be directly used with
-[`Seurat::AddMetaData()`](https://satijalab.github.io/seurat-object/reference/AddMetaData.html)
-to re-insert back into the original Seurat object.
+We can now plot the number of connections (i.e., the results of
+[`igraph::degree()`](https://r.igraph.org/reference/degree.html)) by
+storing these results back into the original Seurat object that we
+started with. Additionally, we can add another metadata column to
+indicate whether each spot is adjacent to more than one other spot.
 
 ``` r
-res = CleanSlide(coord, nCount = nCounts)
-```
-
-![](SpotGraphs_files/figure-html/unnamed-chunk-6-1.png)
-
-``` r
-scc_s1 = Seurat::AddMetaData(scc_s1, res)
+scc_s1 = AddMetaData(scc_s1, n_connections, 'degree')
+scc_s1 = AddMetaData(scc_s1, n_connections>1, 'adj_threshold')
 ```
 
 We can now observe the results of
-[`CleanSlide()`](https://sanin-lab.github.io/SpotGraphs/reference/CleanSlide.md)
-with
-[`Seurat::SpatialDimPlot()`](https://satijalab.org/seurat/reference/SpatialPlot.html)
+[`igraph::degree()`](https://r.igraph.org/reference/degree.html) with
+[`Seurat::SpatialFeaturePlot()`](https://satijalab.org/seurat/reference/SpatialPlot.html).
+Spots colored in red are the spots that we’ve identified to only have
+one adjacent spot or are by themselves on our slide. With this method,
+we would be able to further remove low quality spots from our data,
+entirely based on spot-level adjacencies.
 
 ``` r
-Seurat::SpatialDimPlot(scc_s1, group.by = 'threshold', image.alpha = 0.6)
+plt.deg = SpatialFeaturePlot(scc_s1, feature = 'degree', image.alpha = 0.6) +
+  scale_fill_distiller(palette = 'Blues')
+plt.degfilter = SpatialDimPlot(scc_s1, group.by = 'adj_threshold', image.alpha = 0.6) +
+  scale_fill_manual(values = c('red', 'grey90'))
+wrap_plots(plt.deg, plt.degfilter)
 ```
 
 ![](SpotGraphs_files/figure-html/unnamed-chunk-7-1.png)
 
-We can agree with these results and directly apply the threshold to
-filter out these spots with `subset(scc_s1, threshold)`, or we can
-manually identify groups of spots that we want to filter out. The
-‘ig_cluster’ metadata column stores communities of spots, where each
-spot is immediately adjacent to other spots.
+Alternatively, we could perform clustering using the spot adjacencies we
+identified with
+[`SpotGraph()`](https://sanin-lab.github.io/SpotGraphs/reference/SpotGraph.md).
+We set the `resolution = 0` to group all spots together that are
+connected in any way. We can store these clustering results back into
+our Seurat object and again, plot with
+[`Seurat::SpatialDimPlot()`](https://satijalab.org/seurat/reference/SpatialPlot.html).
+After clustering, we can choose to keep only clusters 1 and 2, which
+will let us remove any low quality spots that are disconnected from most
+of the tissue sample in our data.
 
 ``` r
-Seurat::SpatialDimPlot(scc_s1, group.by = 'ig_cluster', image.alpha = 0.6, label = T, label.size = 3)
+cl = igraph::cluster_louvain(ig, resolution = 0)
+scc_s1 = AddMetaData(scc_s1, factor(cl$membership), 'igraph_clusters')
+plt.cl = SpatialDimPlot(
+  object = scc_s1, 
+  group.by = 'igraph_clusters', 
+  image.alpha = 0.6, 
+  label = T, 
+  label.size = 3
+) + NoLegend()
+  
+
+scc_s1 = AddMetaData(scc_s1, cl$membership %in% c('1','2'), 'cl_threshold')
+plt.clfitler = SpatialDimPlot(
+  object = scc_s1, 
+  group.by = 'cl_threshold', 
+  image.alpha = 0.6
+) + scale_fill_manual(values = c('red', 'grey90'))
+
+wrap_plots(plt.cl, plt.clfitler)
 ```
 
 ![](SpotGraphs_files/figure-html/unnamed-chunk-8-1.png)
 
-In this case, we could manually remove clusters 9, 10, 23, 24, 26, 22,
-15, 18, 19, 17, 20, and 25.
+We will apply the filter determined from using the igraph clustering
+method.
 
 ``` r
-spot_clusters_to_remove = c(9, 10, 23, 24, 26, 22, 15, 18, 19, 17, 20, 25)
-scc_s1 = scc_s1[, !scc_s1$ig_cluster %in% spot_clusters_to_remove]
-Seurat::SpatialFeaturePlot(scc_s1, features = 'nCount_Spatial', pt.size.factor = 2)
+# Apply filter to keep igraph clusters 1 and 2
+scc_s1 = subset(scc_s1, subset = cl_threshold)
 ```
-
-![](SpotGraphs_files/figure-html/unnamed-chunk-9-1.png)
 
 ## CutEdges
 
@@ -190,7 +216,7 @@ edges between two groups of spots.
 
 ``` r
 # Create igraph object
-coord = Seurat::GetTissueCoordinates(scc_s1)
+coord = GetTissueCoordinates(scc_s1)
 coord = coord[,c('x', 'y')]
 ig = SpotGraph(coord)
 
@@ -203,7 +229,7 @@ plt1 = SpatialPlotGraph(ig, group.by = 'clusters', label = T) +
         legend.position = 'none')
 
 # Remove edges between pairs of clusters
-ig = CutEdges(ig, cluster_pairs = list(c(2,1), c(2,10)), cluster.col = 'clusters')
+ig = CutEdges(ig, cluster_pairs = list(c(4,7), c(4,3), c(4,8)), cluster.col = 'clusters')
 plt2 = SpatialPlotGraph(ig, group.by = 'clusters', label = T) +
   ggtitle('after') +
   theme_void() +
@@ -211,9 +237,9 @@ plt2 = SpatialPlotGraph(ig, group.by = 'clusters', label = T) +
         legend.position = 'none')
 
 plt3 = plt2 + 
-  coord_cartesian(xlim = c(0.35,0.8), ylim = c(0.4, 1)) +
+  coord_cartesian(xlim = c(0.15,0.65), ylim = c(0.15, 0.65)) +
   ggtitle('after/zoomed')
-patchwork::wrap_plots(plt1, plt2, plt3)
+wrap_plots(plt1, plt2, plt3)
 ```
 
 ![](SpotGraphs_files/figure-html/unnamed-chunk-10-1.png)
