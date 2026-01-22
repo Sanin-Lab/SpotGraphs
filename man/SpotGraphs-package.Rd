@@ -14,6 +14,7 @@ Use x,y coordinates from 10X Visium data to create an igraph object, which can b
 Useful links:
 \itemize{
   \item \url{https://sanin-lab.github.io/SpotGraphs/}
+  \item \url{https://potential-adventure-or7z9q9.pages.github.io/}
 }
 
 }

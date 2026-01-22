@@ -43,4 +43,4 @@ Depends:
     R (>= 3.5)
 LazyData: true
 LazyDataCompression: bzip2
-URL: https://sanin-lab.github.io/SpotGraphs/
+URL: https://sanin-lab.github.io/SpotGraphs/, https://potential-adventure-or7z9q9.pages.github.io/
