@@ -14,7 +14,7 @@ library(patchwork)
 A common task in spatial analysis is to perform some analysis with a
 region of interest, such as a tumor. In this vignette, we demonstrate
 how to use the
-[`NeighborhoodCenters()`](https://sanin-lab.github.io/SpotGraphs/reference/NeighborhoodCenters.md)
+[`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md)
 function to help us identify characteristics such as the center of a
 region of interest or its boundary.
 
@@ -22,7 +22,7 @@ region of interest or its boundary.
 
 We will again use the 10X Visium dataset, downloaded from GSE208253, to
 demonstrate
-[`NeighborhoodCenters()`](https://sanin-lab.github.io/SpotGraphs/reference/NeighborhoodCenters.md).
+[`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md).
 
 ``` r
 scc_s1 = UpdateSeuratObject(scc_s1)
@@ -56,7 +56,7 @@ In this vignette, we will use clustering to select some region of
 interest in this tissue sample, but in practice, this should instead be
 a region of some biological interest. The region of interest, i.e.,
 neighborhood, is provided to
-[`NeighborhoodCenters()`](https://sanin-lab.github.io/SpotGraphs/reference/NeighborhoodCenters.md)
+[`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md)
 as a named vector of `TRUE`/`FALSE` values, where the names correspond
 to spot barcodes in the given dataset.
 
@@ -119,7 +119,7 @@ wrap_plots(plt1, plt2, plt3, design = 'A#\nBC')
 ## 4. Select multiple regions of interest
 
 The
-[`NeighborhoodCenters()`](https://sanin-lab.github.io/SpotGraphs/reference/NeighborhoodCenters.md)
+[`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md)
 function can also identify characteristics of multiple regions by
 providing a named boolean vector indicating whether a spot is within any
 of these regions. This can be useful when there are several tumor

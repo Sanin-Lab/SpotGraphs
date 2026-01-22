@@ -50,18 +50,18 @@
 
 ## All functions
 
-- [`CutEdges()`](https://sanin-lab.github.io/SpotGraphs/reference/CutEdges.md)
+- [`CutEdges()`](https://potential-adventure-or7z9q9.pages.github.io/reference/CutEdges.md)
   : Remove all edges that lie between pairs of clusters
-- [`NeighborhoodCenters()`](https://sanin-lab.github.io/SpotGraphs/reference/NeighborhoodCenters.md)
+- [`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md)
   : Identify center of some neighborhood of spots, e.g., the center of a
   tumor
-- [`SpatialPlotGraph()`](https://sanin-lab.github.io/SpotGraphs/reference/SpatialPlotGraph.md)
+- [`SpatialPlotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpatialPlotGraph.md)
   : Visualize igraph vertex attribute on tissue x,y coordinates
-- [`SpotGraph()`](https://sanin-lab.github.io/SpotGraphs/reference/SpotGraph.md)
+- [`SpotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpotGraph.md)
   : Creates an igraph object given x,y coordinates
-- [`get_threshold()`](https://sanin-lab.github.io/SpotGraphs/reference/get_threshold.md)
+- [`get_threshold()`](https://potential-adventure-or7z9q9.pages.github.io/reference/get_threshold.md)
   : Calculate a threshold given some set of statistics
-- [`scc_s1`](https://sanin-lab.github.io/SpotGraphs/reference/scc_s1.md)
+- [`scc_s1`](https://potential-adventure-or7z9q9.pages.github.io/reference/scc_s1.md)
   : Oral SCC Visium spatial transcriptomics data
 
 # Articles
@@ -69,6 +69,6 @@
 ### All vignettes
 
 - [Identify centers or boundaries of some region of
-  interest](https://sanin-lab.github.io/SpotGraphs/articles/NeighborhoodCenters.md):
-- [QuickStart](https://sanin-lab.github.io/SpotGraphs/articles/QuickStart.md):
-- [SpotGraphs](https://sanin-lab.github.io/SpotGraphs/articles/SpotGraphs.md):
+  interest](https://potential-adventure-or7z9q9.pages.github.io/articles/NeighborhoodCenters.md):
+- [QuickStart](https://potential-adventure-or7z9q9.pages.github.io/articles/QuickStart.md):
+- [SpotGraphs](https://potential-adventure-or7z9q9.pages.github.io/articles/SpotGraphs.md):

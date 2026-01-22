@@ -70,9 +70,9 @@ head(coord)
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH d532318 UN-- 1185 3189 -- 
+#> IGRAPH 46bfec5 UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from d532318 (vertex names):
+#> + edges from 46bfec5 (vertex names):
 #>  [1] AAACACCAATAACTGC-1--AGGCGGTTTGTCCCGC-1
 #>  [2] AAACACCAATAACTGC-1--CTCGTCGAGGGCTCAT-1
 #>  [3] AAACACCAATAACTGC-1--GAAACATAGGAAACAG-1
@@ -89,7 +89,7 @@ interfaces directly with ggplot2, or use the SpatialPlotGraph function
 provided in this package to visualize the edges drawn between each node
 in the original x,y coordinates stored in the igraph object. Note that
 the `is_boundary` attribute is automatically calculated from running
-[`SpotGraph()`](https://sanin-lab.github.io/SpotGraphs/reference/SpotGraph.md),
+[`SpotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpotGraph.md),
 which we will use to color each node in our plots.
 
 ``` r
@@ -124,7 +124,7 @@ to one other spot with
 
 1.  First, extract the x,y coordinates of each spot in our dataset
 2.  Create and igraph object with
-    [`SpotGraph()`](https://sanin-lab.github.io/SpotGraphs/reference/SpotGraph.md)
+    [`SpotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpotGraph.md)
 3.  Calculate the number of connections per-spot with
     [`igraph::degree()`](https://r.igraph.org/reference/degree.html)
 
@@ -168,7 +168,7 @@ wrap_plots(plt.deg, plt.degfilter)
 
 Alternatively, we could perform clustering using the spot adjacencies we
 identified with
-[`SpotGraph()`](https://sanin-lab.github.io/SpotGraphs/reference/SpotGraph.md).
+[`SpotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpotGraph.md).
 We set the `resolution = 0` to group all spots together that are
 connected in any way. We can store these clustering results back into
 our Seurat object and again, plot with
