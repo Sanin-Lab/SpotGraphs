@@ -13,10 +13,12 @@ To construct a graph given x,y-coordinates of spatial data, the SpotGraph() func
 
 ## Installation
 To install the latest version of our package, run:
+
 `devtools::install_github("Sanin-Lab/SpotGraphs")`
 
 ## Usage
 To create an igraph object from spatial data, the only required input into the `SpotGraph()` function is a data frame or matrix with two columns corresponding to x,y-coordinates. 
+
 `SpotGraph(coord.df)`
 
 ## Tutorials and Applications
