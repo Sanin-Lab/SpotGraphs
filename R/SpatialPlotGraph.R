@@ -26,7 +26,7 @@ SpatialPlotGraph = function(igraph_object = NULL,
                             coord = NULL,
                             group.by = NULL,
                             label = FALSE,
-                            flip.axes = TRUE,
+                            flip.axes = FALSE,
                             linewidth = 0.5,
                             pt.size = 1.6) {
   # Create igraph object from coordinates if igraph object isn't provided
@@ -75,8 +75,7 @@ SpatialPlotGraph = function(igraph_object = NULL,
   group.by = ifelse(is.null(group.by), NA, group.by)
   if (group.by %in% colnames(df)) {
     plt = plt +
-      geom_point(aes(color = .data[[group.by]]), size = pt.size) +
-      guides(color = guide_legend(title = group.by))
+      geom_point(aes(color = .data[[group.by]]), size = pt.size)
 
     # swap legend to colourbar if group.by is continuous
     if (is.numeric(df[,group.by])) {
