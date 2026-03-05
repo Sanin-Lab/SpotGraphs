@@ -47,7 +47,7 @@ cl = igraph::cluster_fast_greedy(ig)
 cl = factor(cl$membership)
 
 # select cluster 1 and name the boolean vector with vertex names
-roi = cl==1
+roi = cl==5
 names(roi) = names(igraph::V(ig))
 ```
 
