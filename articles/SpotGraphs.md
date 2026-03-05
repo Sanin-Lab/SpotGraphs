@@ -70,9 +70,9 @@ head(coord)
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH c6ebc03 UN-- 1185 3189 -- 
+#> IGRAPH eedd453 UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from c6ebc03 (vertex names):
+#> + edges from eedd453 (vertex names):
 #>  [1] AAACACCAATAACTGC-1--AGGCGGTTTGTCCCGC-1
 #>  [2] AAACACCAATAACTGC-1--CTCGTCGAGGGCTCAT-1
 #>  [3] AAACACCAATAACTGC-1--GAAACATAGGAAACAG-1
