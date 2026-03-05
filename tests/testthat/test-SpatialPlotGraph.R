@@ -1,7 +1,7 @@
 # check that data.frame stored in each ggplot object are the same
 # check that the layer names are the same
 
-test_that("SpatialPlotGraph produces expected output with coordinates", {
+test_that("SpatialPlotGraph produces expected output with coordinates input", {
   coord = readRDS(test_path('fixtures', 'sccs1_coord.rds'))
   res = SpatialPlotGraph(coord = coord)
   res_expected = readRDS(test_path('fixtures', 'spatialplotgraph_coord.rds'))
@@ -14,7 +14,7 @@ test_that("SpatialPlotGraph produces expected output with coordinates", {
   )
 })
 
-test_that("SpatialPlotGraph produces expected output with igraph", {
+test_that("SpatialPlotGraph produces expected output with igraph input", {
   ig = readRDS(test_path('fixtures', 'sccs1_igraph.rds'))
   res = SpatialPlotGraph(igraph_object = ig)
   res_expected = readRDS(test_path('fixtures', 'spatialplotgraph_igraph.rds'))

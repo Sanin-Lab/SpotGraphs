@@ -6,7 +6,6 @@
 #' @param group.by Some vertex attribute to plot onto tissue coordinates. Must be
 #' present in `vertex_attr(ig)`.
 #' @param label Logical, whether to label groups on the plot based on `group.by`.
-#' @param flip.axes Default is TRUE. Invert the x and y axes, typically needed with coordinates from Visium Seurat objects to align the spots with the tissue image.
 #' @param linewidth Numeric input to determine width of segments between nodes. Used in `geom_segment().`
 #' @param pt.size Numeric input to determine size of each point on the plot. Used as the size parameter in `geom_point()`.
 #' @return a ggplot object
@@ -26,7 +25,6 @@ SpatialPlotGraph = function(igraph_object = NULL,
                             coord = NULL,
                             group.by = NULL,
                             label = FALSE,
-                            flip.axes = FALSE,
                             linewidth = 0.5,
                             pt.size = 1.6) {
   # Create igraph object from coordinates if igraph object isn't provided
@@ -52,13 +50,6 @@ SpatialPlotGraph = function(igraph_object = NULL,
 
   if (is.null(igraph_object) & is.null(coord)) {
     stop('must provide either igraph_object or coord')
-  }
-
-  if (flip.axes) {
-    coord$x.new = coord$coord_y
-    coord$y.new = -coord$coord_x
-    coord[,c('coord_x', 'coord_y')] = NULL
-    colnames(coord) = c('coord_x', 'coord_y')
   }
 
   # Create data.frame with all igraph vertex attributes and

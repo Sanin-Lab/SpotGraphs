@@ -35,7 +35,7 @@ class(scc_s1)
 dim(scc_s1)
 
 coord = Seurat::GetTissueCoordinates(scc_s1)
-coord = coord[,c('x', 'y')]
+coord = data.frame(x = coord$y, y = -coord$x)
 ```
 
 # 2. Select a region of interest

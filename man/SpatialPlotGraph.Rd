@@ -9,7 +9,6 @@ SpatialPlotGraph(
   coord = NULL,
   group.by = NULL,
   label = FALSE,
-  flip.axes = TRUE,
   linewidth = 0.5,
   pt.size = 1.6
 )
@@ -24,8 +23,6 @@ if not provided, will look for \code{coord_x} and \code{coord_y} attributes in t
 present in \code{vertex_attr(ig)}.}
 
 \item{label}{Logical, whether to label groups on the plot based on \code{group.by}.}
-
-\item{flip.axes}{Default is TRUE. Invert the x and y axes, typically needed with coordinates from Visium Seurat objects to align the spots with the tissue image.}
 
 \item{linewidth}{Numeric input to determine width of segments between nodes. Used in \verb{geom_segment().}}
 
