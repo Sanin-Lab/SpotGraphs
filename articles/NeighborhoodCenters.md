@@ -47,7 +47,7 @@ dim(scc_s1)
 #> [1] 36601  1185
 
 coord = Seurat::GetTissueCoordinates(scc_s1)
-coord = coord[,c('x', 'y')]
+coord = data.frame(x = coord$y, y = -coord$x)
 ```
 
 ## 2. Select a region of interest
@@ -84,13 +84,13 @@ where `is_neighborhood == T`, and 0 where `is_neighborhood == F`.
 
 ``` r
 print(head(res$eigen.scores))
-#>              barcode center_eigen
-#> 1 AAACACCAATAACTGC-1 0.0000000000
-#> 2 AAACAGGGTCTATATT-1 0.0006409795
-#> 3 AAACCGTTCGTCCAGG-1 0.0000000000
-#> 4 AAACGAGACGGTTGAT-1 0.0000000000
-#> 5 AAACTGCTGGCTCCAA-1 0.0000000000
-#> 6 AAAGACTGGGCGCTTT-1 0.0000000000
+#>   barcode center_eigen
+#> 1       1 0.0000000000
+#> 2       2 0.0006409795
+#> 3       3 0.0000000000
+#> 4       4 0.0000000000
+#> 5       5 0.0000000000
+#> 6       6 0.0000000000
 
 # Set centrality scores as a vertex attribute in our igraph object
 igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen

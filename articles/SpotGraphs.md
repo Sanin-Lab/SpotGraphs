@@ -58,29 +58,29 @@ the spots on our slide.
 
 ``` r
 coord = GetTissueCoordinates(scc_s1)
-coord = coord[,c('x', 'y')]
+coord = data.frame(x = coord$y, y = -coord$x)
 head(coord)
-#>                        x     y
-#> AAACACCAATAACTGC-1  4809 16571
-#> AAACAGGGTCTATATT-1  3944 13546
-#> AAACCGTTCGTCCAGG-1  8142 14812
-#> AAACGAGACGGTTGAT-1 13505 10536
-#> AAACTGCTGGCTCCAA-1 11764 13053
-#> AAAGACTGGGCGCTTT-1  4240  9011
+#>       x      y
+#> 1 16571  -4809
+#> 2 13546  -3944
+#> 3 14812  -8142
+#> 4 10536 -13505
+#> 5 13053 -11764
+#> 6  9011  -4240
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH eedd453 UN-- 1185 3189 -- 
+#> IGRAPH a5075b2 UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from eedd453 (vertex names):
-#>  [1] AAACACCAATAACTGC-1--AGGCGGTTTGTCCCGC-1
-#>  [2] AAACACCAATAACTGC-1--CTCGTCGAGGGCTCAT-1
-#>  [3] AAACACCAATAACTGC-1--GAAACATAGGAAACAG-1
-#>  [4] AAACACCAATAACTGC-1--GGAACCTTGACTCTGC-1
-#>  [5] AAACACCAATAACTGC-1--TCCCTGGCGTATTAAC-1
-#>  [6] AAACACCAATAACTGC-1--TGGACGCAATCCAGCC-1
-#>  [7] AAACAGGGTCTATATT-1--ACAGTAATACAACTTG-1
-#>  [8] AAACAGGGTCTATATT-1--TTCCCGGCGCCAATAG-1
+#> + edges from a5075b2 (vertex names):
+#>  [1] 1 --175  1 --522  1 --562  1 --718  1 --983  1 --1073 2 --86   2 --1130
+#>  [9] 3 --31   3 --326  3 --358  3 --680  3 --696  3 --1168 4 --37   4 --38  
+#> [17] 4 --128  4 --216  4 --691  4 --1109 5 --473  5 --734  5 --799  5 --807 
+#> [25] 5 --896  5 --1038 6 --61   6 --366  6 --485  6 --653  6 --815  6 --870 
+#> [33] 7 --110  7 --251  7 --792  7 --936  7 --950  7 --1183 8 --100  8 --153 
+#> [41] 8 --296  8 --436  8 --1081 8 --1106 9 --185  9 --651  9 --758  9 --826 
+#> [49] 9 --902  9 --1085 10--121  10--310  10--430  10--460  10--667  10--727 
+#> [57] 11--127  11--267  11--523  11--853  11--1038 11--1121 12--343  12--553 
 #> + ... omitted several edges
 ```
 
@@ -101,7 +101,6 @@ plt.ggnet = ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
 
 plt.spg = SpatialPlotGraph(igraph_object = ig, 
                            group.by = 'is_boundary', 
-                           flip.axes = T, 
                            pt.size = 0.5)
 
 patchwork::wrap_plots(plt.ggnet, plt.spg)
@@ -109,7 +108,7 @@ patchwork::wrap_plots(plt.ggnet, plt.spg)
 
 ![](SpotGraphs_files/figure-html/unnamed-chunk-4-1.png)
 
-## Spot filtering
+## Spot filtering based on connectivity
 
 One of the main features of the SpotGraph package is to identify spots
 on a slide that lie on top of tissue debris disconnected from the rest

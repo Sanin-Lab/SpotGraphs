@@ -10,7 +10,6 @@ SpatialPlotGraph(
   coord = NULL,
   group.by = NULL,
   label = FALSE,
-  flip.axes = TRUE,
   linewidth = 0.5,
   pt.size = 1.6
 )
@@ -36,12 +35,6 @@ SpatialPlotGraph(
 - label:
 
   Logical, whether to label groups on the plot based on `group.by`.
-
-- flip.axes:
-
-  Default is TRUE. Invert the x and y axes, typically needed with
-  coordinates from Visium Seurat objects to align the spots with the
-  tissue image.
 
 - linewidth:
 
