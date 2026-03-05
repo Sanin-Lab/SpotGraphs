@@ -131,7 +131,7 @@ names correspond to spot barcodes in the given dataset.</p>
 <span><span class="va">cl</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cl</span><span class="op">$</span><span class="va">membership</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># select cluster 1 and name the boolean vector with vertex names</span></span>
-<span><span class="va">roi</span> <span class="op">=</span> <span class="va">cl</span><span class="op">==</span><span class="fl">1</span></span>
+<span><span class="va">roi</span> <span class="op">=</span> <span class="va">cl</span><span class="op">==</span><span class="fl">5</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">roi</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">ig</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -146,12 +146,12 @@ where <code>is_neighborhood == T</code>, and 0 where
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">eigen.scores</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   barcode center_eigen</span></span>
-<span><span class="co">#&gt; 1       1 0.0000000000</span></span>
-<span><span class="co">#&gt; 2       2 0.0006409795</span></span>
-<span><span class="co">#&gt; 3       3 0.0000000000</span></span>
-<span><span class="co">#&gt; 4       4 0.0000000000</span></span>
-<span><span class="co">#&gt; 5       5 0.0000000000</span></span>
-<span><span class="co">#&gt; 6       6 0.0000000000</span></span>
+<span><span class="co">#&gt; 1       1            0</span></span>
+<span><span class="co">#&gt; 2       2            0</span></span>
+<span><span class="co">#&gt; 3       3            0</span></span>
+<span><span class="co">#&gt; 4       4            0</span></span>
+<span><span class="co">#&gt; 5       5            0</span></span>
+<span><span class="co">#&gt; 6       6            0</span></span>
 <span></span>
 <span><span class="co"># Set centrality scores as a vertex attribute in our igraph object</span></span>
 <span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">ig</span><span class="op">)</span><span class="op">$</span><span class="va">centr_eigen</span> <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">eigen.scores</span><span class="op">$</span><span class="va">center_eigen</span></span>

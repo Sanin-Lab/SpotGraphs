@@ -67,7 +67,7 @@ cl = igraph::cluster_fast_greedy(ig)
 cl = factor(cl$membership)
 
 # select cluster 1 and name the boolean vector with vertex names
-roi = cl==1
+roi = cl==5
 names(roi) = names(igraph::V(ig))
 ```
 
@@ -85,12 +85,12 @@ where `is_neighborhood == T`, and 0 where `is_neighborhood == F`.
 ``` r
 print(head(res$eigen.scores))
 #>   barcode center_eigen
-#> 1       1 0.0000000000
-#> 2       2 0.0006409795
-#> 3       3 0.0000000000
-#> 4       4 0.0000000000
-#> 5       5 0.0000000000
-#> 6       6 0.0000000000
+#> 1       1            0
+#> 2       2            0
+#> 3       3            0
+#> 4       4            0
+#> 5       5            0
+#> 6       6            0
 
 # Set centrality scores as a vertex attribute in our igraph object
 igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
