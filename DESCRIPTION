@@ -1,6 +1,6 @@
 Package: SpotGraphs
 Title: Generate igraph Objects With Visium Spot Coordinates For Basic Analysis Tasks
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: 
     c(person("Alex", "Lee", , "alee262@jhmi.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1825-2439")),
       person("David", "Sanin", , "david.sanin@jhu.edu", role = c("aut"), comment = c(ORCID = "0000-0003-0188-7267")))
