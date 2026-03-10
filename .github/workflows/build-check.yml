@@ -1,0 +1,12 @@
+#run the build-check action
+name: build-check
+on:
+    push:
+        branches:
+        - 'main'
+    pull_request:
+        branches: ['master']
+    workflow_dispatch:
+jobs:
+    build-check:
+        uses: FertigLab/actions/.github/workflows/r-build-check.yml@v1.3.0
