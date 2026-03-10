@@ -135,7 +135,7 @@ When working with an igraph object, it may be desirable to remove all edges betw
 ```{r, fig.width=11, fig.height=4, eval=T}
 # Create igraph object
 coord = GetTissueCoordinates(scc_s1)
-coord = coord[,c('x', 'y')]
+coord = data.frame(x = coord$y, y = -coord$x)
 ig = SpotGraph(coord)
 
 # Clustering with igraph
