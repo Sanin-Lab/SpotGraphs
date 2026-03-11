@@ -1,8 +1,8 @@
 ---
-title: "Identify centers or boundaries of some region of interest"
+title: "Identify centers or boundaries"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{NeighborhoodCenters}
+  %\VignetteIndexEntry{Identify centers or boundaries}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
