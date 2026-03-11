@@ -71,7 +71,7 @@ patchwork::wrap_plots(plt.ggnet, plt.spg)
 
 
 ## Spot filtering based on connectivity
-One of the main features of the SpotGraph package is to identify spots on a slide that lie on top of tissue debris disconnected from the rest of the tissue sample. These are uninformative and are a technical artifacts from sample processing, so we'd like to exclude these from our downstream analysis. We can identify whether a spot is surrounded by other spots using the `igraph::degree()` function, and filter out spots that are by themselves or only adjacent to one other spot with `igraph::subgraph()`:
+One of the main features of the SpotGraph package is to identify spots on a slide that lie on top of tissue debris disconnected from the rest of the tissue sample. These are uninformative and are likely technical artifacts from sample processing, so we'd like to exclude these from our downstream analysis. We can count the number of spots surrounding each spot using the `igraph::degree()` function, and identify spots that have no neighbors or only have one adjacent spot:
 
 1. First, extract the x,y coordinates of each spot in our dataset
 2. Create and igraph object with `SpotGraph()`

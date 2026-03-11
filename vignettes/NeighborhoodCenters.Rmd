@@ -37,20 +37,49 @@ dim(scc_s1)
 
 coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$x, y = -coord$y)
-head(coord)
+```
+Perform some spot-level filtering (in the same fashion as in the Getting Starting vignette)
+```{r, message=FALSE, warning=FALSE}
+ig = SpotGraph(coord)
+cl = igraph::cluster_louvain(ig, resolution = 0)
+scc_s1 = AddMetaData(scc_s1, cl$membership %in% c('1','2'), 'cl_threshold')
+scc_s1 = subset(scc_s1, subset = cl_threshold)
 ```
 
-# 2. Select a region of interest
-In this vignette, we will use clustering to select some region of interest in this tissue sample, but in practice, this should instead be a region of some biological interest. The region of interest, i.e., neighborhood, is provided to `NeighborhoodCenters()` as a named vector of `TRUE`/`FALSE` values, where the names correspond to spot barcodes in the given dataset.
-```{r Choose a region}
-# create an igraph object with SpotGraph() and perform clustering
+Update the igraph object after filtering the Seurat object
+```{r}
+coord = GetTissueCoordinates(scc_s1)
+coord = data.frame(x = coord$x, y = -coord$y)
 ig = SpotGraph(coord)
-cl = igraph::cluster_fast_greedy(ig)
-cl = factor(cl$membership)
+```
 
-# select cluster 1 and name the boolean vector with vertex names
-roi = cl==5
-names(roi) = names(igraph::V(ig))
+
+# 2. Select a region of interest
+In this vignette, we will use clustering to select some region of interest in this tissue sample, but in practice, this should instead be a region of some biological interest. The region of interest, i.e., neighborhood, is provided to `NeighborhoodCenters()` as a named vector of `TRUE`/`FALSE` values.
+```{r Choose a region, fig.width=8, fig.height=3.75}
+# perform clustering on the igraph object
+cl = igraph::cluster_louvain(ig, resolution = 0.4)
+
+# store clustering results back into igraph object
+# - note: V() will access all vertices of an igraph object. 
+#        `V() <-` also allows us to store vertex-level attributes 
+igraph::V(ig)$cluster = factor(cl$membership)
+
+# select cluster 5 and name the boolean vector with vertex names
+roi = cl$membership==5
+igraph::V(ig)$is_roi = roi
+
+# visualize clusters and region selection
+plt1 = SpatialPlotGraph(ig, group.by = 'cluster', label = T,
+                        pt.size = 0.5, linewidth = 0.1) +
+  theme_void() +
+  theme(legend.position = 'none')
+plt2 = SpatialPlotGraph(ig, group.by = 'is_roi', label = F,
+                        pt.size = 0.5, linewidth = 0.1) +
+  scale_color_manual(values = c('grey','red')) +
+  theme_void()
+
+wrap_plots(plt1, plt2)
 ```
 
 # 3. Run `NeighborhoodCenters()`
@@ -59,9 +88,7 @@ res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
 ```
 
 The output from this function returns a list, where the first element is a data.frame with the scores from `igraph::centr_eigen()` where `is_neighborhood == T`, and 0 where `is_neighborhood == F`. 
-```{r Plot eigenvector centrality scores, fig.width=7.75, fig.height=7.5}
-print(head(res$eigen.scores))
-
+```{r Plot eigenvector centrality scores, fig.width=7.75, fig.height=6}
 # Set centrality scores as a vertex attribute in our igraph object
 igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
 igraph::V(ig)$roi_center = names(igraph::V(ig)) %in% res$centers
@@ -88,12 +115,12 @@ wrap_plots(plt1, plt2, plt3, design = 'A#\nBC')
 The `NeighborhoodCenters()` function can also identify characteristics of multiple regions by providing a named boolean vector indicating whether a spot is within any of these regions. This can be useful when there are several tumor regions within the same tissue section. Here, we select three different clusters as regions of interest, instead of just one.
 
 ```{r NeighborhoodCenters with multiple regions}
-roi = cl %in% c('1', '2', '5')
+roi = cl$membership %in% c('2', '4', '5')
 names(roi) = names(igraph::V(ig))
 res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
 ```
 
-```{r multiple region plotting, fig.width=7.75, fig.height=7.5}
+```{r multiple region plotting, fig.width=7.75, fig.height=6.2}
 # Set centrality scores as a vertex attribute in our igraph object
 igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
 igraph::V(ig)$roi_center = names(igraph::V(ig)) %in% res$centers
@@ -117,26 +144,25 @@ wrap_plots(plt1, plt2, plt3, design = 'A#\nBC')
 ```
 
 # 5. Calculate distance between each spot and ROI center
-```{r ROI distances, fig.width=8, fig.height=4.75}
-roi_dist = igraph::distances(ig, weights = NA)[,res$centers] %>% 
-  apply(1, min)
-boundary_dist = igraph::distances(ig, weights = NA)[,res$boundary] %>% 
-  apply(1, min)
-# boundary_dist = ifelse(!roi, boundary_dist, 0)
+```{r ROI distances, fig.width=8, fig.height=3.85}
+roi_dist = igraph::distances(ig)[,res$centers] %>% apply(1, min)
+boundary_dist = igraph::distances(ig)[,res$boundary] %>% apply(1, min)
 
+# store calculated distances back into igraph objects
 igraph::V(ig)$roi_dist = roi_dist
 igraph::V(ig)$boundary_dist = boundary_dist
 
+# visualize distances between centers or boundaries
 plt.dist = SpatialPlotGraph(ig, group.by = 'roi_dist',
                  pt.size = 0.5, linewidth = 0.1) +
-  scale_color_distiller(palette = 'RdBu', direction = 1) +
+  scale_color_distiller(palette = 'RdBu', direction = -1) +
   ggtitle('distance to ROI centers') +
   theme_void() +
   theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
         legend.position = 'none')
 plt.boundarydist = SpatialPlotGraph(ig, group.by = 'boundary_dist',
                  pt.size = 0.5, linewidth = 0.1) +
-  scale_color_distiller(palette = 'RdBu', direction = 1) +
+  scale_color_distiller(palette = 'RdBu', direction = -1) +
   ggtitle('distance to ROI boundaries') +
   guides(color = guide_colorbar(title = 'distance'),
          alpha = guide_none()) +
