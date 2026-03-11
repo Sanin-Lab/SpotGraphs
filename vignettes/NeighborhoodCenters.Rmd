@@ -29,14 +29,14 @@ A common task in spatial analysis is to perform some analysis with a region of i
 # 1. Load data
 We will again use the 10X Visium dataset, downloaded from GSE208253, to demonstrate `NeighborhoodCenters()`.
 
-```{r Load data}
+```{r Load data, message=FALSE}
 data("scc_s1", package = "SpotGraphs")
 scc_s1 = UpdateSeuratObject(scc_s1)
 class(scc_s1)
 dim(scc_s1)
 
 coord = Seurat::GetTissueCoordinates(scc_s1)
-coord = data.frame(x = coord$y, y = -coord$x)
+coord = data.frame(x = coord$x, y = -coord$y)
 head(coord)
 ```
 

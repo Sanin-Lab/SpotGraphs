@@ -46,7 +46,7 @@ To construct an igraph object, all we need are the x,y coordinates of the spots 
 
 ```{r}
 coord = Seurat::GetTissueCoordinates(scc_s1)
-coord = data.frame(x = coord$y, y = -coord$x)
+coord = data.frame(x = coord$x, y = -coord$y)
 head(coord)
 
 ig = SpotGraph(coord = coord)
@@ -134,8 +134,7 @@ When working with an igraph object, it may be desirable to remove all edges betw
 ```{r, fig.width=11, fig.height=4, eval=T}
 # Create igraph object
 coord = GetTissueCoordinates(scc_s1)
-# coord = data.frame(x = coord$y, y = -coord$x)
-coord = coord[,c('x', 'y')]
+coord = data.frame(x = coord$x, y = -coord$y)
 ig = SpotGraph(coord)
 
 # Clustering with igraph
