@@ -31,6 +31,7 @@ We will use the example Seurat object provided in this package to
 demonstrate a typical workflow.
 
 ``` r
+data("scc_s1", package = "SpotGraphs")
 class(scc_s1)
 #> [1] "Seurat"
 #> attr(,"package")

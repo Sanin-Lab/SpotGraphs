@@ -85,7 +85,8 @@ dataset from a squamous cell carcinoma patient, downloaded from
 GSE208253. The raw data from GEO is provided as a Seurat object in this
 package to use as an example.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">scc_s1</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/UpdateSeuratObject.html" class="external-link">UpdateSeuratObject</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"scc_s1"</span>, package <span class="op">=</span> <span class="st">"SpotGraphs"</span><span class="op">)</span></span>
+<span><span class="va">scc_s1</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/UpdateSeuratObject.html" class="external-link">UpdateSeuratObject</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Not validating Centroids objects</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Seurat"</span></span>
@@ -125,9 +126,9 @@ the spots on our slide.</p>
 <span></span>
 <span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpotGraph.html">SpotGraph</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span><span class="op">)</span></span>
 <span><span class="va">ig</span></span>
-<span><span class="co">#&gt; IGRAPH e4419b3 UN-- 1185 3189 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 01d3eec UN-- 1185 3189 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)</span></span>
-<span><span class="co">#&gt; + edges from e4419b3 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 01d3eec (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] 1 --175  1 --522  1 --562  1 --718  1 --983  1 --1073 2 --86   2 --1130</span></span>
 <span><span class="co">#&gt;  [9] 3 --31   3 --326  3 --358  3 --680  3 --696  3 --1168 4 --37   4 --38  </span></span>
 <span><span class="co">#&gt; [17] 4 --128  4 --216  4 --691  4 --1109 5 --473  5 --734  5 --799  5 --807 </span></span>

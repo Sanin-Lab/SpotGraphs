@@ -25,6 +25,7 @@ demonstrate
 [`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md).
 
 ``` r
+data("scc_s1", package = "SpotGraphs")
 class(scc_s1)
 #> [1] "Seurat"
 #> attr(,"package")
