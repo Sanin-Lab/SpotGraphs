@@ -30,7 +30,6 @@ A common task in spatial analysis is to perform some analysis with a region of i
 We will again use the 10X Visium dataset, downloaded from GSE208253, to demonstrate `NeighborhoodCenters()`.
 
 ```{r Load data}
-scc_s1 = UpdateSeuratObject(scc_s1)
 class(scc_s1)
 dim(scc_s1)
 

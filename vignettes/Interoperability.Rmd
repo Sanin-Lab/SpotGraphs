@@ -1,0 +1,100 @@
+---
+title: "Seurat and SpatialExperiment interaction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Seurat and SpatialExperiment interaction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE, warning=FALSE}
+library(SpotGraphs)
+library(Seurat)
+library(TENxVisiumData)
+library(SpatialExperiment)
+library(dplyr)
+library(igraph)
+```
+
+## Overview
+
+In this vignette, we demonstrate how SpotGraphs can interact with Seurat and SpatialExperiment objects. A typical workflow will involve the following steps:
+
+1. Extract x,y coordinates from Seurat or SpatialExperiment object.
+
+2. Create igraph object with `SpotGraph()`.
+
+3. Perform some analysis.
+
+4. Store results back into the original Seurat or SpatialExperiment object.
+
+
+## Seurat object interaction
+We will use the example Seurat object provided in this package to demonstrate a typical workflow.
+```{r, eval=TRUE}
+class(scc_s1)
+```
+
+First, extract the x,y coordinates
+```{r, eval=TRUE}
+coord = Seurat::GetTissueCoordinates(scc_s1)
+```
+
+Create an igraph object with `SpotGraph()`
+```{r, eval=TRUE}
+ig = SpotGraph(coord[,c('x','y')])
+```
+
+Perform some analysis. In this case, we will calculate the number of edges per spot.
+```{r, eval=TRUE}
+n_edges = igraph::degree(ig)
+```
+
+Finally, store these results back into the metadata of the original Seurat object
+```{r, eval=TRUE}
+scc_s1 = AddMetaData(scc_s1, metadata = n_edges, col.name = 'degree')
+```
+
+## SpatialExperiment interaction
+To demonstrate interaction with a SpatialExperiment object, we will load an object from ExperimentHub. 
+```{r, eval=TRUE, message=FALSE}
+eh = ExperimentHub::ExperimentHub()
+q = AnnotationHub::query(eh, 'TENxVisium')
+id = q$ah_id[q$title=='HumanGlioblastoma_v3.13']
+spe = eh[[id]]
+class(spe)
+```
+
+Once we have our SpatialExperiment object, we can follow the same workflow
+```{r, eval=TRUE}
+coord = as.data.frame(spatialCoords(spe))
+ig = SpotGraph(coord)
+n_edges = igraph::degree(ig)
+colData(spe)$degree = n_edges
+```
+
+We could also calculate multiple statistics from several analyses on the igraph object before storing them in the original Seurat/SpatialExperiment object. If we store all the vertex/spot-level results back into the igraph object with `V()`, we can extract all of the results at once with `igraph::vertex_attr()`, and coerce this into a `data.frame`.
+```{r, eval=TRUE}
+V(ig)$cluster = factor(cluster_louvain(ig)$membership)
+V(ig)$ecc = eccentricity(ig)
+V(ig)$centrality = centr_eigen(ig)$vector
+
+df = as.data.frame(vertex_attr(ig))
+head(df)
+```
+
+This resulting `data.frame` and then be stored back into the SpatialExperiment object. 
+```{r}
+colData(spe) = cbind(colData(spe), df)
+head(colData(spe))
+```
+
+
+
