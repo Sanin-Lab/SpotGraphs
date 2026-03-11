@@ -108,7 +108,7 @@ df = as.data.frame(vertex_attr(ig))
 head(df)
 #>                 name coord_x coord_y is_boundary cluster ecc   centrality
 #> 1 AAACAAGTATCTCCCA-1    7438    9389       FALSE       1  69 3.244117e-01
-#> 2 AAACAATCTACTAGCA-1    1802    5327        TRUE       2   6 1.885746e-16
+#> 2 AAACAATCTACTAGCA-1    1802    5327        TRUE       2   6 1.817706e-16
 #> 3 AAACACCAATAACTGC-1    8514    3670        TRUE       3  75 3.573227e-02
 #> 4 AAACAGAGCGACTCCT-1    3122    8840       FALSE       4  64 8.092829e-02
 #> 5 AAACAGTGTTCCTGGG-1   10193    5323       FALSE       5  74 1.289729e-01
@@ -141,7 +141,7 @@ head(colData(spe))
 #>                     cluster       ecc  centrality
 #>                    <factor> <numeric>   <numeric>
 #> AAACAAGTATCTCCCA-1        1        69 3.24412e-01
-#> AAACAATCTACTAGCA-1        2         6 1.88575e-16
+#> AAACAATCTACTAGCA-1        2         6 1.81771e-16
 #> AAACACCAATAACTGC-1        3        75 3.57323e-02
 #> AAACAGAGCGACTCCT-1        4        64 8.09283e-02
 #> AAACAGTGTTCCTGGG-1        5        74 1.28973e-01

@@ -112,7 +112,7 @@ through the network between each spot</li>
 <p>To construct an igraph object, all we need are the x,y coordinates of
 the spots on our slide.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">coord</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">coord</span> <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
 <span><span class="va">coord</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">coord</span><span class="op">$</span><span class="va">y</span>, y <span class="op">=</span> <span class="op">-</span><span class="va">coord</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">coord</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       x      y</span></span>
@@ -125,9 +125,9 @@ the spots on our slide.</p>
 <span></span>
 <span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpotGraph.html">SpotGraph</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span><span class="op">)</span></span>
 <span><span class="va">ig</span></span>
-<span><span class="co">#&gt; IGRAPH b2fcd06 UN-- 1185 3189 -- </span></span>
+<span><span class="co">#&gt; IGRAPH e4419b3 UN-- 1185 3189 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)</span></span>
-<span><span class="co">#&gt; + edges from b2fcd06 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from e4419b3 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] 1 --175  1 --522  1 --562  1 --718  1 --983  1 --1073 2 --86   2 --1130</span></span>
 <span><span class="co">#&gt;  [9] 3 --31   3 --326  3 --358  3 --680  3 --696  3 --1168 4 --37   4 --38  </span></span>
 <span><span class="co">#&gt; [17] 4 --128  4 --216  4 --691  4 --1109 5 --473  5 --734  5 --799  5 --807 </span></span>

@@ -45,7 +45,7 @@ To construct an igraph object, all we need are the x,y coordinates of
 the spots on our slide.
 
 ``` r
-coord = GetTissueCoordinates(scc_s1)
+coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$y, y = -coord$x)
 head(coord)
 #>       x      y
@@ -58,9 +58,9 @@ head(coord)
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH b2fcd06 UN-- 1185 3189 -- 
+#> IGRAPH e4419b3 UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from b2fcd06 (vertex names):
+#> + edges from e4419b3 (vertex names):
 #>  [1] 1 --175  1 --522  1 --562  1 --718  1 --983  1 --1073 2 --86   2 --1130
 #>  [9] 3 --31   3 --326  3 --358  3 --680  3 --696  3 --1168 4 --37   4 --38  
 #> [17] 4 --128  4 --216  4 --691  4 --1109 5 --473  5 --734  5 --799  5 --807 
