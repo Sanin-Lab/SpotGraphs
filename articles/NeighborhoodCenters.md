@@ -37,14 +37,24 @@ dim(scc_s1)
 
 coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$x, y = -coord$y)
-head(coord)
-#>       x      y
-#> 1  4809 -16571
-#> 2  3944 -13546
-#> 3  8142 -14812
-#> 4 13505 -10536
-#> 5 11764 -13053
-#> 6  4240  -9011
+```
+
+Perform some spot-level filtering (in the same fashion as in the Getting
+Starting vignette)
+
+``` r
+ig = SpotGraph(coord)
+cl = igraph::cluster_louvain(ig, resolution = 0)
+scc_s1 = AddMetaData(scc_s1, cl$membership %in% c('1','2'), 'cl_threshold')
+scc_s1 = subset(scc_s1, subset = cl_threshold)
+```
+
+Update the igraph object after filtering the Seurat object
+
+``` r
+coord = GetTissueCoordinates(scc_s1)
+coord = data.frame(x = coord$x, y = -coord$y)
+ig = SpotGraph(coord)
 ```
 
 ## 2. Select a region of interest
@@ -54,19 +64,35 @@ interest in this tissue sample, but in practice, this should instead be
 a region of some biological interest. The region of interest, i.e.,
 neighborhood, is provided to
 [`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md)
-as a named vector of `TRUE`/`FALSE` values, where the names correspond
-to spot barcodes in the given dataset.
+as a named vector of `TRUE`/`FALSE` values.
 
 ``` r
-# create an igraph object with SpotGraph() and perform clustering
-ig = SpotGraph(coord)
-cl = igraph::cluster_fast_greedy(ig)
-cl = factor(cl$membership)
+# perform clustering on the igraph object
+cl = igraph::cluster_louvain(ig, resolution = 0.4)
 
-# select cluster 1 and name the boolean vector with vertex names
-roi = cl==5
-names(roi) = names(igraph::V(ig))
+# store clustering results back into igraph object
+# - note: V() will access all vertices of an igraph object. 
+#        `V() <-` also allows us to store vertex-level attributes 
+igraph::V(ig)$cluster = factor(cl$membership)
+
+# select cluster 5 and name the boolean vector with vertex names
+roi = cl$membership==5
+igraph::V(ig)$is_roi = roi
+
+# visualize clusters and region selection
+plt1 = SpatialPlotGraph(ig, group.by = 'cluster', label = T,
+                        pt.size = 0.5, linewidth = 0.1) +
+  theme_void() +
+  theme(legend.position = 'none')
+plt2 = SpatialPlotGraph(ig, group.by = 'is_roi', label = F,
+                        pt.size = 0.5, linewidth = 0.1) +
+  scale_color_manual(values = c('grey','red')) +
+  theme_void()
+
+wrap_plots(plt1, plt2)
 ```
+
+![](NeighborhoodCenters_files/figure-html/Choose%20a%20region-1.png)
 
 ## 3. Run `NeighborhoodCenters()`
 
@@ -80,15 +106,6 @@ a data.frame with the scores from
 where `is_neighborhood == T`, and 0 where `is_neighborhood == F`.
 
 ``` r
-print(head(res$eigen.scores))
-#>   barcode center_eigen
-#> 1       1            0
-#> 2       2            0
-#> 3       3            0
-#> 4       4            0
-#> 5       5            0
-#> 6       6            0
-
 # Set centrality scores as a vertex attribute in our igraph object
 igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
 igraph::V(ig)$roi_center = names(igraph::V(ig)) %in% res$centers
@@ -124,7 +141,7 @@ regions within the same tissue section. Here, we select three different
 clusters as regions of interest, instead of just one.
 
 ``` r
-roi = cl %in% c('1', '2', '5')
+roi = cl$membership %in% c('2', '4', '5')
 names(roi) = names(igraph::V(ig))
 res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
 ```
@@ -157,25 +174,24 @@ wrap_plots(plt1, plt2, plt3, design = 'A#\nBC')
 ## 5. Calculate distance between each spot and ROI center
 
 ``` r
-roi_dist = igraph::distances(ig, weights = NA)[,res$centers] %>% 
-  apply(1, min)
-boundary_dist = igraph::distances(ig, weights = NA)[,res$boundary] %>% 
-  apply(1, min)
-# boundary_dist = ifelse(!roi, boundary_dist, 0)
+roi_dist = igraph::distances(ig)[,res$centers] %>% apply(1, min)
+boundary_dist = igraph::distances(ig)[,res$boundary] %>% apply(1, min)
 
+# store calculated distances back into igraph objects
 igraph::V(ig)$roi_dist = roi_dist
 igraph::V(ig)$boundary_dist = boundary_dist
 
+# visualize distances between centers or boundaries
 plt.dist = SpatialPlotGraph(ig, group.by = 'roi_dist',
                  pt.size = 0.5, linewidth = 0.1) +
-  scale_color_distiller(palette = 'RdBu', direction = 1) +
+  scale_color_distiller(palette = 'RdBu', direction = -1) +
   ggtitle('distance to ROI centers') +
   theme_void() +
   theme(plot.title = element_text(hjust = 0.5, face = 'bold'),
         legend.position = 'none')
 plt.boundarydist = SpatialPlotGraph(ig, group.by = 'boundary_dist',
                  pt.size = 0.5, linewidth = 0.1) +
-  scale_color_distiller(palette = 'RdBu', direction = 1) +
+  scale_color_distiller(palette = 'RdBu', direction = -1) +
   ggtitle('distance to ROI boundaries') +
   guides(color = guide_colorbar(title = 'distance'),
          alpha = guide_none()) +

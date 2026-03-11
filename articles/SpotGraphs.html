@@ -126,9 +126,9 @@ the spots on our slide.</p>
 <span></span>
 <span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpotGraph.html">SpotGraph</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span><span class="op">)</span></span>
 <span><span class="va">ig</span></span>
-<span><span class="co">#&gt; IGRAPH 513ce4a UN-- 1185 3189 -- </span></span>
+<span><span class="co">#&gt; IGRAPH d4b129d UN-- 1185 3189 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)</span></span>
-<span><span class="co">#&gt; + edges from 513ce4a (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from d4b129d (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] 1 --175  1 --522  1 --562  1 --718  1 --983  1 --1073 2 --86   2 --1130</span></span>
 <span><span class="co">#&gt;  [9] 3 --31   3 --326  3 --358  3 --680  3 --696  3 --1168 4 --37   4 --38  </span></span>
 <span><span class="co">#&gt; [17] 4 --128  4 --216  4 --691  4 --1109 5 --473  5 --734  5 --799  5 --807 </span></span>
@@ -164,12 +164,12 @@ in our plots.</p>
 </h2>
 <p>One of the main features of the SpotGraph package is to identify
 spots on a slide that lie on top of tissue debris disconnected from the
-rest of the tissue sample. These are uninformative and are a technical
-artifacts from sample processing, so we’d like to exclude these from our
-downstream analysis. We can identify whether a spot is surrounded by
-other spots using the <code><a href="https://r.igraph.org/reference/degree.html" class="external-link">igraph::degree()</a></code> function, and filter
-out spots that are by themselves or only adjacent to one other spot with
-<code><a href="https://r.igraph.org/reference/subgraph.html" class="external-link">igraph::subgraph()</a></code>:</p>
+rest of the tissue sample. These are uninformative and are likely
+technical artifacts from sample processing, so we’d like to exclude
+these from our downstream analysis. We can count the number of spots
+surrounding each spot using the <code><a href="https://r.igraph.org/reference/degree.html" class="external-link">igraph::degree()</a></code> function,
+and identify spots that have no neighbors or only have one adjacent
+spot:</p>
 <ol style="list-style-type: decimal">
 <li>First, extract the x,y coordinates of each spot in our dataset</li>
 <li>Create and igraph object with <code><a href="../reference/SpotGraph.html">SpotGraph()</a></code>

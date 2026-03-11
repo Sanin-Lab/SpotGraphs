@@ -59,9 +59,9 @@ head(coord)
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH 513ce4a UN-- 1185 3189 -- 
+#> IGRAPH d4b129d UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from 513ce4a (vertex names):
+#> + edges from d4b129d (vertex names):
 #>  [1] 1 --175  1 --522  1 --562  1 --718  1 --983  1 --1073 2 --86   2 --1130
 #>  [9] 3 --31   3 --326  3 --358  3 --680  3 --696  3 --1168 4 --37   4 --38  
 #> [17] 4 --128  4 --216  4 --691  4 --1109 5 --473  5 --734  5 --799  5 --807 
@@ -101,14 +101,13 @@ patchwork::wrap_plots(plt.ggnet, plt.spg)
 
 One of the main features of the SpotGraph package is to identify spots
 on a slide that lie on top of tissue debris disconnected from the rest
-of the tissue sample. These are uninformative and are a technical
+of the tissue sample. These are uninformative and are likely technical
 artifacts from sample processing, so we’d like to exclude these from our
-downstream analysis. We can identify whether a spot is surrounded by
-other spots using the
+downstream analysis. We can count the number of spots surrounding each
+spot using the
 [`igraph::degree()`](https://r.igraph.org/reference/degree.html)
-function, and filter out spots that are by themselves or only adjacent
-to one other spot with
-[`igraph::subgraph()`](https://r.igraph.org/reference/subgraph.html):
+function, and identify spots that have no neighbors or only have one
+adjacent spot:
 
 1.  First, extract the x,y coordinates of each spot in our dataset
 2.  Create and igraph object with
