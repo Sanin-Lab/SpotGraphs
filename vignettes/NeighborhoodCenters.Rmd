@@ -31,11 +31,13 @@ We will again use the 10X Visium dataset, downloaded from GSE208253, to demonstr
 
 ```{r Load data}
 data("scc_s1", package = "SpotGraphs")
+scc_s1 = UpdateSeuratObject(scc_s1)
 class(scc_s1)
 dim(scc_s1)
 
 coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$y, y = -coord$x)
+head(coord)
 ```
 
 # 2. Select a region of interest
