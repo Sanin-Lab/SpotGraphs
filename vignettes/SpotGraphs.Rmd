@@ -29,6 +29,7 @@ To demonstrate the general usage of SpotGraph, will use a 10X Visium dataset fro
 
 
 ```{r, message=FALSE}
+data("scc_s1", package = "SpotGraphs")
 scc_s1 = UpdateSeuratObject(scc_s1)
 class(scc_s1)
 dim(scc_s1)

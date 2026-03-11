@@ -39,6 +39,7 @@ In this vignette, we demonstrate how SpotGraphs can interact with Seurat and Spa
 ## Seurat object interaction
 We will use the example Seurat object provided in this package to demonstrate a typical workflow.
 ```{r, eval=TRUE}
+data("scc_s1", package = "SpotGraphs")
 class(scc_s1)
 ```
 
