@@ -78,9 +78,7 @@ One of the main features of the SpotGraph package is to identify spots on a slid
 3. Calculate the number of connections per-spot with `igraph::degree()`
 ```{r}
 coord = GetTissueCoordinates(scc_s1)
-coord = coord[,c('x', 'y')]
-
-ig = SpotGraph(coord)
+ig = SpotGraph(coord[,1:2])
 
 n_connections = igraph::degree(ig)
 ```
