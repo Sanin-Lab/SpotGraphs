@@ -18,20 +18,8 @@ GSE208253. The raw data from GEO is provided as a Seurat object in this
 package to use as an example.
 
 ``` r
-scc_s1 = Seurat::UpdateSeuratObject(scc_s1)
-#> Validating object structure
-#> Updating object slots
-#> Ensuring keys are in the proper structure
-#> Ensuring keys are in the proper structure
-#> Ensuring feature names don't have underscores or pipes
-#> Updating slots in Spatial
-#> Updating slots in slice1
+scc_s1 = UpdateSeuratObject(scc_s1)
 #> Warning: Not validating Centroids objects
-#> Updated Centroids object 'centroids' in FOV 'slice1'
-#> Updated boundaries in FOV 'slice1'
-#> Validating object structure for Assay5 'Spatial'
-#> Validating object structure for VisiumV2 'slice1'
-#> Object representation is consistent with the most current Seurat version
 class(scc_s1)
 #> [1] "Seurat"
 #> attr(,"package")
@@ -70,9 +58,9 @@ head(coord)
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH 003a1fd UN-- 1185 3189 -- 
+#> IGRAPH b2fcd06 UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from 003a1fd (vertex names):
+#> + edges from b2fcd06 (vertex names):
 #>  [1] 1 --175  1 --522  1 --562  1 --718  1 --983  1 --1073 2 --86   2 --1130
 #>  [9] 3 --31   3 --326  3 --358  3 --680  3 --696  3 --1168 4 --37   4 --38  
 #> [17] 4 --128  4 --216  4 --691  4 --1109 5 --473  5 --734  5 --799  5 --807 

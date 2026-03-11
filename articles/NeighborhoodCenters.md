@@ -1,4 +1,4 @@
-# Identify centers or boundaries of some region of interest
+# Identify centers or boundaries
 
 ``` r
 library(SpotGraphs)
@@ -25,20 +25,6 @@ demonstrate
 [`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md).
 
 ``` r
-scc_s1 = UpdateSeuratObject(scc_s1)
-#> Validating object structure
-#> Updating object slots
-#> Ensuring keys are in the proper structure
-#> Ensuring keys are in the proper structure
-#> Ensuring feature names don't have underscores or pipes
-#> Updating slots in Spatial
-#> Updating slots in slice1
-#> Warning: Not validating Centroids objects
-#> Updated Centroids object 'centroids' in FOV 'slice1'
-#> Updated boundaries in FOV 'slice1'
-#> Validating object structure for Assay5 'Spatial'
-#> Validating object structure for VisiumV2 'slice1'
-#> Object representation is consistent with the most current Seurat version
 class(scc_s1)
 #> [1] "Seurat"
 #> attr(,"package")
