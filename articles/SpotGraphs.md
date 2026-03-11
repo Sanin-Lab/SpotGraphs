@@ -47,21 +47,21 @@ the spots on our slide.
 
 ``` r
 coord = Seurat::GetTissueCoordinates(scc_s1)
-coord = data.frame(x = coord$y, y = -coord$x)
+coord = data.frame(x = coord$x, y = -coord$y)
 head(coord)
 #>       x      y
-#> 1 16571  -4809
-#> 2 13546  -3944
-#> 3 14812  -8142
-#> 4 10536 -13505
-#> 5 13053 -11764
-#> 6  9011  -4240
+#> 1  4809 -16571
+#> 2  3944 -13546
+#> 3  8142 -14812
+#> 4 13505 -10536
+#> 5 11764 -13053
+#> 6  4240  -9011
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH 096a4a8 UN-- 1185 3189 -- 
+#> IGRAPH 513ce4a UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from 096a4a8 (vertex names):
+#> + edges from 513ce4a (vertex names):
 #>  [1] 1 --175  1 --522  1 --562  1 --718  1 --983  1 --1073 2 --86   2 --1130
 #>  [9] 3 --31   3 --326  3 --358  3 --680  3 --696  3 --1168 4 --37   4 --38  
 #> [17] 4 --128  4 --216  4 --691  4 --1109 5 --473  5 --734  5 --799  5 --807 
@@ -203,8 +203,7 @@ edges between two groups of spots.
 ``` r
 # Create igraph object
 coord = GetTissueCoordinates(scc_s1)
-# coord = data.frame(x = coord$y, y = -coord$x)
-coord = coord[,c('x', 'y')]
+coord = data.frame(x = coord$x, y = -coord$y)
 ig = SpotGraph(coord)
 
 # Clustering with igraph

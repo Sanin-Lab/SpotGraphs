@@ -93,19 +93,7 @@ to demonstrate <code><a href="../reference/NeighborhoodCenters.html">Neighborhoo
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"scc_s1"</span>, package <span class="op">=</span> <span class="st">"SpotGraphs"</span><span class="op">)</span></span>
 <span><span class="va">scc_s1</span> <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/UpdateSeuratObject.html" class="external-link">UpdateSeuratObject</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Validating object structure</span></span>
-<span><span class="co">#&gt; Updating object slots</span></span>
-<span><span class="co">#&gt; Ensuring keys are in the proper structure</span></span>
-<span><span class="co">#&gt; Ensuring keys are in the proper structure</span></span>
-<span><span class="co">#&gt; Ensuring feature names don't have underscores or pipes</span></span>
-<span><span class="co">#&gt; Updating slots in Spatial</span></span>
-<span><span class="co">#&gt; Updating slots in slice1</span></span>
 <span><span class="co">#&gt; Warning: Not validating Centroids objects</span></span>
-<span><span class="co">#&gt; Updated Centroids object 'centroids' in FOV 'slice1'</span></span>
-<span><span class="co">#&gt; Updated boundaries in FOV 'slice1'</span></span>
-<span><span class="co">#&gt; Validating object structure for Assay5 'Spatial'</span></span>
-<span><span class="co">#&gt; Validating object structure for VisiumV2 'slice1'</span></span>
-<span><span class="co">#&gt; Object representation is consistent with the most current Seurat version</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Seurat"</span></span>
 <span><span class="co">#&gt; attr(,"package")</span></span>
@@ -114,15 +102,15 @@ to demonstrate <code><a href="../reference/NeighborhoodCenters.html">Neighborhoo
 <span><span class="co">#&gt; [1] 36601  1185</span></span>
 <span></span>
 <span><span class="va">coord</span> <span class="op">=</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/GetTissueCoordinates.html" class="external-link">GetTissueCoordinates</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
-<span><span class="va">coord</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">coord</span><span class="op">$</span><span class="va">y</span>, y <span class="op">=</span> <span class="op">-</span><span class="va">coord</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="va">coord</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">coord</span><span class="op">$</span><span class="va">x</span>, y <span class="op">=</span> <span class="op">-</span><span class="va">coord</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">coord</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       x      y</span></span>
-<span><span class="co">#&gt; 1 16571  -4809</span></span>
-<span><span class="co">#&gt; 2 13546  -3944</span></span>
-<span><span class="co">#&gt; 3 14812  -8142</span></span>
-<span><span class="co">#&gt; 4 10536 -13505</span></span>
-<span><span class="co">#&gt; 5 13053 -11764</span></span>
-<span><span class="co">#&gt; 6  9011  -4240</span></span></code></pre></div>
+<span><span class="co">#&gt; 1  4809 -16571</span></span>
+<span><span class="co">#&gt; 2  3944 -13546</span></span>
+<span><span class="co">#&gt; 3  8142 -14812</span></span>
+<span><span class="co">#&gt; 4 13505 -10536</span></span>
+<span><span class="co">#&gt; 5 11764 -13053</span></span>
+<span><span class="co">#&gt; 6  4240  -9011</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="select-a-region-of-interest">2. Select a region of interest<a class="anchor" aria-label="anchor" href="#select-a-region-of-interest"></a>

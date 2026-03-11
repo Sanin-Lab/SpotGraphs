@@ -27,19 +27,7 @@ demonstrate
 ``` r
 data("scc_s1", package = "SpotGraphs")
 scc_s1 = UpdateSeuratObject(scc_s1)
-#> Validating object structure
-#> Updating object slots
-#> Ensuring keys are in the proper structure
-#> Ensuring keys are in the proper structure
-#> Ensuring feature names don't have underscores or pipes
-#> Updating slots in Spatial
-#> Updating slots in slice1
 #> Warning: Not validating Centroids objects
-#> Updated Centroids object 'centroids' in FOV 'slice1'
-#> Updated boundaries in FOV 'slice1'
-#> Validating object structure for Assay5 'Spatial'
-#> Validating object structure for VisiumV2 'slice1'
-#> Object representation is consistent with the most current Seurat version
 class(scc_s1)
 #> [1] "Seurat"
 #> attr(,"package")
@@ -48,15 +36,15 @@ dim(scc_s1)
 #> [1] 36601  1185
 
 coord = Seurat::GetTissueCoordinates(scc_s1)
-coord = data.frame(x = coord$y, y = -coord$x)
+coord = data.frame(x = coord$x, y = -coord$y)
 head(coord)
 #>       x      y
-#> 1 16571  -4809
-#> 2 13546  -3944
-#> 3 14812  -8142
-#> 4 10536 -13505
-#> 5 13053 -11764
-#> 6  9011  -4240
+#> 1  4809 -16571
+#> 2  3944 -13546
+#> 3  8142 -14812
+#> 4 13505 -10536
+#> 5 11764 -13053
+#> 6  4240  -9011
 ```
 
 ## 2. Select a region of interest
