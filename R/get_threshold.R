@@ -33,8 +33,8 @@ get_threshold = function(stats,
   den = density(stats)
 
   # define an interval to check for local minima
-  int.min = spatstat.univar::quantile.density(den, 0.05)
-  int.max = spatstat.univar::quantile.density(den, 0.95)
+  int.min = spatstat.univar::quantile.density(den, percentile1)
+  int.max = spatstat.univar::quantile.density(den, percentile2)
 
   interval = c(int.min, int.max)
 
