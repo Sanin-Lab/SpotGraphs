@@ -43,7 +43,7 @@ Our goal with this package is support Visium analysis by providing a function th
 To construct an igraph object, all we need are the x,y coordinates of the spots on our slide.
 
 ```{r}
-coord = GetTissueCoordinates(scc_s1)
+coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$y, y = -coord$x)
 head(coord)
 
