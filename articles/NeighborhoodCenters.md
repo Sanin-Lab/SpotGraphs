@@ -40,8 +40,8 @@ coord = data.frame(x = coord$x, y = -coord$y)
 ```
 
 Perform some spot-level filtering (in the same fashion as in the [Get
-Started](https://potential-adventure-or7z9q9.pages.github.io/articles/SpotGraphs.Rmd)
-vignette.
+Started](https://sanin-lab.github.io/SpotGraphs/articles/SpotGraphs.html)
+vignette).
 
 ``` r
 ig = SpotGraph(coord)
