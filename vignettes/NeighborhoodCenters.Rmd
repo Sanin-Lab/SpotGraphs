@@ -38,7 +38,7 @@ dim(scc_s1)
 coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$x, y = -coord$y)
 ```
-Perform some spot-level filtering (in the same fashion as in the [Get Started](SpotGraphs.Rmd) vignette.
+Perform some spot-level filtering (in the same fashion as in the [Get Started](https://sanin-lab.github.io/SpotGraphs/articles/SpotGraphs.html) vignette).
 ```{r, message=FALSE, warning=FALSE}
 ig = SpotGraph(coord)
 cl = igraph::cluster_louvain(ig, resolution = 0)
