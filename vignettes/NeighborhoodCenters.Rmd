@@ -38,7 +38,7 @@ dim(scc_s1)
 coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$x, y = -coord$y)
 ```
-Perform some spot-level filtering (in the same fashion as in the Getting Starting vignette)
+Perform some spot-level filtering (in the same fashion as in the [Get Started](SpotGraphs.Rmd) vignette.
 ```{r, message=FALSE, warning=FALSE}
 ig = SpotGraph(coord)
 cl = igraph::cluster_louvain(ig, resolution = 0)
@@ -115,12 +115,12 @@ wrap_plots(plt1, plt2, plt3, design = 'A#\nBC')
 The `NeighborhoodCenters()` function can also identify characteristics of multiple regions by providing a named boolean vector indicating whether a spot is within any of these regions. This can be useful when there are several tumor regions within the same tissue section. Here, we select three different clusters as regions of interest, instead of just one.
 
 ```{r NeighborhoodCenters with multiple regions}
-roi = cl$membership %in% c('2', '4', '5')
+roi = cl$membership %in% c('2', '5', '7')
 names(roi) = names(igraph::V(ig))
 res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
 ```
 
-```{r multiple region plotting, fig.width=7.75, fig.height=6.2}
+```{r multiple region plotting, fig.width=7.75, fig.height=5.8}
 # Set centrality scores as a vertex attribute in our igraph object
 igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
 igraph::V(ig)$roi_center = names(igraph::V(ig)) %in% res$centers
