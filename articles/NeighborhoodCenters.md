@@ -39,8 +39,9 @@ coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$x, y = -coord$y)
 ```
 
-Perform some spot-level filtering (in the same fashion as in the Getting
-Starting vignette)
+Perform some spot-level filtering (in the same fashion as in the [Get
+Started](https://potential-adventure-or7z9q9.pages.github.io/articles/SpotGraphs.Rmd)
+vignette.
 
 ``` r
 ig = SpotGraph(coord)
@@ -141,7 +142,7 @@ regions within the same tissue section. Here, we select three different
 clusters as regions of interest, instead of just one.
 
 ``` r
-roi = cl$membership %in% c('2', '4', '5')
+roi = cl$membership %in% c('2', '5', '7')
 names(roi) = names(igraph::V(ig))
 res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
 ```
