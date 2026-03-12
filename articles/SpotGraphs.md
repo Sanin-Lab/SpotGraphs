@@ -20,7 +20,6 @@ package to use as an example.
 ``` r
 data("scc_s1", package = "SpotGraphs")
 scc_s1 = UpdateSeuratObject(scc_s1)
-#> Warning: Not validating Centroids objects
 class(scc_s1)
 #> [1] "Seurat"
 #> attr(,"package")
@@ -59,9 +58,9 @@ head(coord)
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH 2afaea6 UN-- 1185 3189 -- 
+#> IGRAPH 2a016d5 UN-- 1185 3189 -- 
 #> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from 2afaea6 (vertex names):
+#> + edges from 2a016d5 (vertex names):
 #>  [1] 1 --175  1 --522  1 --562  1 --718  1 --983  1 --1073 2 --86   2 --1130
 #>  [9] 3 --31   3 --326  3 --358  3 --680  3 --696  3 --1168 4 --37   4 --38  
 #> [17] 4 --128  4 --216  4 --691  4 --1109 5 --473  5 --734  5 --799  5 --807 
@@ -124,7 +123,7 @@ n_connections = igraph::degree(ig)
 
 We can now plot the number of connections (i.e., the results of
 [`igraph::degree()`](https://r.igraph.org/reference/degree.html)) by
-storing these results back into the original Seurat object that we
+storing these results back into the original `Seurat` object that we
 started with. Additionally, we can add another metadata column to
 indicate whether each spot is adjacent to more than one other spot.
 
@@ -156,7 +155,7 @@ identified with
 [`SpotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpotGraph.md).
 We set the `resolution = 0` to group all spots together that are
 connected in any way. We can store these clustering results back into
-our Seurat object and again, plot with
+our `Seurat` object and again, plot with
 [`Seurat::SpatialDimPlot()`](https://satijalab.org/seurat/reference/SpatialPlot.html).
 After clustering, we can choose to keep only clusters 1 and 2, which
 will let us remove any low quality spots that are disconnected from most

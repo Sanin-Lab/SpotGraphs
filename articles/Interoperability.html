@@ -80,22 +80,22 @@
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>In this vignette, we demonstrate how SpotGraphs can interact with
-Seurat and SpatialExperiment objects. A typical workflow will involve
-the following steps:</p>
+<code>Seurat</code> and <code>SpatialExperiment</code> objects. A
+typical workflow will involve the following steps:</p>
 <ol style="list-style-type: decimal">
-<li><p>Extract x,y coordinates from Seurat or SpatialExperiment
-object.</p></li>
+<li><p>Extract x,y coordinates from <code>Seurat</code> or
+<code>SpatialExperiment</code> object.</p></li>
 <li><p>Create igraph object with <code><a href="../reference/SpotGraph.html">SpotGraph()</a></code>.</p></li>
 <li><p>Perform some analysis.</p></li>
-<li><p>Store results back into the original Seurat or SpatialExperiment
-object.</p></li>
+<li><p>Store results back into the original <code>Seurat</code> or
+<code>SpatialExperiment</code> object.</p></li>
 </ol>
 </div>
 <div class="section level2">
 <h2 id="seurat-object-interaction">Seurat object interaction<a class="anchor" aria-label="anchor" href="#seurat-object-interaction"></a>
 </h2>
-<p>We will use the example Seurat object provided in this package to
-demonstrate a typical workflow.</p>
+<p>We will use the example <code>Seurat</code> object provided in this
+package to demonstrate a typical workflow.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"scc_s1"</span>, package <span class="op">=</span> <span class="st">"SpotGraphs"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
@@ -120,8 +120,8 @@ Seurat object</p>
 <div class="section level2">
 <h2 id="spatialexperiment-interaction">SpatialExperiment interaction<a class="anchor" aria-label="anchor" href="#spatialexperiment-interaction"></a>
 </h2>
-<p>To demonstrate interaction with a SpatialExperiment object, we will
-load an object from ExperimentHub.</p>
+<p>To demonstrate interaction with a <code>SpatialExperiment</code>
+object, we will load an object from ExperimentHub.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">eh</span> <span class="op">=</span> <span class="fu">ExperimentHub</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ExperimentHub/man/ExperimentHub-class.html" class="external-link">ExperimentHub</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">q</span> <span class="op">=</span> <span class="fu">AnnotationHub</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/AnnotationHub/man/AnnotationHub-class.html" class="external-link">query</a></span><span class="op">(</span><span class="va">eh</span>, <span class="st">'TENxVisium'</span><span class="op">)</span></span>
@@ -131,8 +131,8 @@ load an object from ExperimentHub.</p>
 <span><span class="co">#&gt; [1] "SpatialExperiment"</span></span>
 <span><span class="co">#&gt; attr(,"package")</span></span>
 <span><span class="co">#&gt; [1] "SpatialExperiment"</span></span></code></pre></div>
-<p>Once we have our SpatialExperiment object, we can follow the same
-workflow</p>
+<p>Once we have our <code>SpatialExperiment</code> object, we can follow
+the same workflow</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coord</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment-methods.html" class="external-link">spatialCoords</a></span><span class="op">(</span><span class="va">spe</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">ig</span> <span class="op">=</span> <span class="fu"><a href="../reference/SpotGraph.html">SpotGraph</a></span><span class="op">(</span><span class="va">coord</span><span class="op">)</span></span>
@@ -140,9 +140,9 @@ workflow</p>
 <span><span class="fu">colData</span><span class="op">(</span><span class="va">spe</span><span class="op">)</span><span class="op">$</span><span class="va">degree</span> <span class="op">=</span> <span class="va">n_edges</span></span></code></pre></div>
 <p>We could also calculate multiple statistics from several analyses on
 the igraph object before storing them in the original
-Seurat/SpatialExperiment object. If we store all the vertex/spot-level
-results back into the igraph object with <code><a href="https://r.igraph.org/reference/V.html" class="external-link">V()</a></code>, we can
-extract all of the results at once with
+<code>Seurat</code>/<code>SpatialExperiment</code> object. If we store
+all the vertex/spot-level results back into the igraph object with
+<code><a href="https://r.igraph.org/reference/V.html" class="external-link">V()</a></code>, we can extract all of the results at once with
 <code><a href="https://r.igraph.org/reference/vertex_attr.html" class="external-link">igraph::vertex_attr()</a></code>, and coerce this into a
 <code>data.frame</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -160,7 +160,7 @@ extract all of the results at once with
 <span><span class="co">#&gt; 5 AAACAGTGTTCCTGGG-1   10193    5323       FALSE       5  74 1.289729e-01</span></span>
 <span><span class="co">#&gt; 6 AAACATTTCCCGGATT-1    8756    9044       FALSE       6  72 3.142856e-01</span></span></code></pre></div>
 <p>This resulting <code>data.frame</code> and then be stored back into
-the SpatialExperiment object.</p>
+the <code>SpatialExperiment</code> object.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">colData</span><span class="op">(</span><span class="va">spe</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu">colData</span><span class="op">(</span><span class="va">spe</span><span class="op">)</span>, <span class="va">df</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">colData</span><span class="op">(</span><span class="va">spe</span><span class="op">)</span><span class="op">)</span></span>

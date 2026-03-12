@@ -11,23 +11,23 @@ library(igraph)
 
 ## Overview
 
-In this vignette, we demonstrate how SpotGraphs can interact with Seurat
-and SpatialExperiment objects. A typical workflow will involve the
-following steps:
+In this vignette, we demonstrate how SpotGraphs can interact with
+`Seurat` and `SpatialExperiment` objects. A typical workflow will
+involve the following steps:
 
-1.  Extract x,y coordinates from Seurat or SpatialExperiment object.
+1.  Extract x,y coordinates from `Seurat` or `SpatialExperiment` object.
 
 2.  Create igraph object with
     [`SpotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpotGraph.md).
 
 3.  Perform some analysis.
 
-4.  Store results back into the original Seurat or SpatialExperiment
+4.  Store results back into the original `Seurat` or `SpatialExperiment`
     object.
 
 ## Seurat object interaction
 
-We will use the example Seurat object provided in this package to
+We will use the example `Seurat` object provided in this package to
 demonstrate a typical workflow.
 
 ``` r
@@ -67,8 +67,8 @@ scc_s1 = AddMetaData(scc_s1, metadata = n_edges, col.name = 'degree')
 
 ## SpatialExperiment interaction
 
-To demonstrate interaction with a SpatialExperiment object, we will load
-an object from ExperimentHub.
+To demonstrate interaction with a `SpatialExperiment` object, we will
+load an object from ExperimentHub.
 
 ``` r
 eh = ExperimentHub::ExperimentHub()
@@ -81,7 +81,7 @@ class(spe)
 #> [1] "SpatialExperiment"
 ```
 
-Once we have our SpatialExperiment object, we can follow the same
+Once we have our `SpatialExperiment` object, we can follow the same
 workflow
 
 ``` r
@@ -93,8 +93,8 @@ colData(spe)$degree = n_edges
 
 We could also calculate multiple statistics from several analyses on the
 igraph object before storing them in the original
-Seurat/SpatialExperiment object. If we store all the vertex/spot-level
-results back into the igraph object with
+`Seurat`/`SpatialExperiment` object. If we store all the
+vertex/spot-level results back into the igraph object with
 [`V()`](https://r.igraph.org/reference/V.html), we can extract all of
 the results at once with
 [`igraph::vertex_attr()`](https://r.igraph.org/reference/vertex_attr.html),
@@ -117,7 +117,7 @@ head(df)
 ```
 
 This resulting `data.frame` and then be stored back into the
-SpatialExperiment object.
+`SpatialExperiment` object.
 
 ``` r
 colData(spe) = cbind(colData(spe), df)

@@ -27,7 +27,6 @@ demonstrate
 ``` r
 data("scc_s1", package = "SpotGraphs")
 scc_s1 = UpdateSeuratObject(scc_s1)
-#> Warning: Not validating Centroids objects
 class(scc_s1)
 #> [1] "Seurat"
 #> attr(,"package")
@@ -50,7 +49,7 @@ scc_s1 = AddMetaData(scc_s1, cl$membership %in% c('1','2'), 'cl_threshold')
 scc_s1 = subset(scc_s1, subset = cl_threshold)
 ```
 
-Update the igraph object after filtering the Seurat object
+Update the igraph object after filtering the `Seurat` object
 
 ``` r
 coord = GetTissueCoordinates(scc_s1)
