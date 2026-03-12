@@ -39,7 +39,7 @@ coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$x, y = -coord$y)
 ```
 Perform some spot-level filtering (in the same fashion as in the [Get Started](https://sanin-lab.github.io/SpotGraphs/articles/SpotGraphs.html) vignette).
-```{r, message=FALSE, warning=FALSE}
+```{r Spot level filtering, message=FALSE, warning=FALSE}
 ig = SpotGraph(coord)
 cl = igraph::cluster_louvain(ig, resolution = 0)
 scc_s1 = AddMetaData(scc_s1, cl$membership %in% c('1','2'), 'cl_threshold')
@@ -47,7 +47,7 @@ scc_s1 = subset(scc_s1, subset = cl_threshold)
 ```
 
 Update the igraph object after filtering the `Seurat` object
-```{r}
+```{r Get coordinates and create igraph postfiltering}
 coord = GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$x, y = -coord$y)
 ig = SpotGraph(coord)
