@@ -28,7 +28,7 @@ library(ggnetwork)
 To demonstrate the general usage of SpotGraph, will use a 10X Visium dataset from a squamous cell carcinoma patient, downloaded from GSE208253. The raw data from GEO is provided as a Seurat object in this package to use as an example.
 
 
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 data("scc_s1", package = "SpotGraphs")
 scc_s1 = UpdateSeuratObject(scc_s1)
 class(scc_s1)
@@ -83,7 +83,7 @@ ig = SpotGraph(coord[,1:2])
 n_connections = igraph::degree(ig)
 ```
 
-We can now plot the number of connections (i.e., the results of `igraph::degree()`) by storing these results back into the original Seurat object that we started with. Additionally, we can add another metadata column to indicate whether each spot is adjacent to more than one other spot. 
+We can now plot the number of connections (i.e., the results of `igraph::degree()`) by storing these results back into the original `Seurat` object that we started with. Additionally, we can add another metadata column to indicate whether each spot is adjacent to more than one other spot. 
 ```{r}
 scc_s1 = AddMetaData(scc_s1, n_connections, 'degree')
 scc_s1 = AddMetaData(scc_s1, n_connections>1, 'adj_threshold')
@@ -98,7 +98,7 @@ plt.degfilter = SpatialDimPlot(scc_s1, group.by = 'adj_threshold', image.alpha =
 wrap_plots(plt.deg, plt.degfilter)
 ```
 
-Alternatively, we could perform clustering using the spot adjacencies we identified with `SpotGraph()`. We set the `resolution = 0` to group all spots together that are connected in any way. We can store these clustering results back into our Seurat object and again, plot with `Seurat::SpatialDimPlot()`. After clustering, we can choose to keep only clusters 1 and 2, which will let us remove any low quality spots that are disconnected from most of the tissue sample in our data.
+Alternatively, we could perform clustering using the spot adjacencies we identified with `SpotGraph()`. We set the `resolution = 0` to group all spots together that are connected in any way. We can store these clustering results back into our `Seurat` object and again, plot with `Seurat::SpatialDimPlot()`. After clustering, we can choose to keep only clusters 1 and 2, which will let us remove any low quality spots that are disconnected from most of the tissue sample in our data.
 ```{r, fig.width=9, fig.height=4, message=FALSE, eval=T}
 cl = igraph::cluster_louvain(ig, resolution = 0)
 scc_s1 = AddMetaData(scc_s1, factor(cl$membership), 'igraph_clusters')
