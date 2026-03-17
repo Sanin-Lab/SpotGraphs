@@ -48,4 +48,5 @@ Which can be stored back into the original coordinates data frame:
 
 ## Citation
 If you use our software, please cite:
+
 Lee, A. J., & Sanin, D. E. (2026). SpotGraphs: Graph-based analysis of spatially resolved transcriptional data in R. bioRxiv, 2026.03.12.711347. https://doi.org/10.64898/2026.03.12.711347 
