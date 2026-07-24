@@ -45,14 +45,6 @@ SpotGraph = function(coord,
                      delaunay.trim = T,
                      dist.buffer = 1.05,
                      max.dist = NULL) {
-  # Get coordinates and calculate euclidean distance
-  d = dist(coord, method = 'euclidean')
-  m = as.matrix(d)
-
-  # Calculate max tolerated distance to define immediately adjacent spots
-  min.dist = min(d)
-  if (is.null(max.dist)) max.dist = sqrt(2*min.dist^2)*dist.buffer
-
   # Use Delaunay triangulation if desired
   if (delaunay) {
     tr.obj = interp::tri.mesh(x = coord)
@@ -78,9 +70,34 @@ SpotGraph = function(coord,
       ig = igraph::delete_edges(ig, edge.del)
     }
   } else {
+    # Get coordinates and calculate euclidean distance
+    knn_result <- dbscan::kNN(as.matrix(coord), k = 50)
+
+    # Calculate max tolerated distance to define immediately adjacent spots
+    min.dist = min(knn_result$dist)
+    if (is.null(max.dist)) max.dist = sqrt(2*min.dist^2)*dist.buffer
+
     # Create igraph object from edge data frame
-    ig = igraph::graph_from_adjacency_matrix(m <= max.dist, mode = "undirected", diag = F)
-  }
+    n <- nrow(knn_result$id)
+    k <- ncol(knn_result$id)
+
+    # Vectorized operations
+    from <- rep(1:n, times = k)
+    to <- as.vector(knn_result$id)
+    dist <- as.vector(knn_result$dist)
+
+    # Single mask operation
+    mask <- dist <= max.dist & from != to
+
+    # Direct edge list creation
+    ig <- igraph::make_undirected_graph(
+      edges = rbind(from[mask], to[mask]),
+      n = n
+    )
+
+    # Remove duplicates
+    ig <- igraph::simplify(ig, remove.multiple = TRUE)
+    }
 
   # Add x,y coordinates to igraph object
   igraph::V(ig)$coord_x = coord[,1]

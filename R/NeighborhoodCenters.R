@@ -3,8 +3,7 @@
 #' @description
 #' Score spots using igraph::centr_eigen to identify spots in the center of some region/neighborhood.
 #'
-#' @param coord A two-column data.frame or matrix, where each column contains x or y coordinates,
-#' where the rownames are spot barcodes/ids.
+#' @param igraph_object An igraph object
 #' @param is_neighborhood A boolean vector (`TRUE`/`FALSE`) of equal length as the number of rows
 #' in `coord`. Centers will be identified for each neighborhood of spots labeled `TRUE`.
 #'
@@ -31,23 +30,25 @@
 #'
 #' res = NeighborhoodCenters(coord = df, is_neighborhood = is_cluster)
 #' }
-NeighborhoodCenters = function(coord = NULL, is_neighborhood) {
+NeighborhoodCenters = function(igraph_object = NULL, is_neighborhood) {
   # check if is_neighborhood vector is boolean
   if (!is.logical(is_neighborhood)) {
     stop('is_neighborhood should be logical (TRUE/FALSE) indicating neighborhood membership')
   }
 
+  # Create igraph object
+  ig = igraph_object
+
   # Ensure spots in is_neighborhood and coord are aligned with each other
   # - if is_neighborhood is not named with spot ids (i.e., barcodes), assume
   #   that they are properly ordered in the same way as the coordinate matrix
-  if (!is.null(names(is_neighborhood))) {
-    coord = coord[match(rownames(coord), names(is_neighborhood)),]
-  } else {
-    names(is_neighborhood) = rownames(coord)
+  if (is.null(names(is_neighborhood))) {
+    names(is_neighborhood) = names(igraph::V(ig))
+    } else {
+    if(sum(is.na(match(names(igraph::V(ig)), names(is_neighborhood)))) > 0){
+      stop('is_neighborhood contains names not present in i_graphobject')
+    }
   }
-
-  # Create igraph object
-  ig = SpotGraph(coord)
 
   # Remove edges between neighborhood and non-neighborhood spots
   is_neighborhood = is_neighborhood[match(names(igraph::V(ig)), names(is_neighborhood))]
