@@ -23,12 +23,13 @@
 #' colnames(df) = c('x', 'y')
 #' nspots = dim(df)[1]
 #' rownames(df) = paste0('spot', 1:nspots)
+#' ig = SpotGraph(df)
 #'
 #' igraph::V(ig)$cluster = igraph::cluster_leiden(ig, resolution = 0)$membership
 #' is_cluster = igraph::V(ig)$cluster=='1'
 #' names(is_cluster) = names(igraph::V(ig))
 #'
-#' res = NeighborhoodCenters(coord = df, is_neighborhood = is_cluster)
+#' res = NeighborhoodCenters(igraph_object = ig, is_neighborhood = is_cluster)
 #' }
 NeighborhoodCenters = function(igraph_object = NULL, is_neighborhood) {
   # check if is_neighborhood vector is boolean
