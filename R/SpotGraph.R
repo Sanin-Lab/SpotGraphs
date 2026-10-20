@@ -45,13 +45,13 @@ SpotGraph = function(coord,
                      delaunay.trim = T,
                      dist.buffer = 1.05,
                      max.dist = NULL) {
-  
+
   coord_mat <- as.matrix(coord)
   n_points  <- nrow(coord_mat)
-  
+
   # Use Delaunay triangulation if desired
   if (delaunay) {
-    tr.obj = interp::tri.mesh(x= coord_mat[, 1], y = coord_mat[, 2])
+    tr.obj = interp::tri.mesh(x= jitter(coord_mat[, 1],0.05), y = jitter(coord_mat[, 2],0.05))
 
     # extract edge list and create igraph object
     edges = tr.obj$arcs
@@ -62,20 +62,20 @@ SpotGraph = function(coord,
 
     # remove long edges
     if (delaunay.trim) {
-      #extract edges directly as a 2 column matrix 
+      #extract edges directly as a 2 column matrix
       e_mat = igraph::as_edgelist(ig)
-      
+
       #vectorized distance calculation for only connected edges
       p1 = coord_mat[e_mat[, 1], , drop = F]
       p2 = coord_mat[e_mat[, 2], , drop = F]
       edge.lengths = sqrt(rowSums((p1 - p2)^2))
-      
+
       #calculate max.dist
       if (is.null(max.dist)) {
         min.dist = min(edge.lengths)
         max.dist = sqrt(2 * min.dist^2) * dist.buffer
       }
-      
+
       ig = igraph::delete_edges(ig, igraph::E(ig)[edge.lengths > max.dist])
     }
   } else {
