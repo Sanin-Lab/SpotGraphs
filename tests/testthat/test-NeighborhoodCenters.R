@@ -1,6 +1,6 @@
 test_that("NeighborhoodCenters produces expected output", {
+  ig = readRDS(test_path('fixtures', 'sccs1_igraph.rds'))
   coord = readRDS(test_path('fixtures', 'sccs1_coord.rds'))
-  ig = SpotGraph(coord)
   igraph::V(ig)$name = rownames(coord)
   is_neighborhood = readRDS(test_path('fixtures', 'neighborhoodcenters_isneighborhood.rds'))
 

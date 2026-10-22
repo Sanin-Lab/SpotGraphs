@@ -24,6 +24,7 @@
 #' nspots = dim(df)[1]
 #' rownames(df) = paste0('spot', 1:nspots)
 #' ig = SpotGraph(df)
+#' igraph::V(ig)$name = rownames(df)
 #'
 #' igraph::V(ig)$cluster = igraph::cluster_leiden(ig, resolution = 0)$membership
 #' is_cluster = igraph::V(ig)$cluster=='1'
@@ -37,21 +38,21 @@ NeighborhoodCenters = function(igraph_object = NULL, is_neighborhood) {
     stop('is_neighborhood should be logical (TRUE/FALSE) indicating neighborhood membership')
   }
 
+  # Create igraph object
+  ig = igraph_object
+
   if (is.null(igraph::V(ig)$name)) {
     stop('Graph object should have named vertices as an attribute called `name`')
   }
-
-  # Create igraph object
-  ig = igraph_object
 
   # Ensure spots in is_neighborhood and coord are aligned with each other
   # - if is_neighborhood is not named with spot ids (i.e., barcodes), assume
   #   that they are properly ordered in the same way as the coordinate matrix
   if (is.null(names(is_neighborhood))) {
-    names(is_neighborhood) = names(igraph::V(ig))
+    names(is_neighborhood) = igraph::V(ig)$name
     } else {
-    if(sum(is.na(match(names(igraph::V(ig)), names(is_neighborhood)))) > 0){
-      stop('is_neighborhood contains names not present in i_graphobject')
+    if(sum(is.na(match(igraph::V(ig)$name, names(is_neighborhood)))) > 0){
+      stop('is_neighborhood contains names not present in igraph_object')
     }
   }
 
@@ -69,14 +70,14 @@ NeighborhoodCenters = function(igraph_object = NULL, is_neighborhood) {
   v.scores = lapply(levels(cl), function(xx) {
     ig.sub = igraph::subgraph(ig, which(cl==xx))
     res = igraph::centr_eigen(ig.sub)$vector
-    names(res) = names(igraph::V(ig.sub))
+    names(res) = igraph::V(ig.sub)$name
     return(res)
   }) %>% unlist
   igraph::V(ig)$center_eigen = v.scores
 
   # Identify boundary vertices
   nbh_boundary = igraph::degree(ig) < max(igraph::degree(ig))
-  boundary = names(igraph::V(ig))[nbh_boundary & is_neighborhood]
+  boundary = igraph::V(ig)$name[nbh_boundary & is_neighborhood]
 
   # Identify center vertices
   centers = as.data.frame(igraph::vertex_attr(ig)) %>%

@@ -2,6 +2,7 @@
 "_PACKAGE"
 
 utils::globalVariables(c('barcode',
+                         'comp',
                          'cluster_nCount',
                          'edge_cl',
                          'groups',
