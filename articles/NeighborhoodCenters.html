@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Identify centers or boundaries">
 </head>
@@ -123,9 +123,14 @@ object</p>
 interest in this tissue sample, but in practice, this should instead be
 a region of some biological interest. The region of interest, i.e.,
 neighborhood, is provided to <code><a href="../reference/NeighborhoodCenters.html">NeighborhoodCenters()</a></code> as a
-named vector of <code>TRUE</code>/<code>FALSE</code> values.</p>
+named vector of <code>TRUE</code>/<code>FALSE</code> values. To
+accurately return the calculated properties, we need to provide
+<em>names</em> (i.e. barcodes) to all out spots.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># perform clustering on the igraph object</span></span>
+<code class="sourceCode R"><span><span class="co"># add barcode to each vertex in the graph (assuming the order matches the coord file)</span></span>
+<span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">ig</span><span class="op">)</span><span class="op">$</span><span class="va">name</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">scc_s1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># perform clustering on the igraph object</span></span>
 <span><span class="va">cl</span> <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/cluster_louvain.html" class="external-link">cluster_louvain</a></span><span class="op">(</span><span class="va">ig</span>, resolution <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># store clustering results back into igraph object</span></span>
@@ -154,7 +159,7 @@ named vector of <code>TRUE</code>/<code>FALSE</code> values.</p>
 <h2 id="run-neighborhoodcenters">3. Run <code>NeighborhoodCenters()</code><a class="anchor" aria-label="anchor" href="#run-neighborhoodcenters"></a>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/NeighborhoodCenters.html">NeighborhoodCenters</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span>, is_neighborhood <span class="op">=</span> <span class="va">roi</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/NeighborhoodCenters.html">NeighborhoodCenters</a></span><span class="op">(</span>igraph_object <span class="op">=</span> <span class="va">ig</span>, is_neighborhood <span class="op">=</span> <span class="va">roi</span><span class="op">)</span></span></code></pre></div>
 <p>The output from this function returns a list, where the first element
 is a data.frame with the scores from <code><a href="https://r.igraph.org/reference/centr_eigen.html" class="external-link">igraph::centr_eigen()</a></code>
 where <code>is_neighborhood == T</code>, and 0 where
@@ -194,7 +199,7 @@ interest, instead of just one.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">roi</span> <span class="op">=</span> <span class="va">cl</span><span class="op">$</span><span class="va">membership</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'2'</span>, <span class="st">'5'</span>, <span class="st">'7'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">roi</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">ig</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/NeighborhoodCenters.html">NeighborhoodCenters</a></span><span class="op">(</span>coord <span class="op">=</span> <span class="va">coord</span>, is_neighborhood <span class="op">=</span> <span class="va">roi</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/NeighborhoodCenters.html">NeighborhoodCenters</a></span><span class="op">(</span>igraph_object <span class="op">=</span> <span class="va">ig</span>, is_neighborhood <span class="op">=</span> <span class="va">roi</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set centrality scores as a vertex attribute in our igraph object</span></span>
 <span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">ig</span><span class="op">)</span><span class="op">$</span><span class="va">centr_eigen</span> <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">eigen.scores</span><span class="op">$</span><span class="va">center_eigen</span></span>
@@ -260,7 +265,7 @@ interest, instead of just one.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

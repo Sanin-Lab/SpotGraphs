@@ -1,6 +1,7 @@
 # Identify centers or boundaries
 
 ``` r
+
 library(SpotGraphs)
 library(Seurat)
 library(ggplot2)
@@ -25,6 +26,7 @@ demonstrate
 [`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md).
 
 ``` r
+
 data("scc_s1", package = "SpotGraphs")
 scc_s1 = UpdateSeuratObject(scc_s1)
 class(scc_s1)
@@ -43,6 +45,7 @@ Started](https://sanin-lab.github.io/SpotGraphs/articles/SpotGraphs.html)
 vignette).
 
 ``` r
+
 ig = SpotGraph(coord)
 cl = igraph::cluster_louvain(ig, resolution = 0)
 scc_s1 = AddMetaData(scc_s1, cl$membership %in% c('1','2'), 'cl_threshold')
@@ -52,6 +55,7 @@ scc_s1 = subset(scc_s1, subset = cl_threshold)
 Update the igraph object after filtering the `Seurat` object
 
 ``` r
+
 coord = GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$x, y = -coord$y)
 ig = SpotGraph(coord)
@@ -64,9 +68,15 @@ interest in this tissue sample, but in practice, this should instead be
 a region of some biological interest. The region of interest, i.e.,
 neighborhood, is provided to
 [`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md)
-as a named vector of `TRUE`/`FALSE` values.
+as a named vector of `TRUE`/`FALSE` values. To accurately return the
+calculated properties, we need to provide *names* (i.e. barcodes) to all
+out spots.
 
 ``` r
+
+# add barcode to each vertex in the graph (assuming the order matches the coord file)
+igraph::V(ig)$name = colnames(scc_s1)
+
 # perform clustering on the igraph object
 cl = igraph::cluster_louvain(ig, resolution = 0.4)
 
@@ -97,7 +107,8 @@ wrap_plots(plt1, plt2)
 ## 3. Run `NeighborhoodCenters()`
 
 ``` r
-res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
+
+res = NeighborhoodCenters(igraph_object = ig, is_neighborhood = roi)
 ```
 
 The output from this function returns a list, where the first element is
@@ -106,6 +117,7 @@ a data.frame with the scores from
 where `is_neighborhood == T`, and 0 where `is_neighborhood == F`.
 
 ``` r
+
 # Set centrality scores as a vertex attribute in our igraph object
 igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
 igraph::V(ig)$roi_center = names(igraph::V(ig)) %in% res$centers
@@ -141,12 +153,14 @@ regions within the same tissue section. Here, we select three different
 clusters as regions of interest, instead of just one.
 
 ``` r
+
 roi = cl$membership %in% c('2', '5', '7')
 names(roi) = names(igraph::V(ig))
-res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
+res = NeighborhoodCenters(igraph_object = ig, is_neighborhood = roi)
 ```
 
 ``` r
+
 # Set centrality scores as a vertex attribute in our igraph object
 igraph::V(ig)$centr_eigen = res$eigen.scores$center_eigen
 igraph::V(ig)$roi_center = names(igraph::V(ig)) %in% res$centers
@@ -174,6 +188,7 @@ wrap_plots(plt1, plt2, plt3, design = 'A#\nBC')
 ## 5. Calculate distance between each spot and ROI center
 
 ``` r
+
 roi_dist = igraph::distances(ig)[,res$centers] %>% apply(1, min)
 boundary_dist = igraph::distances(ig)[,res$boundary] %>% apply(1, min)
 

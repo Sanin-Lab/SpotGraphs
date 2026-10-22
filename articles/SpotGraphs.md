@@ -1,6 +1,7 @@
 # SpotGraphs
 
 ``` r
+
 library(SpotGraphs)
 library(Seurat)
 library(dplyr)
@@ -18,6 +19,7 @@ GSE208253. The raw data from GEO is provided as a Seurat object in this
 package to use as an example.
 
 ``` r
+
 data("scc_s1", package = "SpotGraphs")
 scc_s1 = UpdateSeuratObject(scc_s1)
 class(scc_s1)
@@ -45,6 +47,7 @@ To construct an igraph object, all we need are the x,y coordinates of
 the spots on our slide.
 
 ``` r
+
 coord = Seurat::GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$x, y = -coord$y)
 head(coord)
@@ -58,17 +61,17 @@ head(coord)
 
 ig = SpotGraph(coord = coord)
 ig
-#> IGRAPH 505b745 UN-- 1185 3189 -- 
-#> + attr: name (v/c), coord_x (v/n), coord_y (v/n), is_boundary (v/l)
-#> + edges from 505b745 (vertex names):
-#>  [1] 1 --175  1 --522  1 --562  1 --718  1 --983  1 --1073 2 --86   2 --1130
-#>  [9] 3 --31   3 --326  3 --358  3 --680  3 --696  3 --1168 4 --37   4 --38  
-#> [17] 4 --128  4 --216  4 --691  4 --1109 5 --473  5 --734  5 --799  5 --807 
-#> [25] 5 --896  5 --1038 6 --61   6 --366  6 --485  6 --653  6 --815  6 --870 
-#> [33] 7 --110  7 --251  7 --792  7 --936  7 --950  7 --1183 8 --100  8 --153 
-#> [41] 8 --296  8 --436  8 --1081 8 --1106 9 --185  9 --651  9 --758  9 --826 
-#> [49] 9 --902  9 --1085 10--121  10--310  10--430  10--460  10--667  10--727 
-#> [57] 11--127  11--267  11--523  11--853  11--1038 11--1121 12--343  12--553 
+#> IGRAPH cda0fa2 U--- 1185 3189 -- 
+#> + attr: coord_x (v/n), coord_y (v/n), is_boundary (v/l)
+#> + edges from cda0fa2:
+#>  [1]  1-- 175  1-- 522  1-- 562  1-- 718  1-- 983  1--1073  2--  86  2--1130
+#>  [9]  3--  31  3-- 326  3-- 358  3-- 680  3-- 696  3--1168  4--  37  4--  38
+#> [17]  4-- 128  4-- 216  4-- 691  4--1109  5-- 473  5-- 734  5-- 799  5-- 807
+#> [25]  5-- 896  5--1038  6--  61  6-- 366  6-- 485  6-- 653  6-- 815  6-- 870
+#> [33]  7-- 110  7-- 251  7-- 792  7-- 936  7-- 950  7--1183  8-- 100  8-- 153
+#> [41]  8-- 296  8-- 436  8--1081  8--1106  9-- 185  9-- 651  9-- 758  9-- 826
+#> [49]  9-- 902  9--1085 10-- 121 10-- 310 10-- 430 10-- 460 10-- 667 10-- 727
+#> [57] 11-- 127 11-- 267 11-- 523 11-- 853 11--1038 11--1121 12-- 343 12-- 553
 #> + ... omitted several edges
 ```
 
@@ -81,6 +84,7 @@ the `is_boundary` attribute is automatically calculated from running
 which we will use to color each node in our plots.
 
 ``` r
+
 plt.ggnet = ggplot(ig, aes(x=x, y=y, xend=xend, yend=yend)) +
   geom_edges() + 
   geom_nodes(aes(color = is_boundary), size = 0.5) +
@@ -115,6 +119,7 @@ adjacent spot:
     [`igraph::degree()`](https://r.igraph.org/reference/degree.html)
 
 ``` r
+
 coord = GetTissueCoordinates(scc_s1)
 ig = SpotGraph(coord[,1:2])
 
@@ -128,6 +133,7 @@ started with. Additionally, we can add another metadata column to
 indicate whether each spot is adjacent to more than one other spot.
 
 ``` r
+
 scc_s1 = AddMetaData(scc_s1, n_connections, 'degree')
 scc_s1 = AddMetaData(scc_s1, n_connections>1, 'adj_threshold')
 ```
@@ -141,6 +147,7 @@ we would be able to further remove low quality spots from our data,
 entirely based on spot-level adjacencies.
 
 ``` r
+
 plt.deg = SpatialFeaturePlot(scc_s1, feature = 'degree', image.alpha = 0.6) +
   scale_fill_distiller(palette = 'Blues')
 plt.degfilter = SpatialDimPlot(scc_s1, group.by = 'adj_threshold', image.alpha = 0.6) +
@@ -162,6 +169,7 @@ will let us remove any low quality spots that are disconnected from most
 of the tissue sample in our data.
 
 ``` r
+
 cl = igraph::cluster_louvain(ig, resolution = 0)
 scc_s1 = AddMetaData(scc_s1, factor(cl$membership), 'igraph_clusters')
 plt.cl = SpatialDimPlot(
@@ -189,6 +197,7 @@ We will apply the filter determined from using the igraph clustering
 method.
 
 ``` r
+
 # Apply filter to keep igraph clusters 1 and 2
 scc_s1 = subset(scc_s1, subset = cl_threshold)
 ```
@@ -199,6 +208,7 @@ When working with an igraph object, it may be desirable to remove all
 edges between two groups of spots.
 
 ``` r
+
 # Create igraph object
 coord = GetTissueCoordinates(scc_s1)
 coord = data.frame(x = coord$x, y = -coord$y)

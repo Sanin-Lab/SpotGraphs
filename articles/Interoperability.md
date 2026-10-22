@@ -1,6 +1,7 @@
 # Seurat and SpatialExperiment interaction
 
 ``` r
+
 library(SpotGraphs)
 library(Seurat)
 library(TENxVisiumData)
@@ -31,6 +32,7 @@ We will use the example `Seurat` object provided in this package to
 demonstrate a typical workflow.
 
 ``` r
+
 data("scc_s1", package = "SpotGraphs")
 class(scc_s1)
 #> [1] "Seurat"
@@ -41,6 +43,7 @@ class(scc_s1)
 First, extract the x,y coordinates
 
 ``` r
+
 coord = Seurat::GetTissueCoordinates(scc_s1)
 ```
 
@@ -48,6 +51,7 @@ Create an igraph object with
 [`SpotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpotGraph.md)
 
 ``` r
+
 ig = SpotGraph(coord[,c('x','y')])
 ```
 
@@ -55,6 +59,7 @@ Perform some analysis. In this case, we will calculate the number of
 edges per spot.
 
 ``` r
+
 n_edges = igraph::degree(ig)
 ```
 
@@ -62,6 +67,7 @@ Finally, store these results back into the metadata of the original
 Seurat object
 
 ``` r
+
 scc_s1 = AddMetaData(scc_s1, metadata = n_edges, col.name = 'degree')
 ```
 
@@ -71,6 +77,7 @@ To demonstrate interaction with a `SpatialExperiment` object, we will
 load an object from ExperimentHub.
 
 ``` r
+
 eh = ExperimentHub::ExperimentHub()
 q = AnnotationHub::query(eh, 'TENxVisium')
 id = q$ah_id[q$title=='HumanGlioblastoma_v3.13']
@@ -85,6 +92,7 @@ Once we have our `SpatialExperiment` object, we can follow the same
 workflow
 
 ``` r
+
 coord = as.data.frame(spatialCoords(spe))
 ig = SpotGraph(coord)
 n_edges = igraph::degree(ig)
@@ -101,28 +109,30 @@ the results at once with
 and coerce this into a `data.frame`.
 
 ``` r
+
 V(ig)$cluster = factor(cluster_louvain(ig)$membership)
 V(ig)$ecc = eccentricity(ig)
 V(ig)$centrality = centr_eigen(ig)$vector
 
 df = as.data.frame(vertex_attr(ig))
 head(df)
-#>                 name coord_x coord_y is_boundary cluster ecc   centrality
-#> 1 AAACAAGTATCTCCCA-1    7438    9389       FALSE       1  69 3.244117e-01
-#> 2 AAACAATCTACTAGCA-1    1802    5327        TRUE       2   6 4.306545e-16
-#> 3 AAACACCAATAACTGC-1    8514    3670        TRUE       3  75 3.573227e-02
-#> 4 AAACAGAGCGACTCCT-1    3122    8840       FALSE       4  64 8.092829e-02
-#> 5 AAACAGTGTTCCTGGG-1   10193    5323       FALSE       5  74 1.289729e-01
-#> 6 AAACATTTCCCGGATT-1    8756    9044       FALSE       6  72 3.142856e-01
+#>   coord_x coord_y is_boundary cluster ecc   centrality
+#> 1    7438    9389       FALSE       1  69 3.244117e-01
+#> 2    1802    5327        TRUE       2   6 1.724053e-16
+#> 3    8514    3670        TRUE       3  75 3.573227e-02
+#> 4    3122    8840       FALSE       4  64 8.092829e-02
+#> 5   10193    5323       FALSE       5  74 1.289729e-01
+#> 6    8756    9044       FALSE       6  72 3.142856e-01
 ```
 
 This resulting `data.frame` and then be stored back into the
 `SpatialExperiment` object.
 
 ``` r
+
 colData(spe) = cbind(colData(spe), df)
 head(colData(spe))
-#> DataFrame with 6 rows and 12 columns
+#> DataFrame with 6 rows and 11 columns
 #>                                 sample_id in_tissue array_row array_col
 #>                               <character> <logical> <integer> <integer>
 #> AAACAAGTATCTCCCA-1 HumanGlioblastoma_v3..      TRUE        50       102
@@ -131,20 +141,20 @@ head(colData(spe))
 #> AAACAGAGCGACTCCT-1 HumanGlioblastoma_v3..      TRUE        14        94
 #> AAACAGTGTTCCTGGG-1 HumanGlioblastoma_v3..      TRUE        73        43
 #> AAACATTTCCCGGATT-1 HumanGlioblastoma_v3..      TRUE        61        97
-#>                       degree               name   coord_x   coord_y is_boundary
-#>                    <numeric>        <character> <integer> <integer>   <logical>
-#> AAACAAGTATCTCCCA-1         6 AAACAAGTATCTCCCA-1      7438      9389       FALSE
-#> AAACAATCTACTAGCA-1         2 AAACAATCTACTAGCA-1      1802      5327        TRUE
-#> AAACACCAATAACTGC-1         4 AAACACCAATAACTGC-1      8514      3670        TRUE
-#> AAACAGAGCGACTCCT-1         6 AAACAGAGCGACTCCT-1      3122      8840       FALSE
-#> AAACAGTGTTCCTGGG-1         6 AAACAGTGTTCCTGGG-1     10193      5323       FALSE
-#> AAACATTTCCCGGATT-1         6 AAACATTTCCCGGATT-1      8756      9044       FALSE
-#>                     cluster       ecc  centrality
-#>                    <factor> <numeric>   <numeric>
-#> AAACAAGTATCTCCCA-1        1        69 3.24412e-01
-#> AAACAATCTACTAGCA-1        2         6 4.30655e-16
-#> AAACACCAATAACTGC-1        3        75 3.57323e-02
-#> AAACAGAGCGACTCCT-1        4        64 8.09283e-02
-#> AAACAGTGTTCCTGGG-1        5        74 1.28973e-01
-#> AAACATTTCCCGGATT-1        6        72 3.14286e-01
+#>                       degree   coord_x   coord_y is_boundary  cluster       ecc
+#>                    <numeric> <integer> <integer>   <logical> <factor> <numeric>
+#> AAACAAGTATCTCCCA-1         6      7438      9389       FALSE        1        69
+#> AAACAATCTACTAGCA-1         2      1802      5327        TRUE        2         6
+#> AAACACCAATAACTGC-1         4      8514      3670        TRUE        3        75
+#> AAACAGAGCGACTCCT-1         6      3122      8840       FALSE        4        64
+#> AAACAGTGTTCCTGGG-1         6     10193      5323       FALSE        5        74
+#> AAACATTTCCCGGATT-1         6      8756      9044       FALSE        6        72
+#>                     centrality
+#>                      <numeric>
+#> AAACAAGTATCTCCCA-1 3.24412e-01
+#> AAACAATCTACTAGCA-1 1.72405e-16
+#> AAACACCAATAACTGC-1 3.57323e-02
+#> AAACAGAGCGACTCCT-1 8.09283e-02
+#> AAACAGTGTTCCTGGG-1 1.28973e-01
+#> AAACATTTCCCGGATT-1 3.14286e-01
 ```

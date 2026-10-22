@@ -6,21 +6,20 @@ some region/neighborhood.
 ## Usage
 
 ``` r
-NeighborhoodCenters(coord = NULL, is_neighborhood)
+NeighborhoodCenters(igraph_object = NULL, is_neighborhood)
 ```
 
 ## Arguments
 
-- coord:
+- igraph_object:
 
-  A two-column data.frame or matrix, where each column contains x or y
-  coordinates, where the rownames are spot barcodes/ids.
+  An igraph object with named vertices as an attribute called `name`
 
 - is_neighborhood:
 
   A boolean vector (`TRUE`/`FALSE`) of equal length as the number of
-  rows in `coord`. Centers will be identified for each neighborhood of
-  spots labeled `TRUE`.
+  nodes in `igraph_object`. Centers will be identified for each
+  neighborhood of spots labeled `TRUE`.
 
 ## Value
 
@@ -45,11 +44,12 @@ df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
 colnames(df) = c('x', 'y')
 nspots = dim(df)[1]
 rownames(df) = paste0('spot', 1:nspots)
+ig = SpotGraph(df)
 
 igraph::V(ig)$cluster = igraph::cluster_leiden(ig, resolution = 0)$membership
 is_cluster = igraph::V(ig)$cluster=='1'
 names(is_cluster) = names(igraph::V(ig))
 
-res = NeighborhoodCenters(coord = df, is_neighborhood = is_cluster)
+res = NeighborhoodCenters(igraph_object = ig, is_neighborhood = is_cluster)
 } # }
 ```
