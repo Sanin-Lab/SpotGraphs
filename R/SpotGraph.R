@@ -45,17 +45,13 @@ SpotGraph = function(coord,
                      delaunay.trim = T,
                      dist.buffer = 1.05,
                      max.dist = NULL) {
-  # Get coordinates and calculate euclidean distance
-  d = dist(coord, method = 'euclidean')
-  m = as.matrix(d)
 
-  # Calculate max tolerated distance to define immediately adjacent spots
-  min.dist = min(d)
-  if (is.null(max.dist)) max.dist = sqrt(2*min.dist^2)*dist.buffer
+  coord_mat <- as.matrix(coord)
+  n_points  <- nrow(coord_mat)
 
   # Use Delaunay triangulation if desired
   if (delaunay) {
-    tr.obj = interp::tri.mesh(x = coord)
+    tr.obj = interp::tri.mesh(x= jitter(coord_mat[, 1],0.05), y = jitter(coord_mat[, 2],0.05))
 
     # extract edge list and create igraph object
     edges = tr.obj$arcs
@@ -66,25 +62,56 @@ SpotGraph = function(coord,
 
     # remove long edges
     if (delaunay.trim) {
-      edge.df = as_ids(E(ig)) %>%
-        stringr::str_split('\\|') %>%
-        do.call(what = rbind) %>%
-        as.data.frame()
-      edge.lengths = apply(edge.df, 1, function(xx) m[xx[1],xx[2]])
+      #extract edges directly as a 2 column matrix
+      e_mat = igraph::as_edgelist(ig)
 
-      edge.del = edge.df[edge.lengths>max.dist,] %>%
-        apply(1, paste, collapse = '|')
+      #vectorized distance calculation for only connected edges
+      p1 = coord_mat[e_mat[, 1], , drop = F]
+      p2 = coord_mat[e_mat[, 2], , drop = F]
+      edge.lengths = sqrt(rowSums((p1 - p2)^2))
 
-      ig = igraph::delete_edges(ig, edge.del)
+      #calculate max.dist
+      if (is.null(max.dist)) {
+        min.dist = min(edge.lengths)
+        max.dist = sqrt(2 * min.dist^2) * dist.buffer
+      }
+
+      ig = igraph::delete_edges(ig, igraph::E(ig)[edge.lengths > max.dist])
     }
   } else {
+    # Get coordinates and calculate euclidean distance
+    #cap k dynamically
+    knn_result <- dbscan::kNN(as.matrix(coord), k = min(50, n_points - 1))
+
+    # Calculate max tolerated distance to define immediately adjacent spots
+    min.dist = min(knn_result$dist)
+    if (is.null(max.dist)) max.dist = sqrt(2*min.dist^2)*dist.buffer
+
     # Create igraph object from edge data frame
-    ig = igraph::graph_from_adjacency_matrix(m <= max.dist, mode = "undirected", diag = F)
-  }
+    n <- nrow(knn_result$id)
+    k <- ncol(knn_result$id)
+
+    # Vectorized operations
+    from <- rep(1:n, times = k)
+    to <- as.vector(knn_result$id)
+    dist <- as.vector(knn_result$dist)
+
+    # Single mask operation
+    mask <- dist <= max.dist & from != to
+
+    # Direct edge list creation
+    ig <- igraph::make_undirected_graph(
+      edges = rbind(from[mask], to[mask]),
+      n = n
+    )
+
+    # Remove duplicates
+    ig <- igraph::simplify(ig, remove.multiple = TRUE)
+    }
 
   # Add x,y coordinates to igraph object
-  igraph::V(ig)$coord_x = coord[,1]
-  igraph::V(ig)$coord_y = coord[,2]
+  igraph::V(ig)$coord_x = coord_mat[, 1]
+  igraph::V(ig)$coord_y = coord_mat[, 2]
 
   # identify boundary nodes
   is_boundary = igraph::degree(ig) < max(igraph::degree(ig))

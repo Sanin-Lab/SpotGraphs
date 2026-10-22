@@ -4,11 +4,10 @@
 \alias{NeighborhoodCenters}
 \title{Identify center of some neighborhood of spots, e.g., the center of a tumor}
 \usage{
-NeighborhoodCenters(coord = NULL, is_neighborhood)
+NeighborhoodCenters(igraph_object = NULL, is_neighborhood)
 }
 \arguments{
-\item{coord}{A two-column data.frame or matrix, where each column contains x or y coordinates,
-where the rownames are spot barcodes/ids.}
+\item{igraph_object}{An igraph object}
 
 \item{is_neighborhood}{A boolean vector (\code{TRUE}/\code{FALSE}) of equal length as the number of rows
 in \code{coord}. Centers will be identified for each neighborhood of spots labeled \code{TRUE}.}
