@@ -7,10 +7,10 @@
 NeighborhoodCenters(igraph_object = NULL, is_neighborhood)
 }
 \arguments{
-\item{igraph_object}{An igraph object}
+\item{igraph_object}{An igraph object with named vertices as an attribute called \code{name}}
 
-\item{is_neighborhood}{A boolean vector (\code{TRUE}/\code{FALSE}) of equal length as the number of rows
-in \code{coord}. Centers will be identified for each neighborhood of spots labeled \code{TRUE}.}
+\item{is_neighborhood}{A boolean vector (\code{TRUE}/\code{FALSE}) of equal length as the number of nodes
+in \code{igraph_object}. Centers will be identified for each neighborhood of spots labeled \code{TRUE}.}
 }
 \value{
 a list with the following elements:
@@ -33,11 +33,12 @@ df = rbind(expand.grid(1:5, 1:5), expand.grid(9:11, 9:11))
 colnames(df) = c('x', 'y')
 nspots = dim(df)[1]
 rownames(df) = paste0('spot', 1:nspots)
+ig = SpotGraph(df)
 
 igraph::V(ig)$cluster = igraph::cluster_leiden(ig, resolution = 0)$membership
 is_cluster = igraph::V(ig)$cluster=='1'
 names(is_cluster) = names(igraph::V(ig))
 
-res = NeighborhoodCenters(coord = df, is_neighborhood = is_cluster)
+res = NeighborhoodCenters(igraph_object = ig, is_neighborhood = is_cluster)
 }
 }

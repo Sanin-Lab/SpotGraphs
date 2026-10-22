@@ -44,9 +44,7 @@ CutEdges = function(igraph_object, cluster_pairs = NULL, cluster.col = 'cluster'
   # from cluster_pairs argument 4/29/2025 ===
 
   # create edge data frame
-  edge.df = igraph::as_ids(igraph::E(ig)) %>%
-    stringr::str_split('\\|') %>%
-    do.call(what = rbind) %>%
+  edge.df = igraph::as_edgelist(ig, names = F) %>%
     as.data.frame()
   colnames(edge.df) = c('node1', 'node2')
 

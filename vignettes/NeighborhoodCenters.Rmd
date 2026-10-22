@@ -56,7 +56,12 @@ ig = SpotGraph(coord)
 
 # 2. Select a region of interest
 In this vignette, we will use clustering to select some region of interest in this tissue sample, but in practice, this should instead be a region of some biological interest. The region of interest, i.e., neighborhood, is provided to `NeighborhoodCenters()` as a named vector of `TRUE`/`FALSE` values.
+To accurately return the calculated properties, we need to provide *names* (i.e. barcodes) to all out spots.
+
 ```{r Choose a region, fig.width=8, fig.height=3.75}
+# add barcode to each vertex in the graph (assuming the order matches the coord file)
+igraph::V(ig)$name = colnames(scc_s1)
+
 # perform clustering on the igraph object
 cl = igraph::cluster_louvain(ig, resolution = 0.4)
 
@@ -84,7 +89,7 @@ wrap_plots(plt1, plt2)
 
 # 3. Run `NeighborhoodCenters()`
 ```{r Run NeighborhoodCenters}
-res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
+res = NeighborhoodCenters(igraph_object = ig, is_neighborhood = roi)
 ```
 
 The output from this function returns a list, where the first element is a data.frame with the scores from `igraph::centr_eigen()` where `is_neighborhood == T`, and 0 where `is_neighborhood == F`. 
@@ -117,7 +122,7 @@ The `NeighborhoodCenters()` function can also identify characteristics of multip
 ```{r NeighborhoodCenters with multiple regions}
 roi = cl$membership %in% c('2', '5', '7')
 names(roi) = names(igraph::V(ig))
-res = NeighborhoodCenters(coord = coord, is_neighborhood = roi)
+res = NeighborhoodCenters(igraph_object = ig, is_neighborhood = roi)
 ```
 
 ```{r multiple region plotting, fig.width=7.75, fig.height=5.8}

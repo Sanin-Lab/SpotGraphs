@@ -3,9 +3,9 @@
 #' @description
 #' Score spots using igraph::centr_eigen to identify spots in the center of some region/neighborhood.
 #'
-#' @param igraph_object An igraph object
-#' @param is_neighborhood A boolean vector (`TRUE`/`FALSE`) of equal length as the number of rows
-#' in `coord`. Centers will be identified for each neighborhood of spots labeled `TRUE`.
+#' @param igraph_object An igraph object with named vertices as an attribute called `name`
+#' @param is_neighborhood A boolean vector (`TRUE`/`FALSE`) of equal length as the number of nodes
+#' in `igraph_object`. Centers will be identified for each neighborhood of spots labeled `TRUE`.
 #'
 #' @returns a list with the following elements:
 #' 1. `eigen.scores`: a numeric vector with the output from igraph::centr_eigen, with a
@@ -37,6 +37,10 @@ NeighborhoodCenters = function(igraph_object = NULL, is_neighborhood) {
     stop('is_neighborhood should be logical (TRUE/FALSE) indicating neighborhood membership')
   }
 
+  if (is.null(igraph::V(ig)$name)) {
+    stop('Graph object should have named vertices as an attribute called `name`')
+  }
+
   # Create igraph object
   ig = igraph_object
 
@@ -52,25 +56,22 @@ NeighborhoodCenters = function(igraph_object = NULL, is_neighborhood) {
   }
 
   # Remove edges between neighborhood and non-neighborhood spots
-  is_neighborhood = is_neighborhood[match(names(igraph::V(ig)), names(is_neighborhood))]
-  igraph::V(ig)$is_neighborhood = is_neighborhood
+  igraph::V(ig)$is_neighborhood = as.integer(is_neighborhood)
   ig = CutEdges(igraph_object = ig,
-                cluster_pairs = list(unique(is_neighborhood)),
+                cluster_pairs = list(c(0,1)),
                 cluster.col = 'is_neighborhood')
 
   # Clustering to label each connected community
   cl = factor(igraph::components(ig)$membership)
-  igraph::V(ig)$clusters = cl
+  igraph::V(ig)$comp = cl
 
   # Calculate the centralization eigenvector for each cluster
-  # cl = igraph::V(ig)$clusters
   v.scores = lapply(levels(cl), function(xx) {
     ig.sub = igraph::subgraph(ig, which(cl==xx))
     res = igraph::centr_eigen(ig.sub)$vector
     names(res) = names(igraph::V(ig.sub))
     return(res)
   }) %>% unlist
-  v.scores = v.scores[match(names(igraph::V(ig)), names(v.scores))]
   igraph::V(ig)$center_eigen = v.scores
 
   # Identify boundary vertices
@@ -79,7 +80,7 @@ NeighborhoodCenters = function(igraph_object = NULL, is_neighborhood) {
 
   # Identify center vertices
   centers = as.data.frame(igraph::vertex_attr(ig)) %>%
-    filter(.by = clusters,
+    dplyr::filter(.by = c(is_neighborhood,comp),
            is_neighborhood &
              center_eigen == max(center_eigen)) %>%
     .$name
