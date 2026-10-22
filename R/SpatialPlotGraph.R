@@ -43,9 +43,6 @@ SpatialPlotGraph = function(igraph_object = NULL,
       )
   } else {
     colnames(coord) = c('coord_x', 'coord_y')
-    if(!all(rownames(coord) %in% names(V(ig)))) {
-      stop('igraph vertices do not match coordinates')
-    }
   }
 
   if (is.null(igraph_object) & is.null(coord)) {
