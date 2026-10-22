@@ -45,6 +45,7 @@ colnames(df) = c('x', 'y')
 nspots = dim(df)[1]
 rownames(df) = paste0('spot', 1:nspots)
 ig = SpotGraph(df)
+igraph::V(ig)$name = rownames(df)
 
 igraph::V(ig)$cluster = igraph::cluster_leiden(ig, resolution = 0)$membership
 is_cluster = igraph::V(ig)$cluster=='1'
