@@ -2,6 +2,8 @@
 
 ## All functions
 
+- [`CellGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/CellGraph.md)
+  : Creates an igraph object given x,y coordinates
 - [`CutEdges()`](https://potential-adventure-or7z9q9.pages.github.io/reference/CutEdges.md)
   : Remove all edges that lie between pairs of clusters
 - [`NeighborhoodCenters()`](https://potential-adventure-or7z9q9.pages.github.io/reference/NeighborhoodCenters.md)
@@ -9,6 +11,8 @@
   tumor
 - [`SpatialPlotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpatialPlotGraph.md)
   : Visualize igraph vertex attribute on tissue x,y coordinates
+- [`SpatialPlotLargeGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpatialPlotLargeGraph.md)
+  : Visualize a large graph on tissue x,y coordinates
 - [`SpotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpotGraph.md)
   : Creates an igraph object given x,y coordinates
 - [`get_threshold()`](https://potential-adventure-or7z9q9.pages.github.io/reference/get_threshold.md)

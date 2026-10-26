@@ -82,10 +82,16 @@ interaction](https://sanin-lab.github.io/SpotGraphs/articles/Interoperability.ht
 Brief examples of interaction between `SpotGraphs` and
 `Seurat`/`SpatialExperiment`
 
+[Application with Image based
+data](https://sanin-lab.github.io/SpotGraphs/articles/Xenium.html) -
+Apply our method to cell coordinates obtained with image based data
+(such as Xenium) using
+[`CellGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/CellGraph.md)
+
 ## Citation
 
 If you use our software, please cite:
 
-Lee, A. J., & Sanin, D. E. (2026). SpotGraphs: Graph-based analysis of
-spatially resolved transcriptional data in R. bioRxiv,
+Lee, A. J., Lam, L., & Sanin, D. E. (2026). SpotGraphs: Graph-based
+analysis of spatially resolved transcriptional data in R. bioRxiv,
 2026.03.12.711347. <https://doi.org/10.64898/2026.03.12.711347>
