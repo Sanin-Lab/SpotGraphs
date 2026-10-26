@@ -15,6 +15,8 @@
   : Visualize a large graph on tissue x,y coordinates
 - [`SpotGraph()`](https://potential-adventure-or7z9q9.pages.github.io/reference/SpotGraph.md)
   : Creates an igraph object given x,y coordinates
+- [`coord`](https://potential-adventure-or7z9q9.pages.github.io/reference/coord.md)
+  : Xenium breast cancer spatial coordinates data
 - [`get_threshold()`](https://potential-adventure-or7z9q9.pages.github.io/reference/get_threshold.md)
   : Calculate a threshold given some set of statistics
 - [`scc_s1`](https://potential-adventure-or7z9q9.pages.github.io/reference/scc_s1.md)
