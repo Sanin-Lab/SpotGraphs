@@ -54,24 +54,24 @@ SpatialPlotGraph = function(igraph_object = NULL,
   df = ggnetwork::ggnetwork(ig, layout = as.matrix(coord))
 
   # Create base plot
-  plt = ggplot(df, aes(x = x, y = y)) +
-    geom_segment(aes(xend = xend, yend = yend),
+  plt = ggplot2::ggplot(df, aes(x = x, y = y)) +
+    ggplot2::geom_segment(aes(xend = xend, yend = yend),
                  linewidth = linewidth) +
-    theme_classic()
+    ggplot2::theme_classic()
 
   # Add vertices based on whether group.by is present or not
   group.by = ifelse(is.null(group.by), NA, group.by)
   if (group.by %in% colnames(df)) {
     plt = plt +
-      geom_point(aes(color = .data[[group.by]]), size = pt.size)
+      ggplot2::geom_point(aes(color = .data[[group.by]]), size = pt.size)
 
     # swap legend to colourbar if group.by is continuous
     if (is.numeric(df[,group.by])) {
-      plt = plt + guides(color = guide_colourbar())
+      plt = plt + ggplot2::guides(color = guide_colourbar())
     }
   } else {
     plt = plt +
-      geom_point(size = pt.size)
+      ggplot2::geom_point(size = pt.size)
   }
 
   # Label groups if desired
@@ -79,7 +79,7 @@ SpatialPlotGraph = function(igraph_object = NULL,
     label.df = df %>%
       dplyr::reframe(.by = tidyselect::all_of(group.by), x = mean(x), y = mean(y))
     plt = plt +
-      geom_label(data = label.df,
+      ggplot2::geom_label(data = label.df,
                  aes(x = x, y = y, label = .data[[group.by]], fill = .data[[group.by]]),
                  show.legend = F)
   }

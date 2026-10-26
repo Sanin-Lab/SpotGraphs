@@ -81,7 +81,7 @@ SpotGraph = function(coord,
   } else {
     # Get coordinates and calculate euclidean distance
     #cap k dynamically
-    knn_result <- dbscan::kNN(as.matrix(coord), k = min(50, n_points - 1))
+    knn_result <- dbscan::kNN(coord_mat, k = min(50, n_points - 1))
 
     # Calculate max tolerated distance to define immediately adjacent spots
     min.dist = min(knn_result$dist)

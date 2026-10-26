@@ -1,0 +1,48 @@
+---
+title: "Xenium data (BETA)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Xenium data (BETA)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE, warning=FALSE}
+library(SpotGraphs)
+library(dplyr)
+library(ggplot2)
+```
+
+## Load example dataset
+SpotGraph was designed for spot-based spatial transcripmotic data, but we provide the function `CellGraph()` to use with cell coordinates generated with Xenium or other image based technologies. Our goal with this package is support analysis by providing a function that constructs an igraph object based on the number of adjacent cells on a tissue section This opens up the analysis pipeline to various igraph functions to perform certain tasks such as:
+
+1. identifying spots lying on tissue debris to be removed from downstream analysis
+2. distance calculations between spots by measuring the shortest path through the network between each spot
+3. easily identifying edges of pre-defined regions of tissue
+
+To construct an igraph object, all we need are the x,y coordinates of the spots on our slide. To demonstrate the general usage of our package with this type of data, we collected coordinates from a Xenium Breast Cancer dataset.
+
+
+```{r, message=FALSE, warning=FALSE}
+data("xenium.coord", package = "SpotGraphs")
+class(coord)
+dim(coord)
+head(coord)
+ig = CellGraph(coord = coord)
+ig
+```
+
+We can plot this igraph object with the `SpatialPlotLargeGraph()` function provided in this package to visualize the edges drawn between each node in the original x,y coordinates stored in the igraph object. **As these technologies generate much larger graphs, it is often better to visualize only the edges**, though the function can also plot the nodes (colored by some attribute).
+
+```{r, fig.width=8, fig.height=8}
+SpatialPlotLargeGraph(igraph_object = ig, only_edges = T, aspec.ratio = 1, group.by = NULL)
+```
+
+With this result, you may calculate any other property of a graph that may be informative. For example, cell degree (number of connections for each cell) varies greatly by cell type and may reveal interesting biology.
