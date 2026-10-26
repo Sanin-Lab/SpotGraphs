@@ -21,7 +21,7 @@ SpatialPlotLargeGraph(
 \item{aspect.ratio}{Numeric input to constrain aspect ratio of the generated plot.}
 }
 \value{
-a rasterised ggplot object
+a ggplot object
 }
 \description{
 Visualize a large graph on tissue x,y coordinates

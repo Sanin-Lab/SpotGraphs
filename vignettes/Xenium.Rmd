@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 library(SpotGraphs)
 library(dplyr)
 library(ggplot2)
+library(ggrastr)
 ```
 
 ## Load example dataset
@@ -42,7 +43,8 @@ ig
 We can plot this igraph object with the `SpatialPlotLargeGraph()` function provided in this package to visualize the edges drawn between each node in the original x,y coordinates stored in the igraph object. **As these technologies generate much larger graphs, it is often better to visualize only the edges**, though the function can also plot the nodes (colored by some attribute).
 
 ```{r, fig.width=8, fig.height=8}
-SpatialPlotLargeGraph(igraph_object = ig, only_edges = T, aspec.ratio = 1, group.by = NULL)
+plt <- SpatialPlotLargeGraph(igraph_object = ig, only_edges = T, aspec.ratio = 1, group.by = NULL)
+rasterise(plt, scale = 1, dpi = 300)
 ```
 
 With this result, you may calculate any other property of a graph that may be informative. For example, cell degree (number of connections for each cell) varies greatly by cell type and may reveal interesting biology.

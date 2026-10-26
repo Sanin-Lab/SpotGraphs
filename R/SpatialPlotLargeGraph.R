@@ -5,7 +5,7 @@
 #' @param aspect.ratio Numeric input to constrain aspect ratio of the generated plot.
 #' @param only_edges Boolean to determine if only the edges of the graph should be returned. Default is `TRUE`.
 #'
-#' @return a rasterised ggplot object
+#' @return a ggplot object
 #' @export
 #'
 #' @examples
@@ -61,6 +61,6 @@ SpatialPlotLargeGraph <- function(
     }
   }
 
-  # Rasterise and return
-  return(ggrastr::rasterise(input = plt, dpi = 300, scale = 1))
+  # Return plot
+  return(plt)
 }
