@@ -14,3 +14,12 @@
 #' }
 #' @source <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE208253>
 'scc_s1'
+
+#' Xenium breast cancer spatial coordinates data
+#'
+#' @format a data frame with 2 columns and 36k cells
+#' \describe{
+#'   \item{Get x,y-coordinates of all cells}{head(coord)}
+#' }
+#' @source <https://cf.10xgenomics.com/supp/xenium/analysis-workshop/one-sample-analysis.tar.gz>
+'coord'

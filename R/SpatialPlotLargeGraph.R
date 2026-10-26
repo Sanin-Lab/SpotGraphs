@@ -21,7 +21,7 @@
 SpatialPlotLargeGraph <- function(
     igraph_object = NULL,
     only_edges = T,
-    aspec.ratio = 1.6,
+    aspect.ratio = 1.6,
     group.by = NULL){
 
   if (is.null(igraph_object)) {

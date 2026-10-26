@@ -7,7 +7,7 @@
 SpatialPlotLargeGraph(
   igraph_object = NULL,
   only_edges = T,
-  aspec.ratio = 1.6,
+  aspect.ratio = 1.6,
   group.by = NULL
 )
 }
@@ -16,9 +16,9 @@ SpatialPlotLargeGraph(
 
 \item{only_edges}{Boolean to determine if only the edges of the graph should be returned. Default is \code{TRUE}.}
 
-\item{group.by}{Some vertex attribute to plot onto tissue coordinates. Must be present in \code{vertex_attr(ig)}.}
-
 \item{aspect.ratio}{Numeric input to constrain aspect ratio of the generated plot.}
+
+\item{group.by}{Some vertex attribute to plot onto tissue coordinates. Must be present in \code{vertex_attr(ig)}.}
 }
 \value{
 a ggplot object
