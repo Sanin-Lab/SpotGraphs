@@ -18,7 +18,6 @@ knitr::opts_chunk$set(
 library(SpotGraphs)
 library(dplyr)
 library(ggplot2)
-library(ggrastr)
 ```
 
 ## Load example dataset
@@ -32,7 +31,7 @@ To construct an igraph object, all we need are the x,y coordinates of the spots 
 
 
 ```{r, message=FALSE, warning=FALSE}
-data("xenium.coord", package = "SpotGraphs")
+data("coord", package = "SpotGraphs")
 class(coord)
 dim(coord)
 head(coord)
@@ -42,9 +41,9 @@ ig
 
 We can plot this igraph object with the `SpatialPlotLargeGraph()` function provided in this package to visualize the edges drawn between each node in the original x,y coordinates stored in the igraph object. **As these technologies generate much larger graphs, it is often better to visualize only the edges**, though the function can also plot the nodes (colored by some attribute).
 
-```{r, fig.width=8, fig.height=8}
+```{r, eval = F}
 plt <- SpatialPlotLargeGraph(igraph_object = ig, only_edges = T, aspec.ratio = 1, group.by = NULL)
-rasterise(plt, scale = 1, dpi = 300)
+ggrastr::rasterise(plt, scale = 1, dpi = 300)
 ```
 
 With this result, you may calculate any other property of a graph that may be informative. For example, cell degree (number of connections for each cell) varies greatly by cell type and may reveal interesting biology.
