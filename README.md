@@ -55,3 +55,5 @@ See documentation website for in-depth walkthroughs:
 If you use our software, please cite:
 
 Lee, A. J., Lam, L., & Sanin, D. E. (2026). SpotGraphs: Graph-based analysis of spatially resolved transcriptional data in R. bioRxiv, 2026.03.12.711347. https://doi.org/10.64898/2026.03.12.711347 
+
+*Copyright 2026 - The Johns Hopkins University*
